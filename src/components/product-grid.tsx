@@ -11,7 +11,7 @@ export function ProductGrid({ products }: { products: ProductCard[] }) {
         <li key={p.slug}>
           <Link
             href={`/p/${p.slug}`}
-            className="group block h-full rounded-lg border border-line bg-surface p-3 transition hover:border-accent"
+            className="group block h-full bg-surface p-3 transition hover:bg-[#f6f6f6]"
           >
             <div className="flex aspect-square items-center justify-center overflow-hidden">
               {p.thumb ? (
@@ -21,8 +21,7 @@ export function ProductGrid({ products }: { products: ProductCard[] }) {
                 <span className="text-sm text-muted">ไม่มีรูป</span>
               )}
             </div>
-            <div className="mt-2 text-xs uppercase tracking-wide text-muted">{p.brand}</div>
-            <div className="font-medium group-hover:text-accent">{p.code}</div>
+            <div className="mt-3 border-t border-line pt-2 font-medium group-hover:text-accent">{p.code}</div>
             <div className="line-clamp-2 text-sm text-muted">{p.typeTh}</div>
             {formatEnvelope(p) && <div className="mt-1 text-xs tabular-nums text-muted">{formatEnvelope(p)}</div>}
           </Link>

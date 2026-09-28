@@ -3,12 +3,12 @@
 /* NAT tokens (placeholder until NAT's brand guide arrives). Warm gallery canvas so the
    white-background product photos sit on light tiles and the furniture leads. */
 :root {
-  --canvas: #f7f5f1;
+  --canvas: #ffffff;
   --surface: #ffffff;
   --ink: #1d1c1a;
-  --muted: #6d6961;
-  --line: #e4e0d8;
-  --accent: #2f4f43;
+  --muted: #6b6b6b;
+  --line: #dcdcdc;
+  --accent: #26307a;
   --accent-ink: #ffffff;
 }
 
@@ -21,6 +21,12 @@
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
   --font-sans: var(--font-thai), ui-sans-serif, system-ui, sans-serif;
+}
+
+h1,
+h2 {
+  font-weight: 300;
+  letter-spacing: 0.02em;
 }
 
 body {

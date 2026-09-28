@@ -1,17 +1,17 @@
 import Link from "next/link";
 
 import { SearchBox } from "@/components/search-box";
-import { getBrands, getCategoryTree } from "@/lib/catalog";
+import { getCategoryTree } from "@/lib/catalog";
 
 export default async function Home() {
-  const [tree, brandList] = await Promise.all([getCategoryTree(), getBrands()]);
+  const tree = await getCategoryTree();
   const total = tree.reduce((n, r) => n + r.total, 0);
   return (
     <main className="mx-auto max-w-6xl px-4">
       <section className="py-12 sm:py-16">
-        <h1 className="text-3xl font-semibold sm:text-4xl">เฟอร์นิเจอร์สำหรับสำนักงานและบ้าน</h1>
+        <h1 className="text-4xl sm:text-6xl">เฟอร์นิเจอร์สำหรับสำนักงานและบ้าน</h1>
         <p className="mt-2 text-muted">
-          {total.toLocaleString("en-US")} รายการ จาก {brandList.length} แบรนด์ พร้อมขนาดและสเปกครบทุกชิ้น
+          {total.toLocaleString("en-US")} รายการ พร้อมแบบร่างและสเปกครบทุกชิ้น
         </p>
         <SearchBox className="mt-6 max-w-xl" />
       </section>
@@ -48,27 +48,6 @@ export default async function Home() {
           ))}
       </div>
 
-      <section className="mt-14">
-        <h2 className="mb-3 text-xl font-semibold">แบรนด์</h2>
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-          {brandList.map((b) => (
-            <li key={b.slug}>
-              <Link
-                href={`/brands/${b.slug}`}
-                className="flex h-24 flex-col items-center justify-center gap-1 rounded-lg border border-line bg-surface p-3 transition hover:border-accent"
-              >
-                {b.logoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- small static logo
-                  <img src={b.logoUrl} alt={b.name} className="max-h-10 max-w-full object-contain" />
-                ) : (
-                  <span className="font-semibold tracking-wide">{b.name}</span>
-                )}
-                <span className="text-xs text-muted">{b.products} รายการ</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
     </main>
   );
 }

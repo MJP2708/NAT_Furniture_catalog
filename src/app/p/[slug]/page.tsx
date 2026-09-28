@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: PageProps<"/p/[slug]">): Prom
   if (!data) return { title: "ไม่พบสินค้า" };
   return {
     title: `${data.product.code} ${data.product.typeTh ?? ""}`.trim(),
-    description: `${data.brand.name} ${data.product.code} — ${data.product.typeTh ?? ""}`,
+    description: `${data.product.code} — ${data.product.typeTh ?? ""}`,
     openGraph: data.images[0] ? { images: [data.images[0].url] } : undefined,
   };
 }
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/p/[slug]">): Prom
 export default async function ProductPage({ params }: PageProps<"/p/[slug]">) {
   const data = await getProduct((await params).slug);
   if (!data) notFound();
-  const { product: p, brand, category, parent, images, siblings } = data;
+  const { product: p, category, parent, images, siblings } = data;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
@@ -77,10 +77,7 @@ export default async function ProductPage({ params }: PageProps<"/p/[slug]">) {
 
         {/* Spec block */}
         <div>
-          <Link href={`/brands/${brand.slug}`} className="text-sm font-medium uppercase tracking-wide text-muted hover:text-accent">
-            {brand.name}
-          </Link>
-          <h1 className="text-3xl font-semibold">{p.code}</h1>
+          <h1 className="text-4xl">{p.code}</h1>
           {p.typeTh && <p className="mt-1 text-lg">{p.typeTh}</p>}
           {p.typeEn && p.typeEn !== p.typeTh && <p className="text-muted">{p.typeEn}</p>}
 
