@@ -1,6 +1,6 @@
 # NAT Furniture — E-Catalog Plan
 
-Status: **planning** (nothing implemented yet).
+Status: **phase 1 (foundation)**. Phase 0 extraction is in `ingest/` → `data/extracted/`; the Next.js app, Drizzle schema and seed are in place and the catalog is loaded into Neon (`main` branch).
 Stack: Next.js (App Router, TypeScript) + Neon Postgres. **Constraint: no paid services for now.** Everything runs on free tiers or on our own machine.
 
 ## Decisions so far
@@ -76,7 +76,7 @@ Replaces the vision-LLM idea. Three signals, merged per field:
 3. **Thai dictionary repair** (PyThaiNLP): for each Thai word, choose between the text-layer and OCR versions (and `า`↔`ำ` swaps) by picking the spelling that is a real dictionary word. Labels come from a fixed known list (`ประเภทสินค้า`, `ขนาด`, `โครงขา`, …), so they're matched, not guessed.
 
 Other steps:
-- **Images:** `pdfimages` extracts the embedded photos. Logos are dropped by size and aspect ratio and by matching the known brand-logo hashes. `sharp` trims white borders and outputs WebP at 3 sizes.
+- **Images:** PyMuPDF extracts the embedded photos (upright, in reading order; photos stored as strips are stitched back together). Logos are dropped by size and aspect ratio and by matching the known brand-logo hashes. Pillow trims borders and outputs WebP at 2 sizes (1200 px and 480 px).
 - **Categories:** keyword rules on `ประเภทสินค้า` (e.g. contains `เก้าอี้สำนักงาน` + `พนักพิงสูง` → Office chairs / High-back). The rules file is editable and versioned.
 - **Variants and duplicates:** grouped by code stem plus a check that images look alike (same embedding model as photo search).
 - **Output:** `data/extracted/*.json` (reviewable in git) plus a **review report** (HTML) listing low-confidence fields, unmapped types, and duplicates. After review, the seed script upserts into Neon. Re-runnable and idempotent (keyed by brand + code).
@@ -207,6 +207,12 @@ Before building pages: a **style tile + 3 key screens** (home, category, product
 3. **Showroom photos:** can someone take about 30 phone photos of real pieces for the photo-search benchmark?
 4. **Updates:** who adds new products later: staff through `/admin`, or a developer re-running the import?
 5. **Contact channel** for the public "Ask about this product" button: LINE OA, phone, email form?
+
+### Running it
+- `cd ingest && uv run python -m nat_ingest.build` → `data/extracted/{catalog,categories,brands}.json` + `public/media/`
+- `pnpm db:migrate` (direct/unpooled URL) then `pnpm db:seed` (idempotent, keyed by slug)
+- `pnpm dev`
+- If pnpm downloads time out on this network: `NODE_OPTIONS=--dns-result-order=ipv4first pnpm install --fetch-timeout=900000`
 
 ### Setup needed on this machine (free)
 - `sudo pacman -S tesseract-data-tha` (Thai OCR data)

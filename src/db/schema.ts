@@ -20,7 +20,7 @@ export type SizeSet = {
   label_en: string | null;
   text_th: string;
   text_en: string | null;
-  mm: Partial<Record<"w" | "d" | "h" | "seat_h" | "arm_h" | "dia", [number, number]>>;
+  mm: Partial<Record<"w" | "d" | "h" | "seat_h" | "arm_h" | "dia", [number, number]>> | null;
 };
 
 /** One construction row, e.g. โครงขา → ["เหล็กชุบโครเมียม"]. values_en[i] may be null (untranslated). */
