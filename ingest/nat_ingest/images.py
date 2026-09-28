@@ -1,6 +1,6 @@
 """Extract product photos from the spec sheets and write web-ready WebP files.
 
-* Every embedded image on a product's page is extracted with `pdfimages`.
+* Every embedded image on a product's page is extracted with PyMuPDF, upright and in reading order.
 * Images reused across many files (brand logos, badges) are decoration: the most
   common one per brand becomes that brand's logo, the rest are dropped.
 * Photos are flattened onto white, trimmed, and saved as
@@ -11,62 +11,114 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
-import subprocess
-import tempfile
 from collections import Counter, defaultdict
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
-from PIL import Image, ImageChops
+from PIL import Image
 
 from .paths import IMG_CACHE, MEDIA, RAW
 
 MIN_SIDE = 100
 MAX_ASPECT = 6
 DECOR_MIN_FILES = 4  # an image appearing in this many source files is decoration
-
-
-def _list(pdf: Path, page: int) -> list[dict]:
-    out = subprocess.run(["pdfimages", "-list", "-f", str(page), "-l", str(page), str(pdf)],
-                         capture_output=True, text=True).stdout.splitlines()[2:]
-    rows = []
-    for line in out:
-        cols = line.split()
-        if len(cols) >= 5:
-            rows.append({"num": int(cols[1]), "type": cols[2], "w": int(cols[3]), "h": int(cols[4])})
-    return rows
+# mono sheets always carry the m@ss and mono logos together, so votes tie; pin the mono one.
+LOGO_PIN = {"mono": "beea223a79b45bf6d31ce21a0a78c855"}
 
 
 def extract_page(args: tuple[str, int]) -> tuple[str, int, list[dict]]:
-    """Extract one page's images to .cache/images/<rel>/p<page>-<num>.png (cached)."""
+    """Extract one page's images to .cache/images/<rel>/p<page>-<n>.png (cached).
+
+    Uses the image's placement matrix so flipped/rotated artwork comes out upright,
+    and orders images top-to-bottom, left-to-right as they appear on the sheet.
+    """
+    import pymupdf
+
     rel, page = args
-    pdf = RAW / f"{rel}.pdf"
     dest = IMG_CACHE / rel
     manifest = dest / f"p{page}.json"
     if manifest.exists():
         return rel, page, json.loads(manifest.read_text())
     dest.mkdir(parents=True, exist_ok=True)
-    rows = _list(pdf, page)
+    doc = pymupdf.open(RAW / f"{rel}.pdf")
+    pg = doc[page - 1]
+    infos = sorted(pg.get_image_info(xrefs=True), key=lambda i: (round(i["bbox"][1] / 20), i["bbox"][0]))
+    placed: list[tuple[list[float], Image.Image]] = []
+    done: set[int] = set()
+    for info in infos:
+        xref = info["xref"]
+        if not xref or xref in done:
+            continue
+        done.add(xref)
+        try:
+            img = _pixmap_image(doc, xref)
+        except Exception:
+            continue
+        a, b, c, d = info["transform"][:4]
+        if abs(b) > abs(a):  # rotated by 90 degrees
+            img = img.transpose(Image.ROTATE_90 if b > 0 else Image.ROTATE_270)
+        else:
+            if a < 0:
+                img = img.transpose(Image.FLIP_LEFT_RIGHT)
+            if d < 0:
+                img = img.transpose(Image.FLIP_TOP_BOTTOM)
+        placed.append((list(info["bbox"]), flatten(img)))
     items: list[dict] = []
-    with tempfile.TemporaryDirectory() as tmp:
-        subprocess.run(["pdfimages", "-png", "-f", str(page), "-l", str(page), str(pdf), f"{tmp}/i"], check=True)
-        files = sorted(Path(tmp).glob("i-*.png"))
-        for idx, row in enumerate(rows):
-            if row["type"] != "image" or idx >= len(files):
-                continue
-            img = Image.open(files[idx])
-            # A following smask is this image's alpha channel.
-            if idx + 1 < len(rows) and rows[idx + 1]["type"] == "smask" and idx + 1 < len(files):
-                mask = Image.open(files[idx + 1]).convert("L").resize(img.size)
-                img = img.convert("RGB")
-                img.putalpha(mask)
-            flat = flatten(img)
-            out = dest / f"p{page}-{row['num']}.png"
-            flat.save(out)
-            items.append({"file": str(out.relative_to(IMG_CACHE)), "w": flat.width, "h": flat.height,
-                          "hash": hashlib.md5(flat.tobytes()).hexdigest()})
+    for n, (_, flat) in enumerate(_join_tiles(placed)):
+        out = dest / f"p{page}-{n}.png"
+        flat.save(out)
+        items.append({"file": str(out.relative_to(IMG_CACHE)), "w": flat.width, "h": flat.height,
+                      "hash": hashlib.md5(flat.tobytes()).hexdigest()})
     manifest.write_text(json.dumps(items))
     return rel, page, items
+
+
+def _join_tiles(placed: list[tuple[list[float], Image.Image]], tol: float = 0.3):
+    """Stitch a photo the PDF stores as strips: pieces that abut on the page with an equal-length
+    shared edge in pixels (unrelated neighbours such as stacked logos differ in size)."""
+    out = list(placed)
+    merged = True
+    while merged:
+        merged = False
+        for i, (bi, ii) in enumerate(out):
+            for j, (bj, ij) in enumerate(out):
+                if i == j:
+                    continue
+                if ii.width == ij.width and abs(bi[0] - bj[0]) < tol and abs(bi[2] - bj[2]) < tol \
+                        and abs(bi[3] - bj[1]) < tol:
+                    img = Image.new("RGB", (ii.width, ii.height + ij.height), "white")
+                    img.paste(ii, (0, 0))
+                    img.paste(ij, (0, ii.height))
+                elif ii.height == ij.height and abs(bi[1] - bj[1]) < tol and abs(bi[3] - bj[3]) < tol \
+                        and abs(bi[2] - bj[0]) < tol:
+                    img = Image.new("RGB", (ii.width + ij.width, ii.height), "white")
+                    img.paste(ii, (0, 0))
+                    img.paste(ij, (ii.width, 0))
+                else:
+                    continue
+                box = [min(bi[0], bj[0]), min(bi[1], bj[1]), max(bi[2], bj[2]), max(bi[3], bj[3])]
+                out = [p for k, p in enumerate(out) if k not in (i, j)]
+                out.insert(min(i, j), (box, img))
+                merged = True
+                break
+            if merged:
+                break
+    return out
+
+
+def _pixmap_image(doc, xref: int) -> Image.Image:
+    import pymupdf
+
+    pix = pymupdf.Pixmap(doc, xref)
+    if pix.colorspace and pix.colorspace.n > 3:
+        pix = pymupdf.Pixmap(pymupdf.csRGB, pix)
+    smask = doc.xref_get_key(xref, "SMask")
+    if smask[0] == "xref":
+        mask = pymupdf.Pixmap(doc, int(smask[1].split()[0]))
+        if mask.width == pix.width and mask.height == pix.height and not pix.alpha:
+            pix = pymupdf.Pixmap(pix, mask)
+    mode = "RGBA" if pix.alpha else ("L" if pix.n == 1 else "RGB")
+    return Image.frombytes(mode, (pix.width, pix.height), pix.samples)
 
 
 def is_photo(w: int, h: int) -> bool:
@@ -79,29 +131,19 @@ def is_photo(w: int, h: int) -> bool:
 
 def render_photo_region(pdf: Path, page: int) -> Image.Image | None:
     """For vector/tiled artwork: render the band between the header and the first text line."""
-    import re
+    import pymupdf
 
-    xml = subprocess.run(["pdftotext", "-bbox-layout", "-f", str(page), "-l", str(page), str(pdf), "-"],
-                         capture_output=True, text=True).stdout
-    m = re.search(r'<page width="([\d.]+)" height="([\d.]+)"', xml)
-    if not m:
-        return None
-    pw, ph = float(m.group(1)), float(m.group(2))
-    lines = [(float(a), float(b)) for a, b in re.findall(r'<line xMin="[\d.]+" yMin="([\d.]+)" xMax="[\d.]+" yMax="([\d.]+)"', xml)]
-    header = [y2 for y1, y2 in lines if y1 < ph * 0.2]
+    pg = pymupdf.open(pdf)[page - 1]
+    ph, pw = pg.rect.height, pg.rect.width
+    blocks = [b for b in pg.get_text("blocks") if b[4].strip()]
+    header = [b[3] for b in blocks if b[1] < ph * 0.2]
     top = max(header) + 4 if header else ph * 0.08
-    below = [y1 for y1, _ in lines if y1 > top + 20]
+    below = [b[1] for b in blocks if b[1] > top + 20]
     bottom = min(below) - 4 if below else ph * 0.6
     if bottom - top < 60:
         return None
-    dpi = 200
-    k = dpi / 72
-    with tempfile.TemporaryDirectory() as tmp:
-        subprocess.run(["pdftoppm", "-r", str(dpi), "-png", "-f", str(page), "-l", str(page), "-singlefile",
-                        "-x", str(int(0)), "-y", str(int(top * k)), "-W", str(int(pw * k)), "-H", str(int((bottom - top) * k)),
-                        str(pdf), f"{tmp}/r"], check=True)
-        img = Image.open(f"{tmp}/r.png").convert("RGB")
-        img.load()
+    pix = pg.get_pixmap(dpi=200, clip=pymupdf.Rect(0, top, pw, bottom))
+    img = Image.frombytes("RGB", (pix.width, pix.height), pix.samples)
     cropped = trim(img)
     if min(cropped.size) < 80:
         return None
@@ -114,21 +156,39 @@ def flatten(img: Image.Image) -> Image.Image:
         bg = Image.new("RGB", img.size, "white")
         bg.paste(img, mask=img.split()[-1])
         return bg
-    if img.mode == "CMYK":
-        # pdfimages writes CMYK JPEGs inverted.
-        return ImageChops.invert(img).convert("RGB")
     return img.convert("RGB")
 
 
 def trim(img: Image.Image, pad: int = 12) -> Image.Image:
-    gray = img.convert("L").point(lambda p: 255 if p < 245 else 0)
-    box = gray.getbbox()
-    if not box:
+    """Crop to content, ignoring thin full-width/height rule lines from the sheet layout."""
+    import numpy as np
+
+    ink = np.asarray(img.convert("L")) < 235
+    ink[_thin_runs(ink.mean(axis=1) > 0.6), :] = False
+    ink[:, _thin_runs(ink.mean(axis=0) > 0.6)] = False
+    ys, xs = np.nonzero(ink)
+    if len(xs) == 0:
         return img
-    l, t, r, b = box
+    l, t, r, b = xs.min(), ys.min(), xs.max() + 1, ys.max() + 1
     l, t = max(0, l - pad), max(0, t - pad)
     r, b = min(img.width, r + pad), min(img.height, b + pad)
-    return img.crop((l, t, r, b))
+    return img.crop((int(l), int(t), int(r), int(b)))
+
+
+def _thin_runs(dense, max_len: int = 4):
+    """Keep only runs of dense rows/columns at most max_len long (rule lines, not solid areas)."""
+    import numpy as np
+
+    out = np.zeros_like(dense)
+    start = None
+    for i, v in enumerate([*dense, False]):
+        if v and start is None:
+            start = i
+        elif not v and start is not None:
+            if i - start <= max_len:
+                out[start:i] = True
+            start = None
+    return out
 
 
 def save_webp(img: Image.Image, dest: Path, stem: str) -> dict:
@@ -164,12 +224,17 @@ def attach_images(records: list[dict]) -> None:
             files_by_hash[it["hash"]].add(rel)
     decor = {h for h, files in files_by_hash.items() if len(files) >= DECOR_MIN_FILES}
 
-    brand_logo_votes: dict[str, Counter] = defaultdict(Counter)
+    # Brand logo = the wide decoration image found in the most files of that folder, preferring
+    # ones not shared with other folders (mono sheets carry both the m@ss and mono logos).
+    logo_votes: dict[str, Counter] = defaultdict(Counter)
+    logo_file: dict[str, str] = {}
     for (rel, _), items in extracted.items():
         folder = rel.split("/", 1)[0]
         for it in items:
             if it["hash"] in decor and it["w"] > it["h"] * 1.5:
-                brand_logo_votes[folder][it["file"]] += 1
+                logo_votes[folder][it["hash"]] += 1
+                logo_file.setdefault(it["hash"], it["file"])
+    logo_folders = Counter(h for votes in logo_votes.values() for h in votes)
 
     if (MEDIA / "p").exists():
         shutil.rmtree(MEDIA / "p")
@@ -188,6 +253,11 @@ def attach_images(records: list[dict]) -> None:
                     continue
                 seen.add(it["hash"])
                 photos.append(Image.open(IMG_CACHE / it["file"]))
+            # Largest photo is the hero; the rest stay in reading order.
+            if photos:
+                hero = max(photos, key=lambda p: p.width * p.height)
+                photos.remove(hero)
+                photos.insert(0, hero)
             if not photos:
                 region = render_photo_region(RAW / src["file"], src["page"])
                 if region is not None:
@@ -210,9 +280,10 @@ def attach_images(records: list[dict]) -> None:
 
     logo_dir = MEDIA / "brands"
     logo_dir.mkdir(parents=True, exist_ok=True)
-    for folder, votes in brand_logo_votes.items():
-        best = votes.most_common(1)[0][0]
-        img = trim(Image.open(IMG_CACHE / best), pad=4)
+    for folder, votes in logo_votes.items():
+        best = LOGO_PIN.get(folder) if LOGO_PIN.get(folder) in votes else \
+            min(votes, key=lambda h: (logo_folders[h], -votes[h]))
+        img = trim(Image.open(IMG_CACHE / logo_file[best]), pad=4)
         from .paths import BRANDS
 
         img.save(logo_dir / f"{BRANDS[folder]}.png")

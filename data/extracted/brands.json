@@ -1,0 +1,27 @@
+[
+ {
+  "slug": "perfect",
+  "name": "PERFECT",
+  "logo": "/media/brands/perfect.png"
+ },
+ {
+  "slug": "mono",
+  "name": "MONO",
+  "logo": "/media/brands/mono.png"
+ },
+ {
+  "slug": "mass-mono",
+  "name": "MASS-MONO",
+  "logo": "/media/brands/mass-mono.png"
+ },
+ {
+  "slug": "patara",
+  "name": "PATARA",
+  "logo": "/media/brands/patara.png"
+ },
+ {
+  "slug": "mobelle",
+  "name": "MOBELLE",
+  "logo": null
+ }
+]

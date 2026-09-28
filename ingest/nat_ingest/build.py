@@ -11,10 +11,10 @@ import unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from .categorize import categorize, derive_tags, seats_of
+from .categorize import CATEGORIES, categorize, derive_tags, seats_of
 from .dims import parse_size
 from .glossary import translate_label, translate_value
-from .paths import BRANDS, OCR, OUT, RAW
+from .paths import BRANDS, MEDIA, OCR, OUT, RAW
 from .parse import ParsedPage, parse_lines
 from .pdftext import TEXT, load_meta
 from .textfix import Corpus, load_corpus, normalize, repair_line
@@ -190,6 +190,14 @@ def main() -> None:
     (OUT / "unmapped-types.json").write_text(
         json.dumps(sorted(unmapped.items(), key=lambda x: -x[1]), ensure_ascii=False, indent=1)
     )
+    (OUT / "categories.json").write_text(json.dumps(
+        [{"slug": slug, "parent": parent, "name_th": th, "name_en": en, "sort": i}
+         for i, (slug, parent, th, en) in enumerate(CATEGORIES)], ensure_ascii=False, indent=1))
+    logos = MEDIA / "brands"
+    (OUT / "brands.json").write_text(json.dumps(
+        [{"slug": slug, "name": slug.upper(),
+          "logo": f"/media/brands/{slug}.png" if (logos / f"{slug}.png").exists() else None}
+         for slug in BRANDS.values()], indent=1))
     report(records)
 
 
