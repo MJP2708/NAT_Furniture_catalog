@@ -1,0 +1,13 @@
+# secrets
+.env
+.env.local
+.neon
+
+# python ingest tooling (regenerable)
+ingest/.venv/
+ingest/.cache/
+__pycache__/
+*.pyc
+
+# generated media (rebuilt by `python -m nat_ingest.build`; will move to object storage)
+public/media/

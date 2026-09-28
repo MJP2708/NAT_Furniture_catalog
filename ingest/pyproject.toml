@@ -1,0 +1,12 @@
+[project]
+name = "nat-ingest"
+version = "0.1.0"
+description = "Extract NAT furniture spec sheets (PDF) into structured JSON + images"
+requires-python = ">=3.12"
+dependencies = [
+  "pillow>=11",
+  "pythainlp>=5.1",
+  "numpy>=2",
+  "openpyxl>=3.1.5",
+  "pymupdf>=1.28.2",
+]
