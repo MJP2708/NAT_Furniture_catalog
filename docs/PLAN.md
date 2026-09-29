@@ -221,6 +221,7 @@ Before building pages: a **style tile + 3 key screens** (home, category, product
 - English: every page exists under `/en`; untranslated Thai text shows with a small "TH" marker.
 - `pnpm catalog:pdf` → `public/e-catalogue.pdf` (exports published products from Neon, including admin edits, then lays out the PDF with PyMuPDF; fonts in `ingest/fonts/`, OFL). Re-run after edits and commit the PDF.
 - Import sanity check: size lines with a wrong unit are rescaled and flagged `dims-fixed`; values still implausible are flagged `dims-suspect` for review in `/admin`.
+- `/admin` (own layout, Thai): product list with filters (status, supplier, category, import warning, not-yet-checked), paging and bulk actions (category, publish/hide/review, mark checked); review queue grouped by import warning; editor with drawings (reorder/remove), source link, TH/EN preview and "save and next"; category names/order; add product (no image upload until object storage is chosen). Any staff change sets `edited_at`, which removes the product from the queue and protects it from re-imports; category names edited in admin are no longer overwritten by the seed.
 - `/admin`: needs `ADMIN_PASSWORD` in `.env.local` and in the hosting env (unset = admin disabled). Saving sets `products.edited_at`, which makes `pnpm db:seed` leave that product (and its images) alone; clear `edited_at` to let the import overwrite it again.
 - If pnpm downloads time out on this network: `NODE_OPTIONS=--dns-result-order=ipv4first pnpm install --fetch-timeout=900000`
 

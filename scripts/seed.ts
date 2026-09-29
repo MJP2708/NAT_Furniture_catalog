@@ -75,7 +75,9 @@ async function main() {
       await db
         .insert(categories)
         .values(catRows.map((c) => ({ slug: c.slug, nameTh: c.name_th, nameEn: c.name_en, sort: c.sort })))
-        .onConflictDoUpdate({ target: categories.slug, set: excluded(["nameTh", "nameEn", "sort"]) })
+        // Existing categories keep their names/order (staff edit them in /admin/categories);
+        // the no-op update still returns their ids.
+        .onConflictDoUpdate({ target: categories.slug, set: { slug: sql`excluded.slug` } })
         .returning({ id: categories.id, slug: categories.slug })
     ).map((r) => [r.slug, r.id]),
   );

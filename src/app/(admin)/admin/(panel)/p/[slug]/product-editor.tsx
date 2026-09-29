@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect, useRef, useState } from "react";
 
-import { type FormState, type ProductPayload, saveProduct } from "@/app/(th)/admin/actions";
+import { type FormState, type ProductPayload, saveProduct } from "@/app/(admin)/admin/actions";
 
 type Category = { id: number; label: string };
 type Dim = "w" | "d" | "h" | "dia" | "seat_h" | "arm_h";
@@ -23,17 +23,26 @@ export function ProductEditor({
   slug,
   initial,
   categories,
+  nextHref,
 }: {
   slug: string;
   initial: ProductPayload;
   categories: Category[];
+  nextHref: string | null;
 }) {
   const [p, setP] = useState(initial);
   const [state, action, pending] = useActionState<FormState, FormData>(saveProduct.bind(null, slug), undefined);
+  const router = useRouter();
+  const goNext = useRef(false);
+  // "Save and next": once the save succeeds, open the next product in the same list.
+  useEffect(() => {
+    if (state?.saved && goNext.current && nextHref) router.push(nextHref);
+    goNext.current = false;
+  }, [state, nextHref, router]);
   const set = <K extends keyof ProductPayload>(k: K, v: ProductPayload[K]) => setP((cur) => ({ ...cur, [k]: v }));
 
   return (
-    <form action={action} className="space-y-8">
+    <form action={action} className="space-y-8 rounded-lg border border-line bg-canvas p-4 sm:p-6">
       <input type="hidden" name="payload" value={JSON.stringify(p)} />
 
       <section className="grid gap-4 sm:grid-cols-2">
@@ -186,13 +195,20 @@ export function ProductEditor({
         </Field>
       </section>
 
-      <div className="sticky bottom-0 flex items-center gap-4 border-t border-line bg-canvas py-3">
+      <div className="sticky bottom-0 -mx-4 flex flex-wrap items-center gap-3 border-t border-line bg-canvas px-4 py-3 sm:-mx-6 sm:px-6">
         <button type="submit" disabled={pending} className="rounded-full bg-accent px-6 py-2 text-sm font-medium text-accent-ink disabled:opacity-60">
           {pending ? "กำลังบันทึก…" : "บันทึก · Save"}
         </button>
-        <Link href={`/p/${slug}`} target="_blank" className="text-sm text-accent hover:underline">
-          ดูหน้าสินค้า ↗
-        </Link>
+        {nextHref && (
+          <button
+            type="submit"
+            disabled={pending}
+            onClick={() => (goNext.current = true)}
+            className="rounded-full border border-accent px-5 py-2 text-sm text-accent disabled:opacity-60"
+          >
+            บันทึกแล้วไปรายการถัดไป →
+          </button>
+        )}
         {state?.saved && !pending && <span className="text-sm text-green-700">บันทึกแล้ว · Saved</span>}
         {state?.error && <span className="text-sm text-red-700">{state.error}</span>}
       </div>

@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 
-import { login } from "@/app/(th)/admin/actions";
+import { login } from "@/app/(admin)/admin/actions";
 
 export function LoginForm() {
   const [state, action, pending] = useActionState(login, undefined);
