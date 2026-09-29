@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useActionState, useState } from "react";
 
-import { type FormState, type ProductPayload, saveProduct } from "@/app/admin/actions";
+import { type FormState, type ProductPayload, saveProduct } from "@/app/(th)/admin/actions";
 
 type Category = { id: number; label: string };
 type Dim = "w" | "d" | "h" | "dia" | "seat_h" | "arm_h";
@@ -52,6 +52,12 @@ export function ProductEditor({
         </Field>
         <Field label="Type EN">
           <input className={input} value={p.typeEn ?? ""} onChange={(e) => set("typeEn", e.target.value)} />
+        </Field>
+        <Field label="คำอธิบายสินค้า · Description TH">
+          <textarea className={input} rows={4} value={p.summaryTh ?? ""} onChange={(e) => set("summaryTh", e.target.value)} />
+        </Field>
+        <Field label="Description EN">
+          <textarea className={input} rows={4} value={p.summaryEn ?? ""} onChange={(e) => set("summaryEn", e.target.value)} />
         </Field>
         <Field label="หมวดหมู่ · Category">
           <select

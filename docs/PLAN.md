@@ -1,6 +1,6 @@
 # NAT Furniture — E-Catalog Plan
 
-Status: **demo live; phases 1–3 largely done**. Catalog in Neon (`main`); public site in the ORBIX/Modernform-inspired design (home with space index, category "line" pages, product spec pages with printable spec sheet, code/text search) using line-sketch images; `/admin` spec editor; downloadable e-catalogue PDF generated from the live data.
+Status: **phases 1–4 partly done**. 1,750 products from 7 suppliers in Neon (PDF spec sheets + Practika website + Thai Taiyo catalogues); public site TH/EN with filters, spec pages and printable sheets; `/admin` editor; e-catalogue PDF. Next: photo search, dealer area.
 Stack: Next.js (App Router, TypeScript) + Neon Postgres. **Constraint: no paid services for now.** Everything runs on free tiers or on our own machine.
 
 ## Decisions so far
@@ -214,6 +214,11 @@ Before building pages: a **style tile + 3 key screens** (home, category, product
 - `cd ingest && uv run python -m nat_ingest.build` → `data/extracted/{catalog,categories,brands}.json` + `public/media/`
 - `pnpm db:migrate` (direct/unpooled URL) then `pnpm db:seed` (idempotent, keyed by slug)
 - `pnpm dev`
+- Web suppliers (imports agreed with each supplier; images are only used to draw our sketches):
+  - Practika: `pnpm crawl:practika` (headless Chromium; `pnpm exec playwright-core install chromium-headless-shell` once) → `ingest/.cache/web/practika/`.
+  - Thai Taiyo: catalogue PDFs from thaitaiyo.co.th in `ingest/.cache/web/thaitaiyo/pdf/`, then `cd ingest && uv run python -m nat_ingest.web_thaitaiyo ocr` (Tesseract eng+tha, models in `.cache/tessdata`). Products with an unreadable category are flagged `category-guessed` and hidden until reviewed in `/admin`; code-family guesses are flagged `category-from-code`.
+  - Both are merged by `python -m nat_ingest.build`.
+- English: every page exists under `/en`; untranslated Thai text shows with a small "TH" marker.
 - `pnpm catalog:pdf` → `public/e-catalogue.pdf` (exports published products from Neon, including admin edits, then lays out the PDF with PyMuPDF; fonts in `ingest/fonts/`, OFL). Re-run after edits and commit the PDF.
 - Import sanity check: size lines with a wrong unit are rescaled and flagged `dims-fixed`; values still implausible are flagged `dims-suspect` for review in `/admin`.
 - `/admin`: needs `ADMIN_PASSWORD` in `.env.local` and in the hosting env (unset = admin disabled). Saving sets `products.edited_at`, which makes `pnpm db:seed` leave that product (and its images) alone; clear `edited_at` to let the import overwrite it again.

@@ -14,7 +14,7 @@ from pathlib import Path
 from .categorize import CATEGORIES, categorize, derive_tags, seats_of
 from .dims import parse_size, sanity_fix
 from .glossary import translate_label, translate_value
-from .paths import BRANDS, MEDIA, OCR, OUT, RAW
+from .paths import BRANDS, MEDIA, OCR, OUT, RAW, WEB_BRANDS
 from .parse import ParsedPage, parse_lines
 from .pdftext import TEXT, load_meta
 from .textfix import Corpus, load_corpus, normalize, repair_line
@@ -138,6 +138,12 @@ def build(with_images: bool) -> list[dict]:
             if parsed:
                 records.append(to_record(parsed, brand, rel, i, "xlsx"))
 
+    # Suppliers imported from their websites
+    from . import web_practika, web_thaitaiyo
+
+    records += web_practika.records()
+    records += web_thaitaiyo.records()
+
     records = dedupe(records)
     assign_slugs(records)
     if with_images:
@@ -207,7 +213,8 @@ def main() -> None:
     (OUT / "brands.json").write_text(json.dumps(
         [{"slug": slug, "name": slug.upper(),
           "logo": f"/media/brands/{slug}.png" if (logos / f"{slug}.png").exists() else None}
-         for slug in BRANDS.values()], indent=1))
+         for slug in BRANDS.values()]
+        + [{"slug": slug, "name": name, "logo": None} for slug, name in WEB_BRANDS.items()], indent=1))
     report(records)
 
 

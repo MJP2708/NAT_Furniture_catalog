@@ -17,7 +17,7 @@ from pathlib import Path
 
 from PIL import Image
 
-from .paths import IMG_CACHE, MEDIA, RAW
+from .paths import CACHE, IMG_CACHE, MEDIA, RAW
 
 MIN_SIDE = 100
 MAX_ASPECT = 6
@@ -119,6 +119,45 @@ def _pixmap_image(doc, xref: int) -> Image.Image:
             pix = pymupdf.Pixmap(pix, mask)
     mode = "RGBA" if pix.alpha else ("L" if pix.n == 1 else "RGB")
     return Image.frombytes(mode, (pix.width, pix.height), pix.samples)
+
+
+def main_objects(img: Image.Image) -> Image.Image:
+    """Crop a product photo to its large shapes, dropping small extras such as a printed name."""
+    import cv2
+    import numpy as np
+
+    g = np.asarray(img.convert("L"))
+    ink = (g < 235).astype(np.uint8)
+    if ink.sum() == 0:
+        return img
+    k = max(3, int(min(g.shape) * 0.02))
+    n, _, stats, _ = cv2.connectedComponentsWithStats(cv2.dilate(ink, np.ones((k, k), np.uint8)), connectivity=8)
+    if n < 2:
+        return img
+    areas = stats[1:, cv2.CC_STAT_AREA]
+    keep = [i + 1 for i, a in enumerate(areas) if a >= 0.2 * areas.max()]
+    x0 = min(stats[i, 0] for i in keep)
+    y0 = min(stats[i, 1] for i in keep)
+    x1 = max(stats[i, 0] + stats[i, 2] for i in keep)
+    y1 = max(stats[i, 1] + stats[i, 3] for i in keep)
+    return img.crop((x0, y0, x1, y1))
+
+
+def fingerprint(img: Image.Image):
+    """16x16 average-hash: near-identical photos differ in only a few cells."""
+    import numpy as np
+
+    g = np.asarray(img.convert("L").resize((16, 16)), dtype=np.float32)
+    return g > g.mean()
+
+
+def is_product_shot(img: Image.Image) -> bool:
+    """A product photographed on a plain light background: the outer border is bright and even."""
+    import numpy as np
+
+    g = np.asarray(img.convert("L").resize((200, 200)), dtype=np.float32)
+    border = np.concatenate([g[:8].ravel(), g[-8:].ravel(), g[:, :8].ravel(), g[:, -8:].ravel()])
+    return border.mean() > 225 and border.std() < 22
 
 
 def is_photo(w: int, h: int) -> bool:
@@ -263,6 +302,24 @@ def attach_images(records: list[dict]) -> None:
                 if region is not None:
                     photos.append(region)
                     r["flags"].append("image-from-render")
+        elif src["kind"] == "web":
+            # Supplier website photos: keep product-on-white shots, skip room/lifestyle scenes
+            # and near-duplicates (the same photo served at two sizes/URLs).
+            seen_prints: list = []
+            for f in src.get("images", []):
+                try:
+                    img = flatten(Image.open(CACHE / f))
+                except OSError:
+                    continue
+                # Catalogue crops were already checked for a plain surround during extraction.
+                ok = src.get("prechecked") or is_product_shot(img)
+                if min(img.size) >= MIN_SIDE and ok and len(photos) < 3:
+                    obj = main_objects(img)
+                    fp = fingerprint(obj)
+                    if any((fp != other).mean() < 0.1 for other in seen_prints):
+                        continue
+                    seen_prints.append(fp)
+                    photos.append(obj)
         elif src["kind"] == "xlsx":
             if rel not in xlsx_cache:
                 xlsx_cache[rel] = xlsx_images(RAW / src["file"])

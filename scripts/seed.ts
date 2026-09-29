@@ -18,6 +18,8 @@ type Extracted = {
   series: string;
   type_th: string | null;
   type_en: string | null;
+  summary_th?: string | null;
+  summary_en?: string | null;
   category: string | null;
   tags: string[];
   materials: string[];
@@ -36,7 +38,7 @@ type Extracted = {
 };
 
 // Products missing any of these need a human look before they go public.
-const REVIEW_FLAGS = new Set(["no-code", "no-category", "no-image"]);
+const REVIEW_FLAGS = new Set(["no-code", "no-category", "no-image", "category-guessed"]);
 
 const read = <T>(name: string): T => JSON.parse(readFileSync(`data/extracted/${name}`, "utf8"));
 const chunks = <T>(xs: T[], n: number) =>
@@ -111,6 +113,8 @@ async function main() {
       codeNorm: r.code.toUpperCase().replace(/[^A-Z0-9]/g, ""),
       typeTh: r.type_th,
       typeEn: r.type_en,
+      summaryTh: r.summary_th ?? null,
+      summaryEn: r.summary_en ?? null,
       tags: r.tags,
       materials: r.materials,
       seats: r.seats,

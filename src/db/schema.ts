@@ -77,6 +77,9 @@ export const products = pgTable(
     codeNorm: text().notNull(),
     typeTh: text(),
     typeEn: text(),
+    /** Short product introduction (from the supplier where available). */
+    summaryTh: text(),
+    summaryEn: text(),
     tags: text().array().notNull().default(sql`'{}'::text[]`),
     materials: text().array().notNull().default(sql`'{}'::text[]`),
     seats: smallint(),

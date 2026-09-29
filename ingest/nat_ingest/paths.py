@@ -20,3 +20,9 @@ BRANDS = {
     "PATARA": "patara",
     "mobelle": "mobelle",
 }
+
+# Suppliers imported from their websites (import agreed with each supplier): slug -> display name
+WEB_BRANDS = {
+    "practika": "PRACTIKA",
+    "thaitaiyo": "THAI TAIYO",
+}

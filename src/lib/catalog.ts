@@ -14,6 +14,7 @@ const cardFields = {
   code: products.code,
   typeTh: products.typeTh,
   typeEn: products.typeEn,
+  materials: products.materials,
   widthMin: products.widthMin,
   widthMax: products.widthMax,
   depthMin: products.depthMin,

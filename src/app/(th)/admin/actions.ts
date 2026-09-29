@@ -32,6 +32,8 @@ const Payload = z.object({
   code: z.string().trim().min(1, "ต้องมีรหัสสินค้า").max(80),
   typeTh: optText,
   typeEn: optText,
+  summaryTh: z.string().trim().max(4000).nullable().transform((s) => s || null),
+  summaryEn: z.string().trim().max(4000).nullable().transform((s) => s || null),
   categoryId: z.number().int().positive().nullable(),
   status: z.enum(["published", "review", "hidden"]),
   noteTh: optText,

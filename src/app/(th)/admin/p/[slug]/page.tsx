@@ -69,6 +69,8 @@ async function Editor({ params }: Pick<PageProps<"/admin/p/[slug]">, "params">) 
             code: p.code,
             typeTh: p.typeTh ?? "",
             typeEn: p.typeEn ?? "",
+            summaryTh: p.summaryTh ?? "",
+            summaryEn: p.summaryEn ?? "",
             categoryId: p.categoryId,
             status: p.status,
             noteTh: p.noteTh ?? "",

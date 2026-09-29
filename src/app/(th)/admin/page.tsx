@@ -3,7 +3,7 @@ import Form from "next/form";
 import Link from "next/link";
 import { Suspense } from "react";
 
-import { logout } from "@/app/admin/actions";
+import { logout } from "@/app/(th)/admin/actions";
 import { db } from "@/db";
 import { brands, categories, products } from "@/db/schema";
 import { requireAdmin } from "@/lib/admin-session";
