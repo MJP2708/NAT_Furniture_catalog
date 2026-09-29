@@ -1,3 +1,5 @@
+import { isCustomerSite } from "@/lib/site";
+
 /** Thai is the default at "/", English lives under "/en". */
 export type Lang = "th" | "en";
 
@@ -90,6 +92,25 @@ const UI = {
   },
 } as const;
 
+// The customer site shows product photos, so its wording says photos instead of drawings.
+const PHOTO_WORDING = {
+  th: {
+    heroLead: "เฟอร์นิเจอร์สำหรับทุกพื้นที่ ทั้งสำนักงานและบ้าน พร้อมรูปสินค้าและสเปกครบทุกชิ้น",
+    heroSub: (n: number) => `${n.toLocaleString("en-US")} pieces for offices and homes, each with photos and full specification.`,
+    catalogueLead: "แคตตาล็อกฉบับเต็มในรูปแบบ PDF รวมรูปสินค้าและขนาดของสินค้าทุกรายการ แยกตามพื้นที่ใช้งาน เหมาะสำหรับพิมพ์หรือส่งต่อ",
+    footerAbout: "เฟอร์นิเจอร์สำนักงานและที่อยู่อาศัย พร้อมรูปสินค้าและสเปกครบทุกชิ้น",
+    noImage: "ไม่มีรูป",
+    drawing: (code: string, i: number) => `${code} รูปที่ ${i}`,
+  },
+  en: {
+    heroLead: "Furniture for offices and homes, with photos and a full specification for every piece.",
+    catalogueLead: "The full catalogue as a PDF: photos and the sizes of every piece, arranged by space. Ready to print or share.",
+    noImage: "No photo",
+    footerAbout: "Office and home furniture, with photos and a full specification for every piece.",
+    drawing: (code: string, i: number) => `${code} photo ${i}`,
+  },
+};
+
 export function t(lang: Lang) {
-  return UI[lang];
+  return isCustomerSite ? { ...UI[lang], ...PHOTO_WORDING[lang] } : UI[lang];
 }

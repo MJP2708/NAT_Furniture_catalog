@@ -102,6 +102,18 @@ def convert(path: str) -> None:
     sketch(img).save(p, "WEBP", quality=82)
 
 
+def keep_photos() -> int:
+    """Copy the cleaned-up product photos (public/media/p) to public/media/photo for the
+    customer site, before sketch_all() turns the originals into line drawings."""
+    import shutil
+
+    src, dest = MEDIA / "p", MEDIA / "photo"
+    if dest.exists():
+        shutil.rmtree(dest)
+    shutil.copytree(src, dest)
+    return sum(1 for _ in dest.rglob("*.webp"))
+
+
 def sketch_all(paths: list[str] | None = None) -> int:
     paths = paths or [str(p) for p in sorted((MEDIA / "p").rglob("*.webp"))]
     with ProcessPoolExecutor() as ex:

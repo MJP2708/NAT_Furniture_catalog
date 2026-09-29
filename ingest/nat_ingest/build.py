@@ -150,11 +150,10 @@ def build(with_images: bool) -> list[dict]:
         from .images import attach_images
 
         attach_images(records)
-        from .colorize import colorize_all
-        from .sketch import sketch_all
+        from .sketch import keep_photos, sketch_all
 
-        # Customer site: coloured illustrations, made from the photos before they're replaced.
-        colorize_all()
+        # Customer site shows the photos: keep a copy before the line drawings replace them.
+        keep_photos()
 
         # The public catalog shows line sketches, never the suppliers' photos.
         sketch_all()

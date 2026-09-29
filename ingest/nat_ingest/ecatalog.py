@@ -54,7 +54,7 @@ body { font-family: tr; color: #231f20; font-size: 9pt; line-height: 1.5; }
 
 class Doc:
     def __init__(self, color: bool = False) -> None:
-        self.color = color  # coloured illustrations (customer edition) instead of line drawings
+        self.color = color  # product photos (customer edition) instead of line drawings
         self.pdf = pymupdf.open()
         self.archive = pymupdf.Archive(str(FONTS))
         self.image_cache: dict[str, bytes] = {}
@@ -76,7 +76,7 @@ class Doc:
         if not url:
             return
         if self.color:
-            url = url.replace("/media/p/", "/media/c/", 1)
+            url = url.replace("/media/p/", "/media/photo/", 1)
         path = ROOT / "public" / url.lstrip("/")
         if not path.exists():
             return
@@ -85,7 +85,7 @@ class Doc:
             img = Image.open(path).convert("RGB" if self.color else "L")
             # Thicken lines before shrinking so they keep their weight at print size.
             ratio = max(img.size) / max_px
-            if ratio > 1.5 and min(img.size) > 8:
+            if ratio > 1.5 and min(img.size) > 8 and not self.color:
                 import cv2
 
                 k = int(ratio) | 1
@@ -324,7 +324,7 @@ def build(color: bool = False) -> Path:
 
     doc.pdf.set_metadata({"title": "NAT Furniture E-Catalogue", "author": "NAT Furniture",
                           "subject": "Furniture catalogue", "creator": "nat_ingest.ecatalog"})
-    out = ROOT / "public" / ("e-catalogue-color.pdf" if color else "e-catalogue.pdf")
+    out = ROOT / "public" / ("e-catalogue-photo.pdf" if color else "e-catalogue.pdf")
     doc.pdf.save(out, garbage=4, deflate=True)
     return out
 
@@ -332,7 +332,7 @@ def build(color: bool = False) -> Path:
 def main() -> None:
     import sys
 
-    # Line-drawing edition always; add the coloured customer edition with --color / --all.
+    # Line-drawing edition always; add the photo (customer) edition with --color / --all.
     editions = [False, True] if "--all" in sys.argv else [("--color" in sys.argv)]
     for color in editions:
         out = build(color)
