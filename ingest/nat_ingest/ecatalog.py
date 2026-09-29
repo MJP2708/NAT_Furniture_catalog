@@ -80,6 +80,13 @@ class Doc:
         key = f"{path}:{max_px}:{transparent}"
         if key not in self.image_cache:
             img = Image.open(path).convert("L")
+            # Thicken lines before shrinking so they keep their weight at print size.
+            ratio = max(img.size) / max_px
+            if ratio > 1.5 and min(img.size) > 8:
+                import cv2
+
+                k = int(ratio) | 1
+                img = Image.fromarray(cv2.erode(np.asarray(img), np.ones((k, k), np.uint8)))
             img.thumbnail((max_px, max_px))
             buf = io.BytesIO()
             if transparent:
