@@ -2,7 +2,9 @@ import "server-only";
 
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+
+import { isCustomerSite } from "@/lib/site";
 
 /**
  * Single shared admin password (ADMIN_PASSWORD) until staff accounts arrive with the dealer area.
@@ -12,7 +14,8 @@ import { redirect } from "next/navigation";
 const COOKIE = "nat_admin";
 const MAX_AGE_S = 60 * 60 * 12;
 
-const secret = () => process.env.ADMIN_PASSWORD || null;
+// The customer site has no admin at all, whatever its environment says.
+const secret = () => (isCustomerSite ? null : process.env.ADMIN_PASSWORD || null);
 
 function sign(value: string, key: string) {
   return createHmac("sha256", key).update(value).digest("base64url");
@@ -56,5 +59,6 @@ export async function isAdmin() {
 
 /** Guard for admin pages and every admin Server Action (actions are reachable by direct POST). */
 export async function requireAdmin() {
+  if (isCustomerSite) notFound();
   if (!(await isAdmin())) redirect("/admin/login");
 }

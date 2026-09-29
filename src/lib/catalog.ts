@@ -3,6 +3,7 @@ import { and, asc, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { categories, productImages, products, series } from "@/db/schema";
+import { media } from "@/lib/site";
 
 /** Every cached catalog read carries this tag; admin edits expire it with updateTag. */
 export const CATALOG_TAG = "catalog";
@@ -29,12 +30,17 @@ const cardFields = {
 
 export type ProductCard = Awaited<ReturnType<typeof searchProducts>>[number];
 
+/** Card rows with drawing URLs for this site variant. */
+function cards<T extends { thumb: string | null }>(rows: T[]): T[] {
+  return rows.map((r) => ({ ...r, thumb: media(r.thumb) }));
+}
+
 /** Categories with their number of published products, in display order. */
 export async function getCategoryCounts() {
   "use cache";
   cacheLife("hours");
   cacheTag(CATALOG_TAG);
-  return db
+  const rows = await db
     .select({
       id: categories.id,
       slug: categories.slug,
@@ -52,6 +58,7 @@ export async function getCategoryCounts() {
     .leftJoin(products, and(eq(products.categoryId, categories.id), published))
     .groupBy(categories.id)
     .orderBy(asc(categories.sort));
+  return rows.map((r) => ({ ...r, cover: media(r.cover) }));
 }
 
 /** Top-level spaces (Office, Living, ...) with their subcategories and totals. */
@@ -86,7 +93,7 @@ export async function getCategory(slug: string) {
         .where(and(published, inArray(products.categoryId, ids)))
         .orderBy(asc(products.code))
     : [];
-  return { category: cat, root, products: rows };
+  return { category: cat, root, products: cards(rows) };
 }
 
 export async function getProduct(slug: string) {
@@ -127,7 +134,7 @@ export async function getProduct(slug: string) {
           .limit(12)
       : [],
   ]);
-  return { ...row, images, parent, siblings };
+  return { ...row, images: images.map((im) => ({ ...im, url: media(im.url) })), parent, siblings: cards(siblings) };
 }
 
 /** Code search tolerant of spacing/punctuation ("fg1" finds "FG 1"), plus Thai/English type text. */
@@ -139,7 +146,7 @@ export async function searchProducts(q: string) {
   const like = `%${q.trim()}%`;
   const conds = [ilike(products.typeTh, like), ilike(products.typeEn, like), ilike(products.code, like)];
   if (norm) conds.push(sql`${products.codeNorm} like ${norm + "%"}`, sql`${products.codeNorm} % ${norm}`);
-  return db
+  const rows = await db
     .select(cardFields)
     .from(products)
     .where(and(published, or(...conds)))
@@ -148,6 +155,7 @@ export async function searchProducts(q: string) {
       asc(products.code),
     )
     .limit(60);
+  return cards(rows);
 }
 
 /** Slugs to prerender at build. Products are a sample: the rest render on first visit and are

@@ -53,7 +53,8 @@ body { font-family: tr; color: #231f20; font-size: 9pt; line-height: 1.5; }
 
 
 class Doc:
-    def __init__(self) -> None:
+    def __init__(self, color: bool = False) -> None:
+        self.color = color  # coloured illustrations (customer edition) instead of line drawings
         self.pdf = pymupdf.open()
         self.archive = pymupdf.Archive(str(FONTS))
         self.image_cache: dict[str, bytes] = {}
@@ -74,12 +75,14 @@ class Doc:
         transparent=True turns the white paper into alpha (ink stays), for pastel pages."""
         if not url:
             return
+        if self.color:
+            url = url.replace("/media/p/", "/media/c/", 1)
         path = ROOT / "public" / url.lstrip("/")
         if not path.exists():
             return
         key = f"{path}:{max_px}:{transparent}"
         if key not in self.image_cache:
-            img = Image.open(path).convert("L")
+            img = Image.open(path).convert("RGB" if self.color else "L")
             # Thicken lines before shrinking so they keep their weight at print size.
             ratio = max(img.size) / max_px
             if ratio > 1.5 and min(img.size) > 8:
@@ -87,9 +90,18 @@ class Doc:
 
                 k = int(ratio) | 1
                 img = Image.fromarray(cv2.erode(np.asarray(img), np.ones((k, k), np.uint8)))
+                if self.color:
+                    img = img.convert("RGB")
             img.thumbnail((max_px, max_px))
             buf = io.BytesIO()
-            if transparent:
+            if transparent and self.color:
+                # white paper -> transparent, colours and ink stay
+                a = np.asarray(img).astype(np.int16)
+                alpha = np.clip((255 - a.min(axis=2)) * 6, 0, 255).astype(np.uint8)
+                rgba = img.convert("RGBA")
+                rgba.putalpha(Image.fromarray(alpha))
+                rgba.save(buf, "PNG", optimize=True)
+            elif transparent:
                 ink = Image.new("LA", img.size, 0)
                 ink.putalpha(img.point(lambda v: 255 - v))
                 ink.save(buf, "PNG", optimize=True)
@@ -164,10 +176,10 @@ def size_line(mm: dict) -> str:
     return " x ".join(parts) + " cm" if parts else ""
 
 
-def build() -> Path:
+def build(color: bool = False) -> Path:
     data = json.loads((CACHE / "ecatalog.json").read_text())
     spaces = data["spaces"]
-    doc = Doc()
+    doc = Doc(color)
 
     # Plan page numbers first so the contents page can list them.
     plan: list[tuple[str, dict, dict | None, list[dict]]] = []  # (kind, space, category, items)
@@ -312,15 +324,20 @@ def build() -> Path:
 
     doc.pdf.set_metadata({"title": "NAT Furniture E-Catalogue", "author": "NAT Furniture",
                           "subject": "Furniture catalogue", "creator": "nat_ingest.ecatalog"})
-    out = ROOT / "public" / "e-catalogue.pdf"
+    out = ROOT / "public" / ("e-catalogue-color.pdf" if color else "e-catalogue.pdf")
     doc.pdf.save(out, garbage=4, deflate=True)
     return out
 
 
 def main() -> None:
-    out = build()
-    doc = pymupdf.open(out)
-    print(f"{out.relative_to(ROOT)}: {doc.page_count} pages, {out.stat().st_size / 1e6:.1f} MB")
+    import sys
+
+    # Line-drawing edition always; add the coloured customer edition with --color / --all.
+    editions = [False, True] if "--all" in sys.argv else [("--color" in sys.argv)]
+    for color in editions:
+        out = build(color)
+        doc = pymupdf.open(out)
+        print(f"{out.relative_to(ROOT)}: {doc.page_count} pages, {out.stat().st_size / 1e6:.1f} MB")
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+import { isCustomerSite } from "@/lib/site";
+
 /** Short bilingual introductions for the four spaces (keyed by top-level category slug). */
 export const SPACE_COPY: Record<string, { th: string; en: string }> = {
   office: {
@@ -18,4 +20,6 @@ export const SPACE_COPY: Record<string, { th: string; en: string }> = {
   },
 };
 
-export const E_CATALOGUE_URL = "/e-catalogue.pdf";
+
+/** The customer site links to the coloured edition of the catalogue. */
+export const E_CATALOGUE_URL = isCustomerSite ? "/e-catalogue-color.pdf" : "/e-catalogue.pdf";

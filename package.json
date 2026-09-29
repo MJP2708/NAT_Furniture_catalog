@@ -11,8 +11,10 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx scripts/seed.ts",
-    "catalog:pdf": "tsx scripts/export-catalog.ts && cd ingest && uv run python -m nat_ingest.ecatalog",
-    "crawl:practika": "tsx scripts/crawl-practika.ts"
+    "catalog:pdf": "tsx scripts/export-catalog.ts && cd ingest && uv run python -m nat_ingest.ecatalog --all",
+    "crawl:practika": "tsx scripts/crawl-practika.ts",
+    "dev:customer": "SITE_VARIANT=customer next dev",
+    "start:customer": "SITE_VARIANT=customer next start"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
