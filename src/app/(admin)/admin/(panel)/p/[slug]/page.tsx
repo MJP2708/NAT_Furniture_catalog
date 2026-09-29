@@ -92,6 +92,9 @@ async function Editor({ params, searchParams }: Pick<PageProps<"/admin/p/[slug]"
               <a href={`/en/p/${p.slug}`} target="_blank" className="text-accent hover:underline">
                 EN ↗
               </a>
+              <a href={`/sheet/th/${p.slug}`} target="_blank" className="text-accent hover:underline">
+                ใบสเปก ↗
+              </a>
             </div>
             {p.status !== "published" && <p className="mt-1 text-xs text-amber-700">ยังไม่แสดงบนเว็บไซต์จนกว่าจะเปลี่ยนสถานะเป็น “เผยแพร่”</p>}
           </div>

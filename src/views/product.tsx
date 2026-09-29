@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { PrintButton } from "@/components/print-button";
 import { ProductGrid } from "@/components/product-grid";
 import { getProduct } from "@/lib/catalog";
 import { formatEnvelope, formatRange } from "@/lib/format";
@@ -223,7 +222,13 @@ export async function ProductView({ slug, lang }: { slug: string; lang: Lang }) 
             </p>
           )}
           <div className="mt-8">
-            <PrintButton label={ui.print} />
+            <a
+              href={`/sheet/${lang}/${p.slug}?print=1`}
+              target="_blank"
+              className="no-print inline-block rounded-full border border-ink px-5 py-2 text-sm hover:border-accent hover:text-accent"
+            >
+              {ui.print}
+            </a>
           </div>
         </div>
       </div>
