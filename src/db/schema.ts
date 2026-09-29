@@ -98,6 +98,8 @@ export const products = pgTable(
     /** Extraction warnings from the import (no-image, no-dimensions, ...). */
     flags: text().array().notNull().default(sql`'{}'::text[]`),
     status: productStatus().notNull().default("published"),
+    /** Set when staff edit the product in /admin; the import then leaves the row alone. */
+    editedAt: timestamp({ withTimezone: true }),
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp({ withTimezone: true })
       .notNull()

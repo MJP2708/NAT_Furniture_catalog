@@ -7,7 +7,7 @@
 import { readFileSync } from "node:fs";
 
 import { config } from "dotenv";
-import { inArray, sql } from "drizzle-orm";
+import { and, inArray, isNull, sql } from "drizzle-orm";
 
 config({ path: ".env.local", quiet: true });
 
@@ -136,24 +136,34 @@ async function main() {
   const productCols = Object.keys(toProduct(records[0])).filter((c) => c !== "slug");
 
   let imageCount = 0;
+  let skipped = 0;
   for (const part of chunks(records, 100)) {
     const rows = await db
       .insert(products)
       .values(part.map(toProduct))
-      .onConflictDoUpdate({ target: products.slug, set: { ...excluded(productCols), updatedAt: sql`now()` } })
+      // Products edited in /admin keep their edits (and images) across re-imports.
+      .onConflictDoUpdate({
+        target: products.slug,
+        set: { ...excluded(productCols), updatedAt: sql`now()` },
+        setWhere: isNull(products.editedAt),
+      })
       .returning({ id: products.id, slug: products.slug });
     const ids = new Map(rows.map((r) => [r.slug, r.id]));
+    skipped += part.length - rows.length;
     await db.delete(productImages).where(inArray(productImages.productId, [...ids.values()]));
-    const images = part.flatMap((r) =>
-      r.images.map((im, sort) => ({
-        productId: ids.get(r.slug)!,
-        url: im.src,
-        thumbUrl: im.thumb,
-        width: im.w,
-        height: im.h,
-        sort,
-      })),
-    );
+    // Only products the upsert touched; admin-edited ones keep their current images.
+    const images = part
+      .filter((r) => ids.has(r.slug))
+      .flatMap((r) =>
+        r.images.map((im, sort) => ({
+          productId: ids.get(r.slug)!,
+          url: im.src,
+          thumbUrl: im.thumb,
+          width: im.w,
+          height: im.h,
+          sort,
+        })),
+      );
     if (images.length) await db.insert(productImages).values(images);
     imageCount += images.length;
   }
@@ -162,12 +172,12 @@ async function main() {
   const slugs = records.map((r) => r.slug);
   const stale = await db
     .delete(products)
-    .where(sql`${products.slug} <> all(${sql.param(slugs)}::text[])`)
+    .where(and(sql`${products.slug} <> all(${sql.param(slugs)}::text[])`, isNull(products.editedAt)))
     .returning({ slug: products.slug });
 
   console.log(
     `brands ${brandIds.size} · categories ${catIds.size} · series ${seriesIds.size} · ` +
-      `products ${records.length} · images ${imageCount} · removed ${stale.length}`,
+      `products ${records.length - skipped} (kept ${skipped} admin-edited) · images ${imageCount} · removed ${stale.length}`,
   );
 }
 

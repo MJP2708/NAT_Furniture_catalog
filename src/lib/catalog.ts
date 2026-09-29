@@ -1,8 +1,11 @@
-import { cacheLife } from "next/cache";
-import { and, asc, count, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
+import { cacheLife, cacheTag } from "next/cache";
+import { and, asc, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
 
 import { db } from "@/db";
-import { brands, categories, productImages, products, series } from "@/db/schema";
+import { categories, productImages, products, series } from "@/db/schema";
+
+/** Every cached catalog read carries this tag; admin edits expire it with updateTag. */
+export const CATALOG_TAG = "catalog";
 
 const published = eq(products.status, "published");
 
@@ -11,7 +14,6 @@ const cardFields = {
   code: products.code,
   typeTh: products.typeTh,
   typeEn: products.typeEn,
-  brand: brands.name,
   widthMax: products.widthMax,
   depthMax: products.depthMax,
   heightMax: products.heightMax,
@@ -25,6 +27,7 @@ export type ProductCard = Awaited<ReturnType<typeof searchProducts>>[number];
 export async function getCategoryCounts() {
   "use cache";
   cacheLife("hours");
+  cacheTag(CATALOG_TAG);
   return db
     .select({
       id: categories.id,
@@ -44,6 +47,7 @@ export async function getCategoryCounts() {
 export async function getCategoryTree() {
   "use cache";
   cacheLife("hours");
+  cacheTag(CATALOG_TAG);
   const cats = await getCategoryCounts();
   return cats
     .filter((c) => c.parentId === null)
@@ -53,20 +57,10 @@ export async function getCategoryTree() {
     });
 }
 
-export async function getBrands() {
-  "use cache";
-  cacheLife("hours");
-  return db
-    .select({ slug: brands.slug, name: brands.name, logoUrl: brands.logoUrl, products: count(products.id) })
-    .from(brands)
-    .leftJoin(products, and(eq(products.brandId, brands.id), published))
-    .groupBy(brands.id)
-    .orderBy(desc(count(products.id)));
-}
-
 export async function getCategory(slug: string) {
   "use cache";
   cacheLife("hours");
+  cacheTag(CATALOG_TAG);
   const tree = await getCategoryTree();
   const all = tree.flatMap((r) => [r, ...r.children]);
   const cat = all.find((c) => c.slug === slug);
@@ -77,34 +71,19 @@ export async function getCategory(slug: string) {
     ? await db
         .select(cardFields)
         .from(products)
-        .innerJoin(brands, eq(brands.id, products.brandId))
         .where(and(published, inArray(products.categoryId, ids)))
-        .orderBy(asc(brands.name), asc(products.code))
+        .orderBy(asc(products.code))
     : [];
   return { category: cat, root, products: rows };
-}
-
-export async function getBrand(slug: string) {
-  "use cache";
-  cacheLife("hours");
-  const [brand] = await db.select().from(brands).where(eq(brands.slug, slug));
-  if (!brand) return null;
-  const rows = await db
-    .select(cardFields)
-    .from(products)
-    .innerJoin(brands, eq(brands.id, products.brandId))
-    .where(and(published, eq(products.brandId, brand.id)))
-    .orderBy(asc(products.code));
-  return { brand, products: rows };
 }
 
 export async function getProduct(slug: string) {
   "use cache";
   cacheLife("hours");
+  cacheTag(CATALOG_TAG);
   const [row] = await db
-    .select({ product: products, brand: brands, category: categories, series: series })
+    .select({ product: products, category: categories, series: series })
     .from(products)
-    .innerJoin(brands, eq(brands.id, products.brandId))
     .leftJoin(categories, eq(categories.id, products.categoryId))
     .leftJoin(series, eq(series.id, products.seriesId))
     .where(and(published, eq(products.slug, slug)));
@@ -131,8 +110,7 @@ export async function getProduct(slug: string) {
       ? db
           .select(cardFields)
           .from(products)
-          .innerJoin(brands, eq(brands.id, products.brandId))
-          .where(and(published, eq(products.seriesId, row.series.id), sql`${products.id} <> ${row.product.id}`))
+            .where(and(published, eq(products.seriesId, row.series.id), sql`${products.id} <> ${row.product.id}`))
           .orderBy(asc(products.code))
           .limit(12)
       : [],
@@ -144,6 +122,7 @@ export async function getProduct(slug: string) {
 export async function searchProducts(q: string) {
   "use cache";
   cacheLife("hours");
+  cacheTag(CATALOG_TAG);
   const norm = q.toUpperCase().replace(/[^A-Z0-9]/g, "");
   const like = `%${q.trim()}%`;
   const conds = [ilike(products.typeTh, like), ilike(products.typeEn, like), ilike(products.code, like)];
@@ -151,7 +130,6 @@ export async function searchProducts(q: string) {
   return db
     .select(cardFields)
     .from(products)
-    .innerJoin(brands, eq(brands.id, products.brandId))
     .where(and(published, or(...conds)))
     .orderBy(
       norm ? sql`(${products.codeNorm} like ${norm + "%"}) desc, similarity(${products.codeNorm}, ${norm}) desc` : asc(products.code),
@@ -165,10 +143,10 @@ export async function searchProducts(q: string) {
 export async function getAllSlugs() {
   "use cache";
   cacheLife("hours");
-  const [prods, cats, brandRows] = await Promise.all([
+  cacheTag(CATALOG_TAG);
+  const [prods, cats] = await Promise.all([
     db.select({ slug: products.slug }).from(products).where(published).orderBy(asc(products.id)).limit(24),
     db.select({ slug: categories.slug }).from(categories),
-    db.select({ slug: brands.slug }).from(brands),
   ]);
-  return { products: prods.map((p) => p.slug), categories: cats.map((c) => c.slug), brands: brandRows.map((b) => b.slug) };
+  return { products: prods.map((p) => p.slug), categories: cats.map((c) => c.slug) };
 }

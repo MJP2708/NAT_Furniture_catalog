@@ -1,13 +1,15 @@
 # NAT Furniture — E-Catalog Plan
 
-Status: **phase 1 (foundation)**. Phase 0 extraction is in `ingest/` → `data/extracted/`; the Next.js app, Drizzle schema and seed are in place and the catalog is loaded into Neon (`main` branch).
+Status: **demo live; phases 1 and 3 partly done**. Catalog in Neon (`main`); public browse (home, categories, product spec pages, code/text search) with line-sketch images and an ORBIX/Modernform-style look; `/admin` spec editor behind a shared password.
 Stack: Next.js (App Router, TypeScript) + Neon Postgres. **Constraint: no paid services for now.** Everything runs on free tiers or on our own machine.
 
 ## Decisions so far
 
 | Topic | Decision |
 |---|---|
-| Brands | Show the brand names and logos (PERFECT, MONO, MASS-MONO, PATARA, MOBELLE) inside a NAT-branded catalog |
+| Brands | *(changed 2026-09-28)* Products are shown as NAT's catalog: supplier brands are hidden on public pages and kept in the database/admin. Never claim NAT manufactures them |
+| Images | Line sketches generated from the supplier photos (`nat_ingest.sketch`), not the photos themselves. Exploded views later, per product |
+| Editing | Specs are editable in `/admin`; edited products are skipped by future imports |
 | Audience | **Both** the public and dealers/sales staff. Public catalog open to all; dealer area behind login |
 | Language | **Thai first** (default `/`), English switchable (`/en`) |
 | Paid services | None. Local OCR, a local/in-browser AI model, free-tier hosting |
@@ -212,6 +214,7 @@ Before building pages: a **style tile + 3 key screens** (home, category, product
 - `cd ingest && uv run python -m nat_ingest.build` → `data/extracted/{catalog,categories,brands}.json` + `public/media/`
 - `pnpm db:migrate` (direct/unpooled URL) then `pnpm db:seed` (idempotent, keyed by slug)
 - `pnpm dev`
+- `/admin`: needs `ADMIN_PASSWORD` in `.env.local` and in the hosting env (unset = admin disabled). Saving sets `products.edited_at`, which makes `pnpm db:seed` leave that product (and its images) alone; clear `edited_at` to let the import overwrite it again.
 - If pnpm downloads time out on this network: `NODE_OPTIONS=--dns-result-order=ipv4first pnpm install --fetch-timeout=900000`
 
 ### Setup needed on this machine (free)
