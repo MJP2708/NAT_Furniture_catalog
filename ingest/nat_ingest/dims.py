@@ -49,3 +49,36 @@ def parse_size(text: str) -> dict | None:
     else:
         factor = 1 if biggest > 400 else 10
     return {k: [round(v * factor) for v in pair] for k, pair in found.items()}
+
+
+# Plausible furniture sizes in mm (depth can be tiny: panels, shelves, table tops).
+PLAUSIBLE = {"w": (200, 6000), "d": (10, 4000), "h": (200, 2600), "dia": (200, 3000)}
+
+
+def _bad(axis: str, pair: list[int]) -> bool:
+    lo, hi = PLAUSIBLE.get(axis, (1, 10**6))
+    return pair[0] < lo or pair[1] > hi
+
+
+def sanity_fix(mm: dict) -> tuple[dict, str | None]:
+    """Repair unit typos on the sheets ("560 x 550 x 790 ซม." that are really mm, "1100 ซม.").
+
+    First rescale the whole size line by x1, x10 or /10, whichever leaves the fewest implausible
+    axes (x1 wins ties), then shrink single axes that are exactly 10x too large. Returns the
+    (possibly fixed) sizes and a flag: "dims-fixed", "dims-suspect" or None.
+    """
+    def scaled(f: float) -> dict:
+        return {k: [round(v * f) for v in pair] for k, pair in mm.items()}
+
+    options = [(sum(_bad(k, p) for k, p in scaled(f).items()), i, f) for i, f in enumerate((1, 10, 0.1))]
+    _, _, factor = min(options)
+    out = scaled(factor)
+    fixed = factor != 1
+    for k, pair in out.items():
+        if _bad(k, pair) and pair[1] > PLAUSIBLE.get(k, (0, 10**6))[1]:
+            smaller = [round(v / 10) for v in pair]
+            if not _bad(k, smaller):
+                out[k], fixed = smaller, True
+    if any(_bad(k, p) for k, p in out.items()):
+        return out, "dims-suspect"
+    return out, "dims-fixed" if fixed else None

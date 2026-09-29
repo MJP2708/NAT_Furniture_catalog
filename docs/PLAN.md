@@ -1,6 +1,6 @@
 # NAT Furniture — E-Catalog Plan
 
-Status: **demo live; phases 1 and 3 partly done**. Catalog in Neon (`main`); public browse (home, categories, product spec pages, code/text search) with line-sketch images and an ORBIX/Modernform-style look; `/admin` spec editor behind a shared password.
+Status: **demo live; phases 1–3 largely done**. Catalog in Neon (`main`); public site in the ORBIX/Modernform-inspired design (home with space index, category "line" pages, product spec pages with printable spec sheet, code/text search) using line-sketch images; `/admin` spec editor; downloadable e-catalogue PDF generated from the live data.
 Stack: Next.js (App Router, TypeScript) + Neon Postgres. **Constraint: no paid services for now.** Everything runs on free tiers or on our own machine.
 
 ## Decisions so far
@@ -214,6 +214,8 @@ Before building pages: a **style tile + 3 key screens** (home, category, product
 - `cd ingest && uv run python -m nat_ingest.build` → `data/extracted/{catalog,categories,brands}.json` + `public/media/`
 - `pnpm db:migrate` (direct/unpooled URL) then `pnpm db:seed` (idempotent, keyed by slug)
 - `pnpm dev`
+- `pnpm catalog:pdf` → `public/e-catalogue.pdf` (exports published products from Neon, including admin edits, then lays out the PDF with PyMuPDF; fonts in `ingest/fonts/`, OFL). Re-run after edits and commit the PDF.
+- Import sanity check: size lines with a wrong unit are rescaled and flagged `dims-fixed`; values still implausible are flagged `dims-suspect` for review in `/admin`.
 - `/admin`: needs `ADMIN_PASSWORD` in `.env.local` and in the hosting env (unset = admin disabled). Saving sets `products.edited_at`, which makes `pnpm db:seed` leave that product (and its images) alone; clear `edited_at` to let the import overwrite it again.
 - If pnpm downloads time out on this network: `NODE_OPTIONS=--dns-result-order=ipv4first pnpm install --fetch-timeout=900000`
 

@@ -14,11 +14,16 @@ const cardFields = {
   code: products.code,
   typeTh: products.typeTh,
   typeEn: products.typeEn,
+  widthMin: products.widthMin,
   widthMax: products.widthMax,
+  depthMin: products.depthMin,
   depthMax: products.depthMax,
+  heightMin: products.heightMin,
   heightMax: products.heightMax,
-  thumb: sql<string | null>`(select ${productImages.thumbUrl} from ${productImages}
-    where ${productImages.productId} = ${products.id} order by ${productImages.sort} limit 1)`,
+  // Written out with explicit qualifiers: Drizzle leaves column names unqualified in single-table
+  // selects, which would make "id" here resolve to product_images.id.
+  thumb: sql<string | null>`(select pi.thumb_url from product_images pi
+    where pi.product_id = "products"."id" order by pi.sort limit 1)`,
 };
 
 export type ProductCard = Awaited<ReturnType<typeof searchProducts>>[number];
@@ -36,6 +41,11 @@ export async function getCategoryCounts() {
       nameTh: categories.nameTh,
       nameEn: categories.nameEn,
       products: count(products.id),
+      // A representative sketch: prefer products whose image came from a real photo (not a
+      // rendered drawing), then the lowest code, so the pick is stable between builds.
+      cover: sql<string | null>`(select pi.url from product_images pi join products p2 on p2.id = pi.product_id
+        where p2.category_id = "categories"."id" and p2.status = 'published' and pi.sort = 0
+        order by ('image-from-render' = any(p2.flags)), p2.code limit 1)`,
     })
     .from(categories)
     .leftJoin(products, and(eq(products.categoryId, categories.id), published))
@@ -53,7 +63,8 @@ export async function getCategoryTree() {
     .filter((c) => c.parentId === null)
     .map((root) => {
       const children = cats.filter((c) => c.parentId === root.id && c.products > 0);
-      return { ...root, children, total: children.reduce((n, c) => n + c.products, 0) };
+      const cover = root.cover ?? children.find((c) => c.cover)?.cover ?? null;
+      return { ...root, cover, children, total: children.reduce((n, c) => n + c.products, 0) };
     });
 }
 
@@ -69,7 +80,7 @@ export async function getCategory(slug: string) {
   const ids = cat.parentId === null ? root.children.map((c) => c.id) : [cat.id];
   const rows = ids.length
     ? await db
-        .select(cardFields)
+        .select({ ...cardFields, categoryId: products.categoryId })
         .from(products)
         .where(and(published, inArray(products.categoryId, ids)))
         .orderBy(asc(products.code))

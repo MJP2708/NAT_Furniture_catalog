@@ -2,11 +2,19 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { PrintButton } from "@/components/print-button";
 import { ProductGrid } from "@/components/product-grid";
 import { getAllSlugs, getProduct } from "@/lib/catalog";
-import { formatRange } from "@/lib/format";
+import { formatEnvelope, formatRange } from "@/lib/format";
 
-const DIM_LABELS = { w: "กว้าง W", d: "ลึก D", h: "สูง H", dia: "เส้นผ่านศูนย์กลาง Ø", seat_h: "สูงที่นั่ง", arm_h: "สูงท้าวแขน" } as const;
+const DIM_LABELS = {
+  w: ["Width", "กว้าง"],
+  d: ["Depth", "ลึก"],
+  h: ["Height", "สูง"],
+  dia: ["Diameter", "เส้นผ่านศูนย์กลาง"],
+  seat_h: ["Seat height", "สูงที่นั่ง"],
+  arm_h: ["Arm height", "สูงท้าวแขน"],
+} as const;
 
 export async function generateStaticParams() {
   return (await getAllSlugs()).products.map((slug) => ({ slug }));
@@ -26,18 +34,24 @@ export default async function ProductPage({ params }: PageProps<"/p/[slug]">) {
   const data = await getProduct((await params).slug);
   if (!data) notFound();
   const { product: p, category, parent, images, siblings } = data;
+  const envelope = formatEnvelope(p);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8">
-      <nav className="text-sm text-muted">
+    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 print:p-0">
+      {/* Letterhead for the printed spec sheet */}
+      <div className="mb-6 hidden items-baseline justify-between border-b border-ink pb-2 print:flex">
+        <span className="display text-xl tracking-[0.3em]">NAT</span>
+        <span className="eyebrow text-muted">Specification sheet</span>
+      </div>
+      <nav className="no-print eyebrow font-normal text-muted">
         <Link href="/" className="hover:text-accent">
-          หน้าแรก
+          Home
         </Link>
         {parent && (
           <>
             {" / "}
             <Link href={`/c/${parent.slug}`} className="hover:text-accent">
-              {parent.nameTh}
+              {parent.nameEn}
             </Link>
           </>
         )}
@@ -45,75 +59,82 @@ export default async function ProductPage({ params }: PageProps<"/p/[slug]">) {
           <>
             {" / "}
             <Link href={`/c/${category.slug}`} className="hover:text-accent">
-              {category.nameTh}
+              {category.nameEn}
             </Link>
           </>
         )}
       </nav>
 
-      <div className="mt-4 grid gap-8 lg:grid-cols-[1.1fr_1fr]">
-        {/* Photos */}
-        <div className="space-y-3">
+      <div className="mt-6 grid gap-10 lg:grid-cols-[1.15fr_1fr] print:grid-cols-[1fr_1fr]">
+        {/* Drawings */}
+        <div className="space-y-4">
           {images.length ? (
             images.map((im, i) => (
-              <div key={im.id} className="flex items-center justify-center rounded-lg border border-line bg-surface p-4">
-                {/* eslint-disable-next-line @next/next/no-img-element -- pre-sized WebP */}
+              <div
+                key={im.id}
+                className={`flex items-center justify-center bg-panel/60 p-6 sm:p-10 ${i === 0 ? "rounded-tl-[3rem]" : ""}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- pre-sized WebP sketch */}
                 <img
                   src={im.url}
-                  alt={`${p.code} รูปที่ ${i + 1}`}
+                  alt={`${p.code} แบบร่างที่ ${i + 1}`}
                   width={im.width}
                   height={im.height}
                   loading={i === 0 ? "eager" : "lazy"}
-                  className="h-auto max-h-[520px] w-auto max-w-full object-contain"
+                  className="h-auto max-h-140 w-auto max-w-full object-contain mix-blend-multiply"
                 />
               </div>
             ))
           ) : (
-            <div className="flex aspect-square items-center justify-center rounded-lg border border-line bg-surface text-muted">
-              ไม่มีรูป
-            </div>
+            <div className="flex aspect-square items-center justify-center rounded-tl-[3rem] bg-panel/60 text-muted">ไม่มีภาพ</div>
           )}
         </div>
 
-        {/* Spec block */}
+        {/* Specification */}
         <div>
-          <h1 className="text-4xl">{p.code}</h1>
-          {p.typeTh && <p className="mt-1 text-lg">{p.typeTh}</p>}
+          {category && <div className="eyebrow text-muted">{category.nameEn}</div>}
+          <h1 className="display mt-2 text-5xl sm:text-6xl">{p.code}</h1>
+          {p.typeTh && <p className="mt-3 text-xl font-light">{p.typeTh}</p>}
           {p.typeEn && p.typeEn !== p.typeTh && <p className="text-muted">{p.typeEn}</p>}
+          {envelope && <p className="font-num mt-5 text-lg tabular-nums">{envelope}</p>}
 
-          {p.sizes.length > 0 && (
-            <section className="mt-6">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">ขนาด · Dimensions (mm)</h2>
-              <div className="mt-2 space-y-3">
-                {p.sizes.map((s, i) => (
-                  <div key={i} className="rounded-lg border border-line bg-surface p-4">
-                    {p.sizes.length > 1 && <div className="mb-2 text-sm font-medium">{s.label_th}</div>}
-                    <dl className="grid grid-cols-3 gap-2 text-center">
-                      {(Object.keys(DIM_LABELS) as (keyof typeof DIM_LABELS)[])
-                        .filter((k) => s.mm?.[k])
-                        .map((k) => (
-                          <div key={k}>
-                            <dt className="text-xs text-muted">{DIM_LABELS[k]}</dt>
-                            <dd className="text-lg font-semibold tabular-nums">{formatRange(s.mm![k]!)}</dd>
-                          </div>
-                        ))}
-                    </dl>
-                    <p className="mt-2 text-xs text-muted">{s.text_th}</p>
-                  </div>
-                ))}
+          {p.sizes.some((s) => s.mm) && (
+            <section className="mt-8">
+              <h2><span className="eyebrow">Dimensions (cm)</span> <span className="ml-1 text-sm text-muted">ขนาด</span></h2>
+              <div className="mt-3 space-y-4">
+                {p.sizes
+                  .filter((s) => s.mm)
+                  .map((s, i) => (
+                    <div key={i} className="border-t border-ink/60 pt-3">
+                      {p.sizes.length > 1 && <div className="mb-2 text-sm font-medium">{s.label_th}</div>}
+                      <dl className="grid grid-cols-3 gap-4">
+                        {(Object.keys(DIM_LABELS) as (keyof typeof DIM_LABELS)[])
+                          .filter((k) => s.mm![k])
+                          .map((k) => (
+                            <div key={k}>
+                              <dt className="text-xs text-muted">
+                                <span className="eyebrow font-normal">{DIM_LABELS[k][0]}</span> {DIM_LABELS[k][1]}
+                              </dt>
+                              <dd className="display font-num mt-1 text-3xl tabular-nums">{formatRange(s.mm![k]!)}</dd>
+                            </div>
+                          ))}
+                      </dl>
+                      <p className="mt-2 text-xs text-muted">{s.text_th}</p>
+                    </div>
+                  ))}
               </div>
             </section>
           )}
 
           {p.specs.length > 0 && (
-            <section className="mt-6">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">รายละเอียดการผลิต · Construction</h2>
-              <dl className="mt-2 divide-y divide-line rounded-lg border border-line bg-surface">
+            <section className="mt-10">
+              <h2><span className="eyebrow">Construction</span> <span className="ml-1 text-sm text-muted">รายละเอียดการผลิต</span></h2>
+              <dl className="mt-3 border-b border-line">
                 {p.specs.map((row, i) => (
-                  <div key={i} className="grid gap-1 px-4 py-3 sm:grid-cols-[10rem_1fr]">
-                    <dt className="text-sm font-medium">
-                      {row.label_th}
-                      {row.label_en && <div className="text-xs font-normal text-muted">{row.label_en}</div>}
+                  <div key={i} className="grid gap-1 border-t border-line py-3 sm:grid-cols-[10rem_1fr]">
+                    <dt>
+                      <div className="text-sm font-medium">{row.label_th}</div>
+                      {row.label_en && <div className="eyebrow font-normal text-muted">{row.label_en}</div>}
                     </dt>
                     <dd className="text-sm">
                       {row.values_th.map((v, j) => (
@@ -127,24 +148,34 @@ export default async function ProductPage({ params }: PageProps<"/p/[slug]">) {
           )}
 
           {p.featuresTh.length > 0 && (
-            <section className="mt-6">
-              <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">ลักษณะพิเศษ · Features</h2>
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
+            <section className="mt-10">
+              <h2><span className="eyebrow">Features</span> <span className="ml-1 text-sm text-muted">ลักษณะพิเศษ</span></h2>
+              <ul className="mt-3 space-y-2">
                 {p.featuresTh.map((f, i) => (
-                  <li key={i}>{f}</li>
+                  <li key={i} className="flex gap-3 text-sm">
+                    <span className="mt-2.5 h-px w-5 shrink-0 bg-ink" />
+                    <span>
+                      {f}
+                      {p.featuresEn[i] && <span className="block text-muted">{p.featuresEn[i]}</span>}
+                    </span>
+                  </li>
                 ))}
               </ul>
             </section>
           )}
 
-          {p.noteTh && <p className="mt-6 text-xs text-muted">หมายเหตุ: {p.noteTh}</p>}
+          {p.noteTh && <p className="mt-8 text-xs text-muted">หมายเหตุ: {p.noteTh}</p>}
+          <div className="mt-8">
+            <PrintButton />
+          </div>
         </div>
       </div>
 
       {siblings.length > 0 && data.series && (
-        <section className="mt-12">
-          <h2 className="mb-3 text-xl font-semibold">
-            ซีรีส์ {data.series.name} <span className="text-base font-normal text-muted">รุ่นอื่นในซีรีส์เดียวกัน</span>
+        <section className="no-print mt-20">
+          <h2 className="mb-6 flex items-baseline gap-3">
+            <span className="eyebrow text-sm">Series {data.series.name}</span>
+            <span className="text-muted">รุ่นอื่นในซีรีส์เดียวกัน</span>
           </h2>
           <ProductGrid products={siblings} />
         </section>

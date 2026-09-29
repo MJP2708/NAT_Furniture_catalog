@@ -1,32 +1,35 @@
 @import "tailwindcss";
 
-/* NAT tokens (placeholder until NAT's brand guide arrives). Warm gallery canvas so the
-   white-background product photos sit on light tiles and the furniture leads. */
+/* NAT tokens (placeholder until NAT's brand guide arrives). Gallery-white canvas, near-black
+   ink, hairline rules, one navy accent, and a soft pastel wash for feature panels. */
 :root {
   --canvas: #ffffff;
   --surface: #ffffff;
-  --ink: #1d1c1a;
-  --muted: #6b6b6b;
-  --line: #dcdcdc;
-  --accent: #26307a;
+  --panel: #efefef;
+  --ink: #231f20;
+  --muted: #6f6c6a;
+  --line: #d6d4d1;
+  --accent: #2b3990;
   --accent-ink: #ffffff;
+  --wash-a: #f9e3e6;
+  --wash-b: #f4efe7;
+  --wash-c: #d6edf7;
 }
 
 @theme inline {
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
+  --color-panel: var(--panel);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-line: var(--line);
   --color-accent: var(--accent);
   --color-accent-ink: var(--accent-ink);
-  --font-sans: var(--font-thai), ui-sans-serif, system-ui, sans-serif;
-}
-
-h1,
-h2 {
-  font-weight: 300;
-  letter-spacing: 0.02em;
+  --font-sans: var(--font-thai), var(--font-latin), ui-sans-serif, system-ui, sans-serif;
+  /* Latin headings in Montserrat; Thai characters fall through to IBM Plex Sans Thai. */
+  --font-display: var(--font-latin), var(--font-thai), ui-sans-serif, sans-serif;
+  /* Codes and dimensions: Montserrat figures. */
+  --font-num: var(--font-latin), ui-sans-serif, sans-serif;
 }
 
 body {
@@ -34,4 +37,48 @@ body {
   color: var(--ink);
   /* Thai needs extra line height so vowels and tone marks are never clipped. */
   line-height: 1.65;
+}
+
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  line-height: 1.12;
+}
+
+/* Small uppercase label, like the callouts in the printed catalogue. */
+@utility eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Pastel wash used behind hero and feature panels. */
+@utility wash {
+  background:
+    radial-gradient(60% 80% at 12% 30%, var(--wash-a) 0%, transparent 70%),
+    radial-gradient(55% 75% at 92% 20%, var(--wash-c) 0%, transparent 70%),
+    var(--wash-b);
+}
+
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  /* The screen layout is full-height; in print that spills a blank last page. */
+  html,
+  body {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  body {
+    line-height: 1.45;
+  }
 }

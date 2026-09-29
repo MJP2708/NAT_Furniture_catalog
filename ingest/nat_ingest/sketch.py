@@ -33,11 +33,15 @@ def convert(path: str) -> None:
     sketch(img).save(p, "WEBP", quality=80)
 
 
-def main() -> None:
-    paths = sys.argv[1:] or [str(p) for p in sorted((MEDIA / "p").rglob("*.webp"))]
+def sketch_all(paths: list[str] | None = None) -> int:
+    paths = paths or [str(p) for p in sorted((MEDIA / "p").rglob("*.webp"))]
     with ProcessPoolExecutor() as ex:
         list(ex.map(convert, paths, chunksize=16))
-    print(f"sketched {len(paths)} images")
+    return len(paths)
+
+
+def main() -> None:
+    print(f"sketched {sketch_all(sys.argv[1:])} images")
 
 
 if __name__ == "__main__":

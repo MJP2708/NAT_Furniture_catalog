@@ -3,16 +3,16 @@ import Form from "next/form";
 /** Plain GET form to /search, so it works before any JavaScript loads. */
 export function SearchBox({ className = "", defaultValue = "" }: { className?: string; defaultValue?: string }) {
   return (
-    <Form action="/search" className={`flex ${className}`} role="search">
+    <Form action="/search" className={`flex items-center border-b border-ink/70 ${className}`} role="search">
       <input
         name="q"
         defaultValue={defaultValue}
-        placeholder="ค้นหารหัสสินค้า หรือประเภท เช่น FG 1, โซฟา"
+        placeholder="ค้นหารหัสหรือประเภทสินค้า"
         aria-label="ค้นหาสินค้า"
-        className="min-w-0 flex-1 rounded-l-full border border-r-0 border-line bg-surface px-4 py-2 text-sm outline-none focus:border-accent"
+        className="min-w-0 flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-muted"
       />
-      <button type="submit" className="rounded-r-full bg-accent px-4 text-sm font-medium text-accent-ink">
-        ค้นหา
+      <button type="submit" className="eyebrow px-1 py-2 hover:text-accent" aria-label="ค้นหา">
+        Search
       </button>
     </Form>
   );

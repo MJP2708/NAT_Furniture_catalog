@@ -10,7 +10,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "tsx scripts/seed.ts"
+    "db:seed": "tsx scripts/seed.ts",
+    "catalog:pdf": "tsx scripts/export-catalog.ts && cd ingest && uv run python -m nat_ingest.ecatalog"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

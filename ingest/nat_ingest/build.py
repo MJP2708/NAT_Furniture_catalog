@@ -12,7 +12,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from .categorize import CATEGORIES, categorize, derive_tags, seats_of
-from .dims import parse_size
+from .dims import parse_size, sanity_fix
 from .glossary import translate_label, translate_value
 from .paths import BRANDS, MEDIA, OCR, OUT, RAW
 from .parse import ParsedPage, parse_lines
@@ -61,8 +61,13 @@ def xlsx_pages(path: Path) -> list[list[str]]:
 
 def to_record(parsed: ParsedPage, brand: str, rel: str, page: int, kind: str) -> dict:
     sizes = []
+    dim_flags: set[str] = set()
     for label, value in parsed.sizes:
         dims = parse_size(value)
+        if dims:
+            dims, flag = sanity_fix(dims)
+            if flag:
+                dim_flags.add(flag)
         sizes.append({"label_th": label, "label_en": translate_label(label), "text_th": value,
                       "text_en": translate_value(value), "mm": dims})
     primary = next((s["mm"] for s in sizes if s["mm"]), None)
@@ -82,6 +87,7 @@ def to_record(parsed: ParsedPage, brand: str, rel: str, page: int, kind: str) ->
         flags.append("no-dimensions")
     if not category:
         flags.append("no-category")
+    flags += sorted(dim_flags)
     return {
         "brand": brand,
         "code": code,
@@ -138,6 +144,10 @@ def build(with_images: bool) -> list[dict]:
         from .images import attach_images
 
         attach_images(records)
+        from .sketch import sketch_all
+
+        # The public catalog shows line sketches, never the suppliers' photos.
+        sketch_all()
     return records
 
 

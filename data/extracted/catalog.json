@@ -3954,32 +3954,32 @@
     "text_en": "W 80 x D 2180 x H 42.5-96 mm",
     "mm": {
      "w": [
-      80,
-      80
+      800,
+      800
      ],
      "d": [
       2180,
       2180
      ],
      "h": [
-      42,
-      96
+      420,
+      960
      ]
     }
    }
   ],
   "dimensions_mm": {
    "w": [
-    80,
-    80
+    800,
+    800
    ],
    "d": [
     2180,
     2180
    ],
    "h": [
-    42,
-    96
+    420,
+    960
    ]
   },
   "specs": [
@@ -4042,7 +4042,9 @@
     "cache": "p/mass-mono-star-bed/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "slug": "mass-mono-star-bed"
  },
  {
@@ -10948,8 +10950,8 @@
       560
      ],
      "h": [
-      7700,
-      7700
+      770,
+      770
      ]
     }
    }
@@ -10964,8 +10966,8 @@
     560
    ],
    "h": [
-    7700,
-    7700
+    770,
+    770
    ]
   },
   "specs": [
@@ -11008,7 +11010,9 @@
     "cache": "p/patara-lz-06/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "slug": "patara-lz-06"
  },
  {
@@ -12352,110 +12356,14 @@
     "file": "PATARA/OP-T-90.pdf",
     "page": 1,
     "kind": "pdf"
+   },
+   {
+    "file": "PATARA/OP-T-9060.pdf",
+    "page": 1,
+    "kind": "pdf"
    }
   ],
   "slug": "patara-op-t-9060"
- },
- {
-  "brand": "patara",
-  "code": "OP-T-9060",
-  "series": "OP",
-  "type_th": "โต๊ะกลาง",
-  "type_en": "Coffee table",
-  "category": "coffee-tables",
-  "tags": [],
-  "materials": [
-   "glass",
-   "plastic"
-  ],
-  "seats": null,
-  "sizes": [
-   {
-    "label_th": "ขนาด",
-    "label_en": "Size",
-    "text_th": "W 900 XD600 x H 410 ซม.",
-    "text_en": "W 900 XD600 x H 410 cm",
-    "mm": {
-     "w": [
-      9000,
-      9000
-     ],
-     "d": [
-      6000,
-      6000
-     ],
-     "h": [
-      4100,
-      4100
-     ]
-    }
-   }
-  ],
-  "dimensions_mm": {
-   "w": [
-    9000,
-    9000
-   ],
-   "d": [
-    6000,
-    6000
-   ],
-   "h": [
-    4100,
-    4100
-   ]
-  },
-  "specs": [
-   {
-    "label_th": "โครงโต๊ะ",
-    "label_en": "Desk frame",
-    "values_th": [
-     "ขาโต๊ะทำจากไม้ ASH ขึ้นรูป พ่นสีโอ๊คดำ หรือ ย้อมสีธรรมชาติ ส่วนปลายขาติดยางรองพื้นพลาสติกสีดำ",
-     "คานทำจากไม้ ASH ขนาด 40x70 มม.ขึ้นรูป พ่นสีโอ๊คดำ หรือ ย้อมสีธรรมชาติ"
-    ],
-    "values_en": [
-     null,
-     null
-    ]
-   },
-   {
-    "label_th": "แผ่นหน้าโต๊ะ",
-    "label_en": "Front panel",
-    "values_th": [
-     "กระจก Glass Coated สีขาวขุ่นหน้า 10 มม.ลบมุมโค้งทั้ง 4 ด้านและลบขอบกันคม วางอยู่บนโครงพร้อมยางรองกระจกแบบใส อย่างน้อย 4 จุด"
-    ],
-    "values_en": [
-     null
-    ]
-   }
-  ],
-  "features_th": [],
-  "features_en": [],
-  "note_th": "ขนาดของเฟอร์นิเจอร์ที่ระบุ อาจมีค่าแตกต่างจากมาตรฐาน+-ไม่เกิน 2 ซม.",
-  "note_en": "Stated dimensions may vary from standard by +- no more than 2 cm",
-  "source": {
-   "file": "PATARA/OP-T-9060.pdf",
-   "page": 1,
-   "kind": "pdf"
-  },
-  "images": [
-   {
-    "src": "/media/p/patara-op-t-9060-2/0.webp",
-    "thumb": "/media/p/patara-op-t-9060-2/0-sm.webp",
-    "w": 1002,
-    "h": 543,
-    "cache": "p/patara-op-t-9060-2/0.webp"
-   },
-   {
-    "src": "/media/p/patara-op-t-9060-2/1.webp",
-    "thumb": "/media/p/patara-op-t-9060-2/1-sm.webp",
-    "w": 614,
-    "h": 354,
-    "cache": "p/patara-op-t-9060-2/1.webp"
-   }
-  ],
-  "flags": [],
-  "slug": "patara-op-t-9060-2"
  },
  {
   "brand": "patara",
@@ -16945,7 +16853,9 @@
     "cache": "p/perfect-6042-a/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-suspect"
+  ],
   "slug": "perfect-6042-a"
  },
  {
@@ -33520,7 +33430,9 @@
     "cache": "p/perfect-ep-l/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-suspect"
+  ],
   "slug": "perfect-ep-l"
  },
  {
@@ -33624,7 +33536,9 @@
     "cache": "p/perfect-ep-r/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-suspect"
+  ],
   "slug": "perfect-ep-r"
  },
  {
@@ -37577,8 +37491,8 @@
     "text_en": "W 1100 x D 55 x H 77 cm",
     "mm": {
      "w": [
-      11000,
-      11000
+      1100,
+      1100
      ],
      "d": [
       550,
@@ -37593,8 +37507,8 @@
   ],
   "dimensions_mm": {
    "w": [
-    11000,
-    11000
+    1100,
+    1100
    ],
    "d": [
     550,
@@ -37647,7 +37561,9 @@
     "cache": "p/perfect-fg-2/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "slug": "perfect-fg-2"
  },
  {
@@ -62605,12 +62521,12 @@
     "text_en": "Headrest W 320 x H 190 mm",
     "mm": {
      "w": [
-      320,
-      320
+      3200,
+      3200
      ],
      "h": [
-      190,
-      190
+      1900,
+      1900
      ]
     }
    }
@@ -62721,7 +62637,9 @@
     "cache": "p/perfect-503ab/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "slug": "perfect-503ab"
  },
  {
@@ -62796,12 +62714,12 @@
     "text_en": "Headrest W 320 x H 190 mm",
     "mm": {
      "w": [
-      320,
-      320
+      3200,
+      3200
      ],
      "h": [
-      190,
-      190
+      1900,
+      1900
      ]
     }
    }
@@ -62912,7 +62830,9 @@
     "cache": "p/perfect-503ag2/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "slug": "perfect-503ag2"
  },
  {
@@ -72864,16 +72784,16 @@
     "text_en": "W 400 x D 105 x H 95 mm",
     "mm": {
      "w": [
-      400,
-      400
+      4000,
+      4000
      ],
      "d": [
-      105,
-      105
+      1050,
+      1050
      ],
      "h": [
-      95,
-      95
+      950,
+      950
      ]
     }
    }
@@ -73029,7 +72949,9 @@
     "cache": "p/mono-apcb-2412-ctb-410/1.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "also_sources": [
    {
     "file": "mono/APCB-2412-CTB410.pdf",
@@ -73219,16 +73141,16 @@
     "text_en": "W 400 x D 105 x H 95 mm",
     "mm": {
      "w": [
-      400,
-      400
+      4000,
+      4000
      ],
      "d": [
-      105,
-      105
+      1050,
+      1050
      ],
      "h": [
-      95,
-      95
+      950,
+      950
      ]
     }
    }
@@ -73377,7 +73299,9 @@
     "cache": "p/mono-apcb-3212-ctb-410/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "slug": "mono-apcb-3212-ctb-410"
  },
  {
@@ -73425,16 +73349,16 @@
     "text_en": "W 400 x D 105 x H 95 mm",
     "mm": {
      "w": [
-      400,
-      400
+      4000,
+      4000
      ],
      "d": [
-      105,
-      105
+      1050,
+      1050
      ],
      "h": [
-      95,
-      95
+      950,
+      950
      ]
     }
    }
@@ -73583,7 +73507,9 @@
     "cache": "p/mono-apcb-3212-p-ctb-410/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "slug": "mono-apcb-3212-p-ctb-410"
  },
  {
@@ -85107,7 +85033,9 @@
     "cache": "p/mono-clarks200-d-l/1.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-suspect"
+  ],
   "slug": "mono-clarks200-d-l"
  },
  {
@@ -85922,12 +85850,12 @@
     "text_en": "W 104.5 x D 1.6 x H 380 mm",
     "mm": {
      "w": [
-      104,
-      104
+      1040,
+      1040
      ],
      "d": [
-      2,
-      2
+      20,
+      20
      ],
      "h": [
       380,
@@ -85938,12 +85866,12 @@
   ],
   "dimensions_mm": {
    "w": [
-    104,
-    104
+    1040,
+    1040
    ],
    "d": [
-    2,
-    2
+    20,
+    20
    ],
    "h": [
     380,
@@ -85990,7 +85918,9 @@
     "cache": "p/mono-mcr-105/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "also_sources": [
    {
     "file": "mono/CRN-1212.pdf",
@@ -95341,7 +95271,9 @@
     "cache": "p/mono-gd-02-ht/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-suspect"
+  ],
   "slug": "mono-gd-02-ht"
  },
  {
@@ -100219,7 +100151,9 @@
     "cache": "p/mono-jks-652/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-suspect"
+  ],
   "slug": "mono-jks-652"
  },
  {
@@ -100426,7 +100360,9 @@
     "cache": "p/mono-jkss-60/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-suspect"
+  ],
   "slug": "mono-jkss-60"
  },
  {
@@ -100828,32 +100764,32 @@
     "text_en": "W 560 x D 550 x H 790-890 cm",
     "mm": {
      "w": [
-      5600,
-      5600
+      560,
+      560
      ],
      "d": [
-      5500,
-      5500
+      550,
+      550
      ],
      "h": [
-      7900,
-      8900
+      790,
+      890
      ]
     }
    }
   ],
   "dimensions_mm": {
    "w": [
-    5600,
-    5600
+    560,
+    560
    ],
    "d": [
-    5500,
-    5500
+    550,
+    550
    ],
    "h": [
-    7900,
-    8900
+    790,
+    890
    ]
   },
   "specs": [
@@ -100957,6 +100893,7 @@
    }
   ],
   "flags": [
+   "dims-fixed",
    "image-from-render"
   ],
   "slug": "mono-kk-01-a"
@@ -103491,32 +103428,32 @@
     "text_en": "W 600 x D 310 x H 90 mm",
     "mm": {
      "w": [
-      600,
-      600
+      6000,
+      6000
      ],
      "d": [
-      310,
-      310
+      3100,
+      3100
      ],
      "h": [
-      90,
-      90
+      900,
+      900
      ]
     }
    }
   ],
   "dimensions_mm": {
    "w": [
-    600,
-    600
+    6000,
+    6000
    ],
    "d": [
-    310,
-    310
+    3100,
+    3100
    ],
    "h": [
-    90,
-    90
+    900,
+    900
    ]
   },
   "specs": [
@@ -103549,7 +103486,9 @@
     "cache": "p/mono-kb-02-2/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "slug": "mono-kb-02-2"
  },
  {
@@ -113206,6 +113145,7 @@
    }
   ],
   "flags": [
+   "dims-suspect",
    "image-from-render"
   ],
   "slug": "mono-mt-15-osp"
@@ -124863,7 +124803,9 @@
     "cache": "p/mono-puma-dm/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-suspect"
+  ],
   "slug": "mono-puma-dm"
  },
  {
@@ -127437,6 +127379,7 @@
    }
   ],
   "flags": [
+   "dims-suspect",
    "image-from-render"
   ],
   "slug": "mono-swsb-120"
@@ -134432,32 +134375,32 @@
     "text_en": "W 242 x D 60 x H 115 mm and W 322 x D 80 x H 115 mm",
     "mm": {
      "w": [
-      242,
-      242
+      2420,
+      2420
      ],
      "d": [
-      60,
-      60
+      600,
+      600
      ],
      "h": [
-      115,
-      115
+      1150,
+      1150
      ]
     }
    }
   ],
   "dimensions_mm": {
    "w": [
-    242,
-    242
+    2420,
+    2420
    ],
    "d": [
-    60,
-    60
+    600,
+    600
    ],
    "h": [
-    115,
-    115
+    1150,
+    1150
    ]
   },
   "specs": [
@@ -134610,7 +134553,9 @@
     "cache": "p/mono-twy-240-60-twy-320-80/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "slug": "mono-twy-240-60-twy-320-80"
  },
  {
@@ -134852,32 +134797,32 @@
     "text_en": "W 282 x D 160 x H 75-120 mm and W 320 x D 180 x H 75-120 mm",
     "mm": {
      "w": [
-      282,
-      282
+      2820,
+      2820
      ],
      "d": [
-      160,
-      160
+      1600,
+      1600
      ],
      "h": [
-      75,
-      120
+      750,
+      1200
      ]
     }
    }
   ],
   "dimensions_mm": {
    "w": [
-    282,
-    282
+    2820,
+    2820
    ],
    "d": [
-    160,
-    160
+    1600,
+    1600
    ],
    "h": [
-    75,
-    120
+    750,
+    1200
    ]
   },
   "specs": [
@@ -135030,7 +134975,9 @@
     "cache": "p/mono-twy-280-160-re-twy-320-180-re/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "slug": "mono-twy-280-160-re-twy-320-180-re"
  },
  {
@@ -135062,32 +135009,32 @@
     "text_en": "W 282 x D 160 x H 75-120 mm and W 320 x D 180 x H 75-120 mm",
     "mm": {
      "w": [
-      282,
-      282
+      2820,
+      2820
      ],
      "d": [
-      160,
-      160
+      1600,
+      1600
      ],
      "h": [
-      75,
-      120
+      750,
+      1200
      ]
     }
    }
   ],
   "dimensions_mm": {
    "w": [
-    282,
-    282
+    2820,
+    2820
    ],
    "d": [
-    160,
-    160
+    1600,
+    1600
    ],
    "h": [
-    75,
-    120
+    750,
+    1200
    ]
   },
   "specs": [
@@ -135240,7 +135187,9 @@
     "cache": "p/mono-twy-280-160-twy-320-180/0.webp"
    }
   ],
-  "flags": [],
+  "flags": [
+   "dims-fixed"
+  ],
   "slug": "mono-twy-280-160-twy-320-180"
  },
  {
