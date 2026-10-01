@@ -1,7 +1,6 @@
 """Sync catalogue images and PDFs to Neon Object Storage (bucket "nat-media").
 
-  public/media/<path>      -> nat-media/<path>          (p/..., photo/..., brands/...)
-  public/e-catalogue*.pdf  -> nat-media/catalogue/<name>
+  public/media/<path>  -> nat-media/<path>   (p/..., photo/..., brands/..., catalogue/*.pdf)
 
 Only new or changed files are uploaded (compared by MD5 against the object's ETag); objects
 whose local file is gone are deleted. Credentials come from .env.local (AWS_* variables).
@@ -37,10 +36,7 @@ def client():
 
 
 def local_files() -> dict[str, str]:
-    files = {str(p.relative_to(MEDIA)): str(p) for p in MEDIA.rglob("*") if p.is_file()}
-    for pdf in (ROOT / "public").glob("e-catalogue*.pdf"):
-        files[f"catalogue/{pdf.name}"] = str(pdf)
-    return files
+    return {str(p.relative_to(MEDIA)): str(p) for p in MEDIA.rglob("*") if p.is_file()}
 
 
 def remote_etags(s3) -> dict[str, str]:

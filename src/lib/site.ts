@@ -24,7 +24,7 @@ export function media<T extends string | null | undefined>(url: T): T {
   return u as T;
 }
 
-/** A downloadable catalogue PDF (public/<name> locally, catalogue/<name> in the bucket). */
+/** A downloadable catalogue PDF, stored in the bucket under catalogue/ (served via /media/...). */
 export function catalogueFile(name: string) {
-  return MEDIA_BASE ? `${MEDIA_BASE}/catalogue/${name}` : `/${name}`;
+  return MEDIA_BASE ? `${MEDIA_BASE}/catalogue/${name}` : `/media/catalogue/${name}`;
 }

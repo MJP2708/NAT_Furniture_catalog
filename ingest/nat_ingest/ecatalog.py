@@ -431,7 +431,9 @@ def build(color: bool = False) -> Path:
         for cat in space["categories"]:
             toc.append([2, f'{cat["nameEn"]} · {cat["nameTh"]}', page_of_cat[cat["slug"]]])
     doc.pdf.set_toc(toc)
-    out = ROOT / "public" / ("e-catalogue-photo.pdf" if color else "e-catalogue.pdf")
+    # Served from storage like the images: public/media/catalogue/ is synced by nat_ingest.upload
+    out = ROOT / "public" / "media" / "catalogue" / ("e-catalogue-photo.pdf" if color else "e-catalogue.pdf")
+    out.parent.mkdir(parents=True, exist_ok=True)
     doc.pdf.save(out, garbage=4, deflate=True)
     return out
 

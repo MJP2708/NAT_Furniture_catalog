@@ -10,6 +10,8 @@ __pycache__/
 
 # generated images live in Neon Object Storage (nat_ingest.upload); the site serves them via /media/[...path]
 public/media/
+# catalogue PDFs are uploaded to the bucket (catalogue/...) by nat_ingest.upload
+public/e-catalogue*.pdf
 
 # node / next.js
 /node_modules

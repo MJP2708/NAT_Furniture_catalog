@@ -13,3 +13,8 @@ dependencies = [
   "boto3>=1.43.104",
   "python-dotenv>=1.2.3",
 ]
+
+[dependency-groups]
+dev = [
+    "git-filter-repo>=2.47.0",
+]
