@@ -15,7 +15,8 @@
     "crawl:practika": "tsx scripts/crawl-practika.ts",
     "dev:customer": "SITE_VARIANT=customer next dev",
     "start:customer": "SITE_VARIANT=customer next start",
-    "embed:images": "tsx scripts/embed-images.ts"
+    "embed:images": "tsx scripts/embed-images.ts",
+    "db:materials": "tsx scripts/update-materials.ts"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.3.0",

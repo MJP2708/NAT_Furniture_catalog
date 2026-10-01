@@ -37,6 +37,8 @@ type Extracted = {
   slug: string;
 };
 
+let classify: (r: Extracted) => string | null = () => null;
+
 // Products missing any of these need a human look before they go public.
 const REVIEW_FLAGS = new Set(["no-code", "no-category", "no-image", "category-guessed"]);
 
@@ -120,6 +122,7 @@ async function main() {
       tags: r.tags,
       materials: r.materials,
       seats: r.seats,
+      material: classify(r),
       widthMin: w?.[0] ?? null,
       widthMax: w?.[1] ?? null,
       depthMin: dp?.[0] ?? null,
@@ -140,6 +143,18 @@ async function main() {
     };
   };
   const productCols = Object.keys(toProduct(records[0])).filter((c) => c !== "slug");
+  const { classifyMaterial } = await import("../src/lib/material");
+  classify = (r) =>
+    classifyMaterial({
+      category: r.category,
+      type: `${r.type_th ?? ""} ${r.type_en ?? ""} ${r.code}`,
+      specText: [
+        ...r.specs.map((s) => `${s.label_th} ${s.values_th.join(" ")} ${s.values_en.filter(Boolean).join(" ")}`),
+        ...r.features_th,
+        ...r.materials,
+      ].join(" "),
+      source: r.source.file,
+    });
 
   let imageCount = 0;
   let skipped = 0;
@@ -156,6 +171,12 @@ async function main() {
       .returning({ id: products.id, slug: products.slug });
     const ids = new Map(rows.map((r) => [r.slug, r.id]));
     skipped += part.length - rows.length;
+    // Keep photo-search vectors of images that are still there (same product and file).
+    const kept = await db
+      .select({ productId: productImages.productId, url: productImages.url, embedding: sql<string | null>`${productImages.embedding}::text` })
+      .from(productImages)
+      .where(inArray(productImages.productId, [...ids.values()]));
+    const vectorOf = new Map(kept.filter((k) => k.embedding).map((k) => [`${k.productId} ${k.url}`, k.embedding!]));
     await db.delete(productImages).where(inArray(productImages.productId, [...ids.values()]));
     // Only products the upsert touched; admin-edited ones keep their current images.
     const images = part
@@ -168,9 +189,10 @@ async function main() {
           width: im.w,
           height: im.h,
           sort,
+          embedding: vectorOf.has(`${ids.get(r.slug)} ${im.src}`) ? sql`${vectorOf.get(`${ids.get(r.slug)} ${im.src}`)}::vector` : null,
         })),
       );
-    if (images.length) await db.insert(productImages).values(images);
+    if (images.length) await db.insert(productImages).values(images as never);
     imageCount += images.length;
   }
 

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import { montserrat, plexThai } from "@/app/fonts";
+import { Logo } from "@/components/logo";
 import { LanguageSwitch, LanguageSwitchFallback } from "@/components/language-switch";
 import { SearchBox } from "@/components/search-box";
 import { E_CATALOGUE_URL } from "@/lib/copy";
@@ -34,8 +35,8 @@ export function SiteShell({ lang, children }: { lang: Lang; children: React.Reac
       <body className="flex min-h-full flex-col font-sans">
         <header className="no-print sticky top-0 z-20 border-b border-line bg-canvas/95 backdrop-blur">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 sm:px-6 md:flex-nowrap">
-            <Link href={href(lang, "/")} className="display shrink-0 text-2xl tracking-[0.3em]" aria-label="NAT Furniture">
-              NAT
+            <Link href={href(lang, "/")} className="shrink-0" aria-label="NAT Furniture">
+              <Logo className="h-7 sm:h-8" />
             </Link>
             <nav className="hidden items-center gap-5 text-sm lg:flex">
               {SPACES.map(([slug, th, en]) => (
@@ -72,7 +73,7 @@ export function SiteShell({ lang, children }: { lang: Lang; children: React.Reac
         <footer className="no-print mt-20 border-t border-line">
           <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">
             <div>
-              <div className="display text-3xl tracking-[0.3em]">NAT</div>
+              <Logo className="h-10" />
               <p className="mt-2 max-w-sm text-sm text-muted">{ui.footerAbout}</p>
             </div>
             <div>

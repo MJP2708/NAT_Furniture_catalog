@@ -5,6 +5,7 @@ import {
   BorderStyle,
   Document,
   Footer,
+  Header,
   ImageRun,
   type ISectionOptions,
   LevelFormat,
@@ -137,29 +138,20 @@ export async function buildSpecDocx(data: Product, lang: Lang, siteUrl: string):
       margins: { top: o.margins ?? 40, bottom: o.margins ?? 40, left: 60, right: 60 },
     });
 
-  // ---- letterhead
-  const head = new Table({
-    width: { size: CONTENT_W, type: WidthType.DXA },
-    columnWidths: [CONTENT_W / 2, CONTENT_W / 2],
-    layout: TableLayoutType.FIXED,
-    borders: { ...NO_BORDERS, bottom: { style: BorderStyle.SINGLE, size: 12, color: INK } },
-    rows: [
-      new TableRow({
-        children: [
-          cell([para([run("NAT", { size: 20, spacing: 120 }), run("   FURNITURE", { size: 6.5, bold: true, color: MUTED, spacing: 30 })])], {
-            width: CONTENT_W / 2,
-            vAlign: VerticalAlign.BOTTOM,
-          }),
-          cell(
-            [
-              para([run("SPECIFICATION SHEET", { size: 7, bold: true, spacing: 30 })], { align: AlignmentType.RIGHT }),
-              ...(lang === "th" ? [para([run(l.title, { size: 7.5, color: MUTED })], { align: AlignmentType.RIGHT })] : []),
-            ],
-            { width: CONTENT_W / 2, vAlign: VerticalAlign.BOTTOM },
-          ),
-        ],
-      }),
-    ],
+  // ---- letterhead (the company letterhead image goes in the Word page header)
+  const letterhead = await fetch(new URL("/brand/letterhead.jpg", siteUrl))
+    .then((r) => (r.ok ? r.arrayBuffer() : null))
+    .catch(() => null);
+  const lhW = Math.round((CONTENT_W / 1440) * 96); // content width in px at 96 dpi
+  const lhH = Math.round((lhW * 129) / 1044);
+  const header = new Header({
+    children: letterhead
+      ? [new Paragraph({ children: [new ImageRun({ type: "jpg", data: Buffer.from(letterhead), transformation: { width: lhW, height: lhH } })] })]
+      : [para([run("NAT FURNITURE CO., LTD.", { size: 12, bold: true })])],
+  });
+  const head = new Paragraph({
+    children: [run("SPECIFICATION SHEET", { size: 7, bold: true, spacing: 30 }), ...(lang === "th" ? [run(`   ${l.title}`, { size: 7.5, color: MUTED })] : [])],
+    border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: INK, space: 3 } },
   });
 
   // ---- title
@@ -313,9 +305,11 @@ export async function buildSpecDocx(data: Product, lang: Lang, siteUrl: string):
     properties: {
       page: {
         size: { width: PAGE_W, height: PAGE_H },
-        margin: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN, footer: 360 },
+        // top margin leaves room for the letterhead in the page header
+        margin: { top: MARGIN + 1250, bottom: MARGIN, left: MARGIN, right: MARGIN, header: 400, footer: 360 },
       },
     },
+    headers: { default: header },
     footers: { default: footer },
     children: [head, ...title, new Paragraph({ spacing: { after: 120 }, children: [] }), media, ...construction, ...featureBlock, ...about],
   };

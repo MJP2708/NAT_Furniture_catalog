@@ -34,6 +34,7 @@ ACCENT = (0.169, 0.224, 0.565)
 LINE = (0.2, 0.2, 0.2)
 
 FONTS = ROOT / "ingest" / "fonts"
+LETTERHEAD = ROOT / "public" / "brand" / "letterhead.jpg"
 CSS = """
 @font-face { font-family: ml; src: url(Montserrat-Light.ttf); }
 @font-face { font-family: mr; src: url(Montserrat-Regular.ttf); }
@@ -275,20 +276,23 @@ def build(color: bool = False) -> Path:
             page_of_cat.setdefault(entry[2]["slug"], n)
             page_of_code += [(p["code"], n) for p in entry[3]]
 
-    # ---- 1. cover
+    # ---- 1. cover: company letterhead on top, then the catalogue title band
     page = doc.page()
-    _band(page, 0, H * 0.38)
-    doc.html(page, (M, 54, W - M, 140),
-             '<div class="display" style="font-size:66pt; letter-spacing:24pt; color:#ffffff">NAT</div>')
-    doc.html(page, (M, 140, W - M, 170),
-             '<div class="eyebrow" style="font-size:9pt; letter-spacing:4pt; color:#ffffff">FURNITURE&#160;&#160;·&#160;&#160;E-CATALOGUE</div>')
-    doc.html(page, (W - M - 260, 150, W - M, 200),
+    lh_h = (W - 2 * M) * 129 / 1044
+    page.insert_image(pymupdf.Rect(M, 22, W - M, 22 + lh_h), filename=str(LETTERHEAD))
+    band_top = 22 + lh_h + 14
+    _band(page, band_top, H * 0.46)
+    doc.html(page, (M, band_top + 26, W - M, band_top + 90),
+             '<div class="display" style="font-size:44pt; color:#ffffff">E-Catalogue</div>')
+    doc.html(page, (M, band_top + 86, W - M, band_top + 112),
+             '<div class="thl" style="font-size:13pt; color:#d9d6d1">แคตตาล็อกเฟอร์นิเจอร์</div>')
+    doc.html(page, (W - M - 260, band_top + 92, W - M, band_top + 120),
              f'<div class="num" style="text-align:right; font-size:9pt; color:#bdbab5">{date.today():%Y}&#160;&#160;·&#160;&#160;{total:,} items</div>')
-    page.draw_rect(pymupdf.Rect(M, H * 0.38 - 3, M + 60, H * 0.38), color=None, fill=ACCENT)
+    page.draw_rect(pymupdf.Rect(M, H * 0.46 - 3, M + 60, H * 0.46), color=None, fill=ACCENT)
     floor, slot = H - 92, (W - 2 * M) / 4
     for k, slug in enumerate(("armchairs", "office-chairs", "meeting-tables", "sofas")):
         x0 = M + k * slot
-        doc.sketch(page, covers.get(slug), (x0 + 16, H * 0.38 + 40, x0 + slot - 16, floor), max_px=700)
+        doc.sketch(page, covers.get(slug), (x0 + 16, H * 0.46 + 26, x0 + slot - 16, floor), max_px=700)
     doc.rule(page, M, floor + 6, W - M, 0.6, INK)
     doc.html(page, (M, floor + 14, W - M, H - 30),
              '<div><span class="display" style="font-size:15pt">Furniture for every space</span>'
@@ -408,8 +412,10 @@ def build(color: bool = False) -> Path:
     # ---- 5. back cover
     page = doc.page()
     _band(page, 0, H)
-    doc.html(page, (M, 70, W - M, 160), '<div class="display" style="font-size:54pt; letter-spacing:20pt; color:#ffffff">NAT</div>'
-                                        '<div class="eyebrow" style="font-size:8pt; letter-spacing:4pt; color:#bdbab5; margin-top:6pt">FURNITURE</div>')
+    # company letterhead on a white panel
+    lh_h = (W - 2 * M - 40) * 129 / 1044
+    page.draw_rect(pymupdf.Rect(M, 60, W - M, 60 + lh_h + 40), color=None, fill=(1, 1, 1))
+    page.insert_image(pymupdf.Rect(M + 20, 80, W - M - 20, 80 + lh_h), filename=str(LETTERHEAD))
     page.draw_rect(pymupdf.Rect(M, 200, M + 60, 203), color=None, fill=ACCENT)
     doc.html(page, (M, 220, W * 0.55, 420),
              '<p style="color:#ffffff; font-size:9pt">ขนาดสินค้าอ้างอิงจากแผ่นสเปกของผู้ผลิต อาจคลาดเคลื่อนเล็กน้อย '

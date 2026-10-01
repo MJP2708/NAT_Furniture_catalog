@@ -9,6 +9,8 @@ import { FLAGS, type ListFilter, nextInList, productImagesOf } from "@/lib/admin
 import { requireAdmin } from "@/lib/admin-session";
 
 import { ImageManager } from "./image-manager";
+import type { ProductPayload } from "@/app/(admin)/admin/actions";
+
 import { ProductEditor } from "./product-editor";
 
 export const metadata = { title: "แก้ไขสินค้า" };
@@ -146,6 +148,7 @@ async function Editor({ params, searchParams }: Pick<PageProps<"/admin/p/[slug]"
             summaryTh: p.summaryTh ?? "",
             summaryEn: p.summaryEn ?? "",
             categoryId: p.categoryId,
+            material: (p.material as ProductPayload["material"]) ?? null,
             status: p.status,
             noteTh: p.noteTh ?? "",
             noteEn: p.noteEn ?? "",

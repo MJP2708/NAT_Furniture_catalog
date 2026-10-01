@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { Logo } from "@/components/logo";
+
 import { logout } from "@/app/(admin)/admin/actions";
 
 const NAV = [
@@ -14,7 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <header className="sticky top-0 z-20 border-b border-line bg-canvas">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-1 px-4 py-3 sm:px-6 md:flex-nowrap">
           <Link href="/admin" className="flex items-baseline gap-2">
-            <span className="display text-xl tracking-[0.3em]">NAT</span>
+            <Logo className="h-6" />
             <span className="eyebrow text-muted">Admin</span>
           </Link>
           <nav className="scrollbar-none -mx-4 order-last flex w-[calc(100%+2rem)] items-center gap-1 overflow-x-auto px-3 text-sm whitespace-nowrap md:order-none md:mx-0 md:w-auto md:px-0">

@@ -16,6 +16,7 @@ const cardFields = {
   typeTh: products.typeTh,
   typeEn: products.typeEn,
   materials: products.materials,
+  material: products.material,
   widthMin: products.widthMin,
   widthMax: products.widthMax,
   depthMin: products.depthMin,
@@ -155,6 +156,38 @@ export async function searchProducts(q: string) {
       asc(products.code),
     )
     .limit(60);
+  return cards(rows);
+}
+
+/** Count and a representative image per main material (home page tiles). */
+export async function getMaterialCounts() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CATALOG_TAG);
+  const rows = await db
+    .select({
+      material: products.material,
+      count: count(),
+      cover: sql<string | null>`(select pi.url from product_images pi join products p2 on p2.id = pi.product_id
+        where p2.material = "products"."material" and p2.status = 'published' and pi.sort = 0
+        order by ('image-from-render' = any(p2.flags)), p2.code limit 1)`,
+    })
+    .from(products)
+    .where(and(published, sql`${products.material} is not null`))
+    .groupBy(products.material);
+  return rows.map((r) => ({ ...r, cover: media(r.cover) }));
+}
+
+/** All published products of one main material, with their category, for /material/[m]. */
+export async function getMaterialProducts(material: string) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CATALOG_TAG);
+  const rows = await db
+    .select({ ...cardFields, categoryId: products.categoryId })
+    .from(products)
+    .where(and(published, eq(products.material, material)))
+    .orderBy(asc(products.code));
   return cards(rows);
 }
 

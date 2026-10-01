@@ -83,6 +83,8 @@ export const products = pgTable(
     tags: text().array().notNull().default(sql`'{}'::text[]`),
     materials: text().array().notNull().default(sql`'{}'::text[]`),
     seats: smallint(),
+    /** Main material group for case goods (steel | wood); see lib/material.ts */
+    material: text(),
     // Overall envelope in mm across all size sets, for range facets.
     widthMin: integer(),
     widthMax: integer(),
@@ -113,6 +115,7 @@ export const products = pgTable(
     index().on(t.categoryId),
     index().on(t.brandId),
     index().on(t.seriesId),
+    index().on(t.categoryId, t.material),
     index().using("gin", t.tags),
     index().using("gin", t.materials),
     index("products_code_norm_trgm_idx").using("gin", sql`${t.codeNorm} gin_trgm_ops`),

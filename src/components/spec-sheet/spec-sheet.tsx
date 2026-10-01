@@ -77,15 +77,13 @@ export function SpecSheet({ data, lang, autoPrint }: { data: Product; lang: Lang
 
   return (
     <article className="sheet shadow-[0_2px_24px_rgba(0,0,0,0.12)]">
-      {/* Letterhead */}
-      <header className="flex items-end justify-between border-b-2 border-ink pb-[2.5mm]">
-        <div className="flex items-baseline gap-[3mm]">
-          <span className="display text-[20pt] leading-none tracking-[0.32em]">NAT</span>
-          <span className="eyebrow text-[6.5pt] text-muted">Furniture</span>
-        </div>
-        <div className="text-right">
-          <div className="eyebrow text-[7pt]">Specification sheet</div>
-          {lang === "th" && <div className="text-[7.5pt] text-muted">{l.title}</div>}
+      {/* Company letterhead */}
+      <header>
+        {/* eslint-disable-next-line @next/next/no-img-element -- company letterhead */}
+        <img src="/brand/letterhead.jpg" alt="NAT Furniture Co., Ltd." className="block h-auto w-full" />
+        <div className="mt-[2mm] flex items-baseline justify-between border-t border-ink pt-[1.5mm]">
+          <span className="eyebrow text-[7pt]">Specification sheet</span>
+          {lang === "th" && <span className="text-[7.5pt] text-muted">{l.title}</span>}
         </div>
       </header>
 

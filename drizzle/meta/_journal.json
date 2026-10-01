@@ -36,6 +36,13 @@
       "when": 1790827828835,
       "tag": "0004_image_embedding_index",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790847607445,
+      "tag": "0005_product_material",
+      "breakpoints": true
     }
   ]
 }

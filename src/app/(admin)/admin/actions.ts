@@ -35,6 +35,7 @@ const Payload = z.object({
   summaryTh: z.string().trim().max(4000).nullable().transform((s) => s || null),
   summaryEn: z.string().trim().max(4000).nullable().transform((s) => s || null),
   categoryId: z.number().int().positive().nullable(),
+  material: z.enum(["steel", "wood"]).nullable(),
   status: z.enum(["published", "review", "hidden"]),
   noteTh: optText,
   noteEn: optText,

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 
 import { type FormState, type ProductPayload, saveProduct } from "@/app/(admin)/admin/actions";
+import { MATERIAL_GROUPS, MATERIAL_KEYS } from "@/lib/material";
 
 type Category = { id: number; label: string };
 type Dim = "w" | "d" | "h" | "dia" | "seat_h" | "arm_h";
@@ -67,6 +68,20 @@ export function ProductEditor({
         </Field>
         <Field label="Description EN">
           <textarea className={input} rows={4} value={p.summaryEn ?? ""} onChange={(e) => set("summaryEn", e.target.value)} />
+        </Field>
+        <Field label="วัสดุหลัก · Main material">
+          <select
+            className={input}
+            value={p.material ?? ""}
+            onChange={(e) => set("material", (e.target.value || null) as ProductPayload["material"])}
+          >
+            <option value="">— ไม่ระบุ —</option>
+            {MATERIAL_KEYS.map((m) => (
+              <option key={m} value={m}>
+                {MATERIAL_GROUPS[m].th} · {MATERIAL_GROUPS[m].en}
+              </option>
+            ))}
+          </select>
         </Field>
         <Field label="หมวดหมู่ · Category">
           <select

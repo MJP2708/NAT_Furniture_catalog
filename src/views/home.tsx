@@ -1,7 +1,8 @@
 import Link from "next/link";
 
 import { SearchBox } from "@/components/search-box";
-import { getCategoryTree } from "@/lib/catalog";
+import { getCategoryTree, getMaterialCounts } from "@/lib/catalog";
+import { MATERIAL_GROUPS, MATERIAL_KEYS } from "@/lib/material";
 import { E_CATALOGUE_URL, SPACE_COPY } from "@/lib/copy";
 import { href, type Lang, t } from "@/lib/i18n";
 
@@ -17,7 +18,8 @@ const HERO_SLOTS: React.CSSProperties[] = [
 
 export async function HomeView({ lang }: { lang: Lang }) {
   const ui = t(lang);
-  const tree = (await getCategoryTree()).filter((r) => r.total > 0);
+  const [fullTree, materialCounts] = await Promise.all([getCategoryTree(), getMaterialCounts()]);
+  const tree = fullTree.filter((r) => r.total > 0);
   const total = tree.reduce((n, r) => n + r.total, 0);
   const subcats = tree.flatMap((r) => r.children);
   const heroSketches = HERO_CATEGORIES.map((slug) => subcats.find((c) => c.slug === slug)?.cover)
@@ -78,6 +80,39 @@ export async function HomeView({ lang }: { lang: Lang }) {
             );
           })}
         </ol>
+      </section>
+
+      {/* Browse by material */}
+      <section className="border-t border-line">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+          <div className="eyebrow text-muted">Materials</div>
+          <h2 className="display mt-2 text-3xl sm:text-4xl">{lang === "en" ? "Browse by material" : "เลือกตามวัสดุ"}</h2>
+          <ul className="mt-8 grid max-w-2xl grid-cols-2 gap-x-6 gap-y-8">
+            {MATERIAL_KEYS.map((k) => {
+              const row = materialCounts.find((r) => r.material === k);
+              if (!row) return null;
+              return (
+                <li key={k}>
+                  <Link href={href(lang, `/material/${k}`)} className="group block">
+                    <div className="flex aspect-square items-center justify-center bg-panel/60 p-4">
+                      {row.cover && (
+                        // eslint-disable-next-line @next/next/no-img-element -- material sample
+                        <img src={row.cover.replace(/\.webp$/, "-sm.webp")} alt="" loading="lazy" className="max-h-full max-w-full object-contain mix-blend-multiply transition duration-300 group-hover:scale-[1.04]" />
+                      )}
+                    </div>
+                    <div className="border-t border-ink/60 pt-2">
+                      <div className="font-medium group-hover:text-accent">{MATERIAL_GROUPS[k][lang]}</div>
+                      <div className="flex justify-between text-sm text-muted">
+                        <span>{lang === "en" ? MATERIAL_GROUPS[k].th : MATERIAL_GROUPS[k].en}</span>
+                        <span className="font-num tabular-nums">{row.count}</span>
+                      </div>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </section>
 
       {/* One section per space */}
