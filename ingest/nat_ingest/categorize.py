@@ -17,6 +17,7 @@ CATEGORIES: list[tuple[str, str | None, str, str]] = [
     ("meeting-tables", "office", "โต๊ะประชุม", "Meeting tables"),
     ("multipurpose-tables", "office", "โต๊ะเอนกประสงค์", "Multipurpose & folding tables"),
     ("storage", "office", "ตู้เอกสาร & ตู้ลิ้นชัก", "Storage & cabinets"),
+    ("shelving", "office", "ชั้นวางของ", "Shelving"),
     ("counters", "office", "เคาน์เตอร์", "Counters & reception"),
     ("partitions", "office", "แผงกั้น & อุปกรณ์", "Partitions & accessories"),
     ("phone-booths", "office", "ตู้โทรศัพท์ & พ็อด", "Phone booths & pods"),
@@ -29,10 +30,12 @@ CATEGORIES: list[tuple[str, str | None, str, str]] = [
     ("stools", "living", "สตูล & ม้านั่ง", "Stools & benches"),
     ("dining", None, "ห้องอาหาร", "Dining"),
     ("dining-tables", "dining", "โต๊ะอาหาร", "Dining tables"),
+    ("kitchen", "dining", "ชุดครัว", "Kitchen units"),
     ("dining-chairs", "dining", "เก้าอี้อาหาร", "Dining chairs"),
     ("bar", "dining", "โต๊ะบาร์ & เก้าอี้บาร์", "Bar tables & stools"),
     ("bedroom", None, "ห้องนอน", "Bedroom"),
     ("beds", "bedroom", "เตียงนอน & ชุดเครื่องนอน", "Beds & bedding"),
+    ("wardrobes", "bedroom", "ตู้เสื้อผ้า", "Wardrobes"),
 ]
 
 # First matching rule wins. Patterns run against "<type> | <code>".

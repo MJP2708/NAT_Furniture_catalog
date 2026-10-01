@@ -6,9 +6,9 @@ import re
 NUM = r"(\d+(?:[.,]\d+)?)"
 RANGE = rf"{NUM}(?:\s*[-–~]\s*{NUM})?"
 AXES = {
-    "w": r"(?:กว้าง|กว้า|กวาง|ก\.|W\.?|Width)",
-    "d": r"(?:ลึก|ลก|ยาว|D\.?|Depth|L\.?)",
-    "h": r"(?:สูง|สง|H\.?|Height)",
+    "w": r"(?:กว้าง|กว้า|กวาง|ก\.|ก(?=\s*\d)|W\.?|Width)",
+    "d": r"(?:ลึก|ลก|ยาว|D\.?|Depth|L\.?|ล(?=\s*\d))",
+    "h": r"(?:สูง|สง|H\.?|Height|ส(?=\s*\d))",
     "dia": r"(?:ø|Ø|⌀|เส้นผ่า(?:น)?ศูนย์กลาง|Dia\.?|DIA\.?)",
 }
 UNIT_MM = re.compile(r"(มม|mm)", re.I)
@@ -39,6 +39,9 @@ def parse_size(text: str) -> dict | None:
                 found[axis] = [lo, hi if hi is not None else lo]
 
     biggest = max(v for pair in found.values() for v in pair)
+    if biggest <= 5 and any(v % 1 for pair in found.values() for v in pair):
+        # "1.20 x 0.60 x 0.75" -- metres
+        return {k: [round(v * 1000) for v in pair] for k, pair in found.items()}
     if UNIT_MM.search(text):
         factor = 1
     elif UNIT_CM.search(text):

@@ -14,6 +14,9 @@ export default async function SheetLayout({ children, params }: LayoutProps<"/sh
   const { lang } = await params;
   return (
     <html lang={lang === "en" ? "en" : "th"} className={`${plexThai.variable} ${montserrat.variable} antialiased`}>
+      <head>
+        <style>{"@page { size: A4; margin: 0; }"}</style>
+      </head>
       <body className="bg-panel font-sans">{children}</body>
     </html>
   );

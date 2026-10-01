@@ -68,14 +68,7 @@ body {
   margin: 12mm;
 }
 
-/* The spec sheet draws its own margins inside an exact A4 box. */
-@page sheet {
-  size: A4;
-  margin: 0;
-}
-.sheet {
-  page: sheet;
-}
+
 
 @media print {
   .no-print {
@@ -98,8 +91,9 @@ body {
 .sheet {
   --fit: 1;
   width: 210mm;
-  height: 297mm;
-  padding: 11mm 12mm 9mm;
+  /* a hair under A4 so rounding in any browser can't spill a blank second page */
+  height: 296mm;
+  padding: 11mm 13mm 9mm;
   background: #fff;
   color: var(--ink);
   display: flex;
@@ -121,10 +115,10 @@ body {
 .sheet .fs-sm { font-size: calc(var(--fit) * 7.5pt); }
 .sheet .fs-md { font-size: calc(var(--fit) * 8.5pt); }
 .sheet .fs-lg { font-size: calc(var(--fit) * 11pt); }
-.sheet .fs-code { font-size: calc(var(--fit) * 30pt); }
-.sheet .fs-dim { font-size: calc(var(--fit) * 12pt); }
-.sheet .drawing { height: calc(var(--fit) * 92mm); }
-.sheet .drawing-sm { height: calc(var(--fit) * 24mm); }
+.sheet .fs-code { font-size: calc(var(--fit) * 26pt); }
+.sheet .fs-dim { font-size: calc(var(--fit) * 9.5pt); }
+.sheet .drawing { height: calc(var(--fit) * 62mm); }
+.sheet .drawing-sm { height: calc(var(--fit) * 17mm); }
 .sheet .spec-cols { column-gap: 7mm; }
 .sheet .spec-row { break-inside: avoid; }
 
@@ -135,8 +129,14 @@ body {
     background: #fff !important;
   }
   .sheet-page {
+    display: block !important;
+    min-height: 0 !important;
     padding: 0 !important;
     background: #fff !important;
+  }
+  .sheet {
+    break-after: avoid;
+    break-inside: avoid;
   }
   .sheet {
     box-shadow: none !important;

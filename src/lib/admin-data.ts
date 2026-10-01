@@ -4,6 +4,7 @@ import { and, asc, count, desc, eq, ilike, inArray, isNull, or, sql, type SQL } 
 
 import { db } from "@/db";
 import { brands, categories, productImages, products } from "@/db/schema";
+import { media } from "@/lib/site";
 
 /** Import warnings, explained for staff. `hidden` ones keep the product off the site until fixed. */
 export const FLAGS: Record<string, { th: string; help: string; hidden?: boolean; order: number }> = {
@@ -94,7 +95,7 @@ export async function listProducts(f: ListFilter) {
       .innerJoin(brands, eq(brands.id, products.brandId))
       .where(where),
   ]);
-  return { rows, total, page, pages: Math.max(1, Math.ceil(total / PAGE_SIZE)) };
+  return { rows: rows.map((r) => ({ ...r, thumb: media(r.thumb) })), total, page, pages: Math.max(1, Math.ceil(total / PAGE_SIZE)) };
 }
 
 /** The product after `slug` in the same filtered list (for "save and next"). */
@@ -152,9 +153,10 @@ export async function categoriesWithCounts() {
 }
 
 export async function productImagesOf(productId: number) {
-  return db
+  const rows = await db
     .select({ id: productImages.id, url: productImages.url, width: productImages.width, height: productImages.height, sort: productImages.sort })
     .from(productImages)
     .where(eq(productImages.productId, productId))
     .orderBy(asc(productImages.sort));
+  return rows.map((r) => ({ ...r, url: media(r.url) }));
 }

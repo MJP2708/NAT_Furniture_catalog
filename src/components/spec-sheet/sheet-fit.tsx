@@ -24,10 +24,6 @@ export function SheetFit({ children, autoPrint }: { children: React.ReactNode; a
       if (overflows()) {
         // Long sheets: shrink until everything fits on the page.
         while (overflows() && f > 0.58) set((f -= 0.03));
-      } else {
-        // Short sheets: grow the drawing and type to use the page, then step back once too far.
-        while (!overflows() && f < 1.35) set((f += 0.03));
-        if (overflows()) set((f -= 0.03));
       }
       sheet.dataset.fit = String(Math.round(f * 100) / 100);
     };

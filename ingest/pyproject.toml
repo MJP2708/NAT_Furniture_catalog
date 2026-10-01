@@ -10,4 +10,6 @@ dependencies = [
   "openpyxl>=3.1.5",
   "pymupdf>=1.28.2",
   "opencv-python-headless>=5.0.0.93",
+  "boto3>=1.43.104",
+  "python-dotenv>=1.2.3",
 ]

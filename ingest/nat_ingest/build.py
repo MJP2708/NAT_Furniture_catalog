@@ -23,6 +23,13 @@ SKIP_FILE = re.compile(r"^ราคา")  # price sheets; prices are entered in 
 
 
 def slugify(s: str) -> str:
+    if re.search(r"[\u0E00-\u0E7F]", s):
+        # Thai names become readable ASCII addresses: "ตู้เก็บเอกสาร" -> "tu-kep-ekkasan"
+        from pythainlp.tokenize import word_tokenize
+        from pythainlp.transliterate import romanize
+
+        s = " ".join(romanize(w, engine="royin") if re.search(r"[\u0E00-\u0E7F]", w) else w
+                     for w in word_tokenize(s, engine="newmm") if w.strip())
     s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode()
     s = re.sub(r"[^A-Za-z0-9]+", "-", s).strip("-").lower()
     return s or "item"
@@ -139,8 +146,9 @@ def build(with_images: bool) -> list[dict]:
                 records.append(to_record(parsed, brand, rel, i, "xlsx"))
 
     # Suppliers imported from their websites
-    from . import web_practika, web_thaitaiyo
+    from . import web_natdocs, web_practika, web_thaitaiyo
 
+    records += web_natdocs.records()
     records += web_practika.records()
     records += web_thaitaiyo.records()
 

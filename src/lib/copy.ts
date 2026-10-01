@@ -1,4 +1,4 @@
-import { isCustomerSite } from "@/lib/site";
+import { catalogueFile, isCustomerSite } from "@/lib/site";
 
 /** Short bilingual introductions for the four spaces (keyed by top-level category slug). */
 export const SPACE_COPY: Record<string, { th: string; en: string }> = {
@@ -22,4 +22,4 @@ export const SPACE_COPY: Record<string, { th: string; en: string }> = {
 
 
 /** The customer site links to the photo edition of the catalogue. */
-export const E_CATALOGUE_URL = isCustomerSite ? "/e-catalogue-photo.pdf" : "/e-catalogue.pdf";
+export const E_CATALOGUE_URL = catalogueFile(isCustomerSite ? "e-catalogue-photo.pdf" : "e-catalogue.pdf");

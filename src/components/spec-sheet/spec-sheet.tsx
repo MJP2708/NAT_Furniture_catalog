@@ -1,5 +1,3 @@
-import QRCode from "qrcode";
-
 import { getProduct } from "@/lib/catalog";
 import { formatEnvelope, formatRange } from "@/lib/format";
 import { type Lang, pick } from "@/lib/i18n";
@@ -21,7 +19,6 @@ const L = {
     about: "รายละเอียดสินค้า",
     note: "หมายเหตุ",
     overall: "ขนาดรวม",
-    qr: "สแกนดูข้อมูลล่าสุด",
     disclaimer: "ขนาดอ้างอิงจากแผ่นสเปกของผู้ผลิต อาจคลาดเคลื่อนเล็กน้อย วัสดุและสีอาจเปลี่ยนแปลงได้โดยไม่ต้องแจ้งให้ทราบล่วงหน้า",
     printed: "พิมพ์เมื่อ",
     locale: "th-TH",
@@ -35,7 +32,6 @@ const L = {
     about: "About this product",
     note: "Note",
     overall: "Overall",
-    qr: "Scan for the latest details",
     disclaimer: "Sizes are from the manufacturer's specification sheet and may vary slightly. Materials and finishes may change without notice.",
     printed: "Printed",
     locale: "en-GB",
@@ -57,11 +53,10 @@ function SectionTitle({ lang, en, th }: { lang: Lang; en: string; th: string }) 
   );
 }
 
-export async function SpecSheet({ data, lang, autoPrint }: { data: Product; lang: Lang; autoPrint: boolean }) {
+export function SpecSheet({ data, lang, autoPrint }: { data: Product; lang: Lang; autoPrint: boolean }) {
   const l = L[lang];
   const { product: p, category, parent, images } = data;
   const url = `${SITE}${lang === "en" ? "/en" : ""}/p/${p.slug}`;
-  const qr = await QRCode.toString(url, { type: "svg", margin: 0, errorCorrectionLevel: "M", color: { dark: "#231f20", light: "#ffffff" } });
   const type = pick(lang, p.typeTh ?? "", p.typeEn).value;
   const secondType = lang === "th" && p.typeEn && p.typeEn !== p.typeTh ? p.typeEn : null;
   const summary = pick(lang, p.summaryTh ?? "", p.summaryEn).value;
@@ -103,9 +98,9 @@ export async function SpecSheet({ data, lang, autoPrint }: { data: Product; lang
             {type && <div className="fs-lg mt-[1.5mm]">{type}</div>}
             {secondType && <div className="fs-sm text-muted">{secondType}</div>}
           </div>
-          <div className="flex shrink-0 items-center gap-[2.5mm]">
-            <div className="fs-xs max-w-[26mm] text-right leading-snug text-muted">{l.qr}</div>
-            <div className="h-[19mm] w-[19mm]" dangerouslySetInnerHTML={{ __html: qr }} />
+          <div className="shrink-0 text-right">
+            <div className="eyebrow fs-xs text-muted">Model</div>
+            <div className="font-num fs-lg">{p.code}</div>
           </div>
         </section>
 

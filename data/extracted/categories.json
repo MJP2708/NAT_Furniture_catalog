@@ -84,115 +84,136 @@
   "sort": 11
  },
  {
+  "slug": "shelving",
+  "parent": "office",
+  "name_th": "ชั้นวางของ",
+  "name_en": "Shelving",
+  "sort": 12
+ },
+ {
   "slug": "counters",
   "parent": "office",
   "name_th": "เคาน์เตอร์",
   "name_en": "Counters & reception",
-  "sort": 12
+  "sort": 13
  },
  {
   "slug": "partitions",
   "parent": "office",
   "name_th": "แผงกั้น & อุปกรณ์",
   "name_en": "Partitions & accessories",
-  "sort": 13
+  "sort": 14
  },
  {
   "slug": "phone-booths",
   "parent": "office",
   "name_th": "ตู้โทรศัพท์ & พ็อด",
   "name_en": "Phone booths & pods",
-  "sort": 14
+  "sort": 15
  },
  {
   "slug": "living",
   "parent": null,
   "name_th": "ห้องนั่งเล่น",
   "name_en": "Living",
-  "sort": 15
+  "sort": 16
  },
  {
   "slug": "sofas",
   "parent": "living",
   "name_th": "โซฟา",
   "name_en": "Sofas",
-  "sort": 16
+  "sort": 17
  },
  {
   "slug": "sofa-beds",
   "parent": "living",
   "name_th": "โซฟาเบด & เดย์เบด",
   "name_en": "Sofa beds & daybeds",
-  "sort": 17
+  "sort": 18
  },
  {
   "slug": "recliners",
   "parent": "living",
   "name_th": "โซฟาปรับนอน & เก้าอี้พักผ่อน",
   "name_en": "Recliners & lounge chairs",
-  "sort": 18
+  "sort": 19
  },
  {
   "slug": "armchairs",
   "parent": "living",
   "name_th": "อาร์มแชร์ & เก้าอี้รับแขก",
   "name_en": "Armchairs & accent chairs",
-  "sort": 19
+  "sort": 20
  },
  {
   "slug": "coffee-tables",
   "parent": "living",
   "name_th": "โต๊ะกลาง & โต๊ะข้าง",
   "name_en": "Coffee & side tables",
-  "sort": 20
+  "sort": 21
  },
  {
   "slug": "stools",
   "parent": "living",
   "name_th": "สตูล & ม้านั่ง",
   "name_en": "Stools & benches",
-  "sort": 21
+  "sort": 22
  },
  {
   "slug": "dining",
   "parent": null,
   "name_th": "ห้องอาหาร",
   "name_en": "Dining",
-  "sort": 22
+  "sort": 23
  },
  {
   "slug": "dining-tables",
   "parent": "dining",
   "name_th": "โต๊ะอาหาร",
   "name_en": "Dining tables",
-  "sort": 23
+  "sort": 24
+ },
+ {
+  "slug": "kitchen",
+  "parent": "dining",
+  "name_th": "ชุดครัว",
+  "name_en": "Kitchen units",
+  "sort": 25
  },
  {
   "slug": "dining-chairs",
   "parent": "dining",
   "name_th": "เก้าอี้อาหาร",
   "name_en": "Dining chairs",
-  "sort": 24
+  "sort": 26
  },
  {
   "slug": "bar",
   "parent": "dining",
   "name_th": "โต๊ะบาร์ & เก้าอี้บาร์",
   "name_en": "Bar tables & stools",
-  "sort": 25
+  "sort": 27
  },
  {
   "slug": "bedroom",
   "parent": null,
   "name_th": "ห้องนอน",
   "name_en": "Bedroom",
-  "sort": 26
+  "sort": 28
  },
  {
   "slug": "beds",
   "parent": "bedroom",
   "name_th": "เตียงนอน & ชุดเครื่องนอน",
   "name_en": "Beds & bedding",
-  "sort": 27
+  "sort": 29
+ },
+ {
+  "slug": "wardrobes",
+  "parent": "bedroom",
+  "name_th": "ตู้เสื้อผ้า",
+  "name_en": "Wardrobes",
+  "sort": 30
  }
 ]
