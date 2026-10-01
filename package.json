@@ -14,9 +14,11 @@
     "catalog:pdf": "tsx scripts/export-catalog.ts && cd ingest && uv run python -m nat_ingest.ecatalog --all",
     "crawl:practika": "tsx scripts/crawl-practika.ts",
     "dev:customer": "SITE_VARIANT=customer next dev",
-    "start:customer": "SITE_VARIANT=customer next start"
+    "start:customer": "SITE_VARIANT=customer next start",
+    "embed:images": "tsx scripts/embed-images.ts"
   },
   "dependencies": {
+    "@huggingface/transformers": "^4.3.0",
     "@neondatabase/serverless": "^1.1.0",
     "aws4fetch": "^1.0.20",
     "drizzle-orm": "^0.45.3",

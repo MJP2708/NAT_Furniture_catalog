@@ -1,0 +1,1 @@
+CREATE INDEX "product_images_embedding_hnsw" ON "product_images" USING hnsw ("embedding" vector_cosine_ops);

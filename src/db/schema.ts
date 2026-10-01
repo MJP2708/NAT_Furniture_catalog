@@ -135,5 +135,5 @@ export const productImages = pgTable(
     /** CLIP image embedding for photo search (filled in phase 4). */
     embedding: vector({ dimensions: 512 }),
   },
-  (t) => [index().on(t.productId, t.sort)],
+  (t) => [index().on(t.productId, t.sort), index("product_images_embedding_hnsw").using("hnsw", t.embedding.op("vector_cosine_ops"))],
 );

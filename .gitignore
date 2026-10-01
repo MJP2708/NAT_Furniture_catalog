@@ -23,3 +23,6 @@ next-env.d.ts
 .DS_Store
 *.pem
 .pnpm-debug.log*
+
+# model downloads for image search indexing
+/.cache/

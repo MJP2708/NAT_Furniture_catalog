@@ -14,6 +14,17 @@ export function SearchBox({ lang, className = "", defaultValue = "" }: { lang: L
         aria-label={ui.searchLabel}
         className="min-w-0 flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-muted"
       />
+      <a
+        href={href(lang, "/visual-search")}
+        className="px-2 py-2 text-muted hover:text-accent"
+        aria-label={lang === "en" ? "Search by photo" : "ค้นหาด้วยรูปภาพ"}
+        title={lang === "en" ? "Search by photo" : "ค้นหาด้วยรูปภาพ"}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+          <path d="M4 8h3l2-3h6l2 3h3v11H4z" strokeLinejoin="round" />
+          <circle cx="12" cy="13" r="3.5" />
+        </svg>
+      </a>
       <button type="submit" className="eyebrow px-1 py-2 hover:text-accent">
         Search
       </button>
