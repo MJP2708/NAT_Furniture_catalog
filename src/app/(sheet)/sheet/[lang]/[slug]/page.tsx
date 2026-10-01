@@ -38,6 +38,9 @@ export default async function SheetPage({ params, searchParams }: PageProps<"/sh
         <Link href={`/sheet/${lang === "en" ? "th" : "en"}/${slug}`} className="text-muted hover:text-accent">
           {lang === "en" ? "ภาษาไทย" : "English"}
         </Link>
+        <a href={`/sheet/${lang}/${slug}/docx`} download className="rounded-full border border-ink px-5 py-2 text-sm hover:border-accent hover:text-accent">
+          {lang === "en" ? "Download Word" : "ดาวน์โหลด Word"}
+        </a>
         <PrintButton label={lang === "en" ? "Print / Save PDF" : "พิมพ์ / บันทึก PDF"} />
       </div>
       <Suspense>

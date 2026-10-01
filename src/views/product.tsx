@@ -221,13 +221,20 @@ export async function ProductView({ slug, lang }: { slug: string; lang: Lang }) 
               <ThaiMark show={note.fallback} />
             </p>
           )}
-          <div className="mt-8">
+          <div className="no-print mt-8 flex flex-wrap gap-3">
             <a
               href={`/sheet/${lang}/${p.slug}?print=1`}
               target="_blank"
-              className="no-print inline-block rounded-full border border-ink px-5 py-2 text-sm hover:border-accent hover:text-accent"
+              className="inline-flex items-center gap-2 rounded-full border border-ink px-5 py-2 text-sm hover:border-accent hover:text-accent"
             >
               {ui.print}
+            </a>
+            <a
+              href={`/sheet/${lang}/${p.slug}/docx`}
+              download
+              className="inline-flex items-center gap-2 rounded-full border border-ink px-5 py-2 text-sm hover:border-accent hover:text-accent"
+            >
+              {lang === "en" ? "Spec sheet (Word)" : "ใบสเปก Word"}
             </a>
           </div>
         </div>
