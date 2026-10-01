@@ -80,7 +80,7 @@ async function Products({ searchParams }: Pick<PageProps<"/admin">, "searchParam
       </div>
 
       {/* Filters */}
-      <Form action="/admin" className="mt-4 grid gap-2 rounded-lg border border-line bg-canvas p-3 text-sm sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.3fr_1.2fr_auto]">
+      <Form action="/admin" className="mt-4 grid gap-2 rounded-lg border border-line bg-canvas p-3 text-sm sm:grid-cols-2 xl:grid-cols-[1.4fr_1fr_1.3fr_1.2fr_auto]">
         {filter.status && <input type="hidden" name="status" value={filter.status} />}
         <input name="q" defaultValue={filter.q} placeholder="ค้นหารหัส / ประเภท" className="rounded border border-line px-3 py-2 outline-none focus:border-accent" />
         <select name="brand" defaultValue={filter.brand ?? ""} className="rounded border border-line px-2 py-2">
@@ -109,7 +109,7 @@ async function Products({ searchParams }: Pick<PageProps<"/admin">, "searchParam
               </option>
             ))}
         </select>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <label className="flex items-center gap-1.5 whitespace-nowrap">
             <input type="checkbox" name="open" value="1" defaultChecked={filter.open} /> ยังไม่ตรวจ
           </label>

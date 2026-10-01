@@ -154,7 +154,11 @@ def extract() -> list[dict]:
         f: Path = r["path"]
         rel = f.relative_to(SOURCE)
         folder = rel.parts[-2]
-        paras = r["paras"] or [f.stem]
+        # drop leading junk lines (stray "\", numbers) so the title is a real name
+        paras = r["paras"]
+        while paras and len(re.findall(r"[A-Za-z\u0E00-\u0E7F]", paras[0])) < 2:
+            paras = paras[1:]
+        paras = paras or [f.stem]
         code, name = _title_parts(paras[0], f.name)
         rows, features, size_lines = _parse(paras)
         if not size_lines and parse_size(f.stem):

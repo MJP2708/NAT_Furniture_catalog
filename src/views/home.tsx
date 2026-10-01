@@ -33,7 +33,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
         <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_1.1fr] lg:py-24">
           <div>
             <div className="eyebrow text-muted">NAT Furniture · E-Catalogue</div>
-            <h1 className="display mt-4 text-5xl whitespace-pre-line sm:text-7xl">{ui.heroTitle}</h1>
+            <h1 className="display mt-4 text-[2.6rem] whitespace-pre-line sm:text-7xl">{ui.heroTitle}</h1>
             <p className="mt-6 max-w-md text-lg">{ui.heroLead}</p>
             <p className="mt-2 max-w-md text-sm text-muted">{ui.heroSub(total)}</p>
             <SearchBox lang={lang} className="mt-8 max-w-md" />
@@ -69,9 +69,9 @@ export async function HomeView({ lang }: { lang: Lang }) {
               <li key={root.slug}>
                 <Link href={`#${root.slug}`} className="group flex items-baseline gap-4">
                   <span className="font-num w-8 text-sm tabular-nums text-muted">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="h-px w-16 -translate-y-1 bg-ink/50 transition-all group-hover:w-24 group-hover:bg-accent" />
+                  <span className="hidden h-px w-16 -translate-y-1 bg-ink/50 transition-all group-hover:w-24 group-hover:bg-accent sm:block" />
                   <span className="display text-xl group-hover:text-accent">{lang === "en" ? primary : root.nameEn}</span>
-                  <span className="text-muted">{lang === "en" ? secondary : root.nameTh}</span>
+                  <span className="whitespace-nowrap text-muted">{lang === "en" ? secondary : root.nameTh}</span>
                   <span className="font-num ml-auto text-sm tabular-nums text-muted">{root.total}</span>
                 </Link>
               </li>
@@ -89,7 +89,7 @@ export async function HomeView({ lang }: { lang: Lang }) {
               <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
                 <div>
                   <div className="font-num text-sm tabular-nums text-muted">{String(i + 1).padStart(2, "0")}</div>
-                  <h2 className="display mt-2 text-5xl sm:text-6xl">{root.nameEn}</h2>
+                  <h2 className="display mt-2 text-4xl sm:text-6xl">{root.nameEn}</h2>
                   <div className="mt-1 text-2xl font-light">{root.nameTh}</div>
                 </div>
                 <div className="lg:pt-8">

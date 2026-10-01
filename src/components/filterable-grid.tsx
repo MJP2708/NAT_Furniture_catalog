@@ -50,6 +50,7 @@ export function FilterableGrid({
   const [materials, setMaterials] = useState<string[]>([]);
   const [width, setWidth] = useState<number | null>(null);
   const [sort, setSort] = useState<"code" | "width-asc" | "width-desc">("code");
+  const [panel, setPanel] = useState(false); // filters panel on phones
 
   const present = useMemo(() => {
     const counts = new Map<string, number>();
@@ -74,7 +75,7 @@ export function FilterableGrid({
     );
 
   const chip = (active: boolean) =>
-    `rounded-full border px-3 py-1 text-sm transition ${active ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"}`;
+    `rounded-full border px-3 py-1.5 text-sm transition ${active ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"}`;
   const en = lang === "en";
   const filtered = materials.length > 0 || width !== null;
 
@@ -82,9 +83,23 @@ export function FilterableGrid({
     <div>
       {items.length > 8 && (
         <div className="no-print mb-8 space-y-3">
+          {/* phones: filters behind a toggle so products come first */}
+          <button
+            type="button"
+            onClick={() => setPanel((v) => !v)}
+            aria-expanded={panel}
+            className="flex items-center gap-2 rounded-full border border-ink px-4 py-2 text-sm md:hidden"
+          >
+            {en ? "Filters" : "ตัวกรอง"}
+            {materials.length + (width !== null ? 1 : 0) > 0 && (
+              <span className="font-num rounded-full bg-ink px-1.5 text-xs text-canvas">{materials.length + (width !== null ? 1 : 0)}</span>
+            )}
+            <span aria-hidden>{panel ? "▴" : "▾"}</span>
+          </button>
+          <div className={`${panel ? "space-y-3" : "hidden"} md:block md:space-y-3`}>
           {present.length > 1 && (
             <div className="flex flex-wrap items-center gap-2">
-              <span className="eyebrow mr-2 w-20 text-muted">Material</span>
+              <span className="eyebrow w-full text-muted md:mr-2 md:w-20">Material</span>
               {present.map((m) => (
                 <button
                   key={m}
@@ -100,7 +115,7 @@ export function FilterableGrid({
           )}
           {widthsPresent.length > 1 && (
             <div className="flex flex-wrap items-center gap-2">
-              <span className="eyebrow mr-2 w-20 text-muted">Width</span>
+              <span className="eyebrow w-full text-muted md:mr-2 md:w-20">Width</span>
               {widthsPresent.map(([[label], i]) => (
                 <button key={label} type="button" aria-pressed={width === i} className={chip(width === i)} onClick={() => setWidth(width === i ? null : i)}>
                   <span className="font-num">{label}</span>
@@ -108,8 +123,9 @@ export function FilterableGrid({
               ))}
             </div>
           )}
+          </div>
           <div className="flex flex-wrap items-center gap-3 text-sm">
-            <span className="eyebrow mr-2 w-20 text-muted">Sort</span>
+            <span className="eyebrow hidden w-20 text-muted md:mr-2 md:inline">Sort</span>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as typeof sort)}

@@ -33,35 +33,39 @@ export function SiteShell({ lang, children }: { lang: Lang; children: React.Reac
     <html lang={lang} className={`${plexThai.variable} ${montserrat.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
         <header className="no-print sticky top-0 z-20 border-b border-line bg-canvas/95 backdrop-blur">
-          <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-3 sm:px-6">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3 sm:px-6 md:flex-nowrap">
             <Link href={href(lang, "/")} className="display shrink-0 text-2xl tracking-[0.3em]" aria-label="NAT Furniture">
               NAT
             </Link>
             <nav className="hidden items-center gap-5 text-sm lg:flex">
               {SPACES.map(([slug, th, en]) => (
-                <Link key={slug} href={href(lang, `/c/${slug}`)} className="hover:text-accent">
+                <Link key={slug} href={href(lang, `/c/${slug}`)} className="whitespace-nowrap hover:text-accent">
                   {spaceName(th, en)}
                 </Link>
               ))}
-              <a href={E_CATALOGUE_URL} className="eyebrow text-accent hover:underline">
+              <a href={E_CATALOGUE_URL} className="eyebrow whitespace-nowrap text-accent hover:underline">
                 E-Catalogue
               </a>
             </nav>
-            <SearchBox lang={lang} className="ml-auto w-full max-w-sm" />
-            <Suspense fallback={<LanguageSwitchFallback lang={lang} />}>
-              <LanguageSwitch />
-            </Suspense>
+            {/* phones: search drops to its own full-width row; language switch stays top right */}
+            <SearchBox lang={lang} className="order-last w-full md:order-none md:ml-auto md:max-w-sm" />
+            <div className="ml-auto md:ml-0">
+              <Suspense fallback={<LanguageSwitchFallback lang={lang} />}>
+                <LanguageSwitch />
+              </Suspense>
+            </div>
           </div>
-          {/* Compact space links for small screens */}
-          <nav className="flex gap-4 overflow-x-auto border-t border-line px-4 py-2 pr-8 text-sm lg:hidden">
+          {/* Compact space links for small screens (swipe sideways) */}
+          <nav className="scrollbar-none flex gap-5 overflow-x-auto border-t border-line px-4 py-2 text-sm whitespace-nowrap sm:px-6 lg:hidden">
             {SPACES.map(([slug, th, en]) => (
-              <Link key={slug} href={href(lang, `/c/${slug}`)} className="shrink-0 hover:text-accent">
+              <Link key={slug} href={href(lang, `/c/${slug}`)} className="shrink-0 py-1 hover:text-accent">
                 {spaceName(th, en)}
               </Link>
             ))}
-            <a href={E_CATALOGUE_URL} className="eyebrow shrink-0 self-center text-accent">
+            <a href={E_CATALOGUE_URL} className="eyebrow shrink-0 self-center py-1 text-accent">
               E-Catalogue
             </a>
+            <span className="w-2 shrink-0" aria-hidden />
           </nav>
         </header>
         <div className="flex-1">{children}</div>

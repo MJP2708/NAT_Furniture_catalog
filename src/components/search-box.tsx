@@ -12,11 +12,11 @@ export function SearchBox({ lang, className = "", defaultValue = "" }: { lang: L
         defaultValue={defaultValue}
         placeholder={ui.searchPlaceholder}
         aria-label={ui.searchLabel}
-        className="min-w-0 flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-muted"
+        className="min-w-0 flex-1 bg-transparent py-2 text-base outline-none placeholder:text-muted sm:text-sm"
       />
       <a
         href={href(lang, "/visual-search")}
-        className="px-2 py-2 text-muted hover:text-accent"
+        className="flex h-10 w-10 shrink-0 items-center justify-center text-muted hover:text-accent"
         aria-label={lang === "en" ? "Search by photo" : "ค้นหาด้วยรูปภาพ"}
         title={lang === "en" ? "Search by photo" : "ค้นหาด้วยรูปภาพ"}
       >
@@ -25,7 +25,7 @@ export function SearchBox({ lang, className = "", defaultValue = "" }: { lang: L
           <circle cx="12" cy="13" r="3.5" />
         </svg>
       </a>
-      <button type="submit" className="eyebrow px-1 py-2 hover:text-accent">
+      <button type="submit" className="eyebrow flex h-10 shrink-0 items-center px-1 hover:text-accent">
         Search
       </button>
     </Form>

@@ -32,6 +32,12 @@
   --font-num: var(--font-latin), ui-sans-serif, sans-serif;
 }
 
+html {
+  /* no accidental sideways scrolling on phones */
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   background: var(--canvas);
   color: var(--ink);
@@ -56,6 +62,14 @@ body {
 }
 
 /* Pastel wash used behind hero and feature panels. */
+/* horizontal swipe rows without a visible scrollbar */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @utility wash {
   background:
     radial-gradient(60% 80% at 12% 30%, var(--wash-a) 0%, transparent 70%),
@@ -140,5 +154,6 @@ body {
   }
   .sheet {
     box-shadow: none !important;
+    zoom: 1 !important;
   }
 }

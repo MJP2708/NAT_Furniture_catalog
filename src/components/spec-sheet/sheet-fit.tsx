@@ -40,8 +40,19 @@ export function SheetFit({ children, autoPrint }: { children: React.ReactNode; a
       }
     };
     ready();
+    // On screens narrower than A4, shrink the whole sheet to fit (print CSS resets this).
+    const fitScreen = () => {
+      // Phones widen the layout to fit wide content, so measure the real screen width.
+      const avail = Math.min(window.innerWidth, window.screen?.width || window.innerWidth) - 32; // 16px side padding
+      sheet.style.zoom = String(Math.min(1, avail / sheet.offsetWidth));
+    };
+    fitScreen();
+    window.addEventListener("resize", fitScreen);
     window.addEventListener("beforeprint", fit);
-    return () => window.removeEventListener("beforeprint", fit);
+    return () => {
+      window.removeEventListener("resize", fitScreen);
+      window.removeEventListener("beforeprint", fit);
+    };
   }, [autoPrint]);
 
   return (

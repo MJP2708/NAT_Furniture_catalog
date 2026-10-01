@@ -44,7 +44,7 @@ export async function CategoryView({ slug, lang }: { slug: string; lang: Lang })
           </nav>
           <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-end">
             <div>
-              <h1 className="display text-5xl sm:text-6xl">{category.nameEn}</h1>
+              <h1 className="display text-4xl sm:text-6xl">{category.nameEn}</h1>
               <div className="mt-1 text-2xl font-light">{category.nameTh}</div>
             </div>
             <div className="text-sm lg:text-right">
@@ -54,10 +54,11 @@ export async function CategoryView({ slug, lang }: { slug: string; lang: Lang })
               <p className="font-num mt-2 text-muted tabular-nums">{ui.items(products.length)}</p>
             </div>
           </div>
-          <div className="mt-8 flex flex-wrap gap-2">
+          {/* subcategory chips: one swipeable row on phones, wrapping on larger screens */}
+          <div className="scrollbar-none -mx-4 mt-8 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
             <Link
               href={href(lang, `/c/${root.slug}`)}
-              className={`rounded-full border px-3 py-1 text-sm ${isSpace ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"}`}
+              className={`shrink-0 rounded-full border px-3 py-1.5 text-sm whitespace-nowrap ${isSpace ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"}`}
             >
               {ui.all}
             </Link>
@@ -65,7 +66,7 @@ export async function CategoryView({ slug, lang }: { slug: string; lang: Lang })
               <Link
                 key={c.slug}
                 href={href(lang, `/c/${c.slug}`)}
-                className={`rounded-full border px-3 py-1 text-sm ${
+                className={`shrink-0 rounded-full border px-3 py-1.5 text-sm whitespace-nowrap ${
                   c.slug === category.slug ? "border-ink bg-ink text-canvas" : "border-line hover:border-ink"
                 }`}
               >

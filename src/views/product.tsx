@@ -113,7 +113,7 @@ export async function ProductView({ slug, lang }: { slug: string; lang: Lang }) 
         {/* Specification */}
         <div>
           {category && <div className="eyebrow text-muted">{category.nameEn}</div>}
-          <h1 className="display mt-2 text-5xl sm:text-6xl">{p.code}</h1>
+          <h1 className="display mt-2 text-4xl break-words sm:text-6xl">{p.code}</h1>
           {type.value && (
             <p className="mt-3 text-xl font-light">
               {type.value}
@@ -144,7 +144,7 @@ export async function ProductView({ slug, lang }: { slug: string; lang: Lang }) 
                       {p.sizes.length > 1 && (
                         <div className="mb-2 text-sm font-medium">{pick(lang, s.label_th, s.label_en).value}</div>
                       )}
-                      <dl className="grid grid-cols-3 gap-4">
+                      <dl className="grid grid-cols-3 gap-3 sm:gap-4">
                         {(Object.keys(DIM_LABELS) as (keyof typeof DIM_LABELS)[])
                           .filter((k) => s.mm![k])
                           .map((k) => (
@@ -153,7 +153,7 @@ export async function ProductView({ slug, lang }: { slug: string; lang: Lang }) 
                                 <span className="eyebrow font-normal">{DIM_LABELS[k][0]}</span>
                                 {lang === "th" && ` ${DIM_LABELS[k][1]}`}
                               </dt>
-                              <dd className="display font-num mt-1 text-3xl tabular-nums">{formatRange(s.mm![k]!)}</dd>
+                              <dd className="display font-num mt-1 text-2xl tabular-nums sm:text-3xl">{formatRange(s.mm![k]!)}</dd>
                             </div>
                           ))}
                       </dl>
