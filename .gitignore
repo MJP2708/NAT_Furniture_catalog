@@ -8,7 +8,8 @@ ingest/.cache/
 __pycache__/
 *.pyc
 
-# generated media is committed for now (32 MB) so deploys include photos; moves to object storage later
+# generated images live in Neon Object Storage (nat_ingest.upload); the site serves them via /media/[...path]
+public/media/
 
 # node / next.js
 /node_modules
