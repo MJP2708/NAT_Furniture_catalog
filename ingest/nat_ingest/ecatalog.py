@@ -1,7 +1,9 @@
 """Lay out the NAT e-catalogue PDF from ingest/.cache/ecatalog.json (see scripts/export-catalog.ts).
 
-A4 landscape pages: cover, contents, then for each space a divider page followed by
-"line" pages (sketch, hairline rule, code, type, sizes in cm), and a closing page.
+A4 landscape pages in the style of a furniture brochure: a cover with the logo and a colour
+panel, contents, then for each space a divider (colour panel + studio backdrop with a hero
+piece), each category opening on a tinted panel with its title and hero piece, product grids
+on white (sketch or photo, code, type, sizes in cm), an index of codes and a closing page.
 Output: public/e-catalogue.pdf.
 
 Usage: python -m nat_ingest.ecatalog   (normally via `pnpm catalog:pdf`)
@@ -30,11 +32,19 @@ COLS, ROWS = 6, 3
 PER_PAGE = COLS * ROWS
 INK = (0.137, 0.122, 0.125)
 MUTED = (0.435, 0.424, 0.416)
-ACCENT = (0.169, 0.224, 0.565)
+ACCENT = (0.184, 0.196, 0.561)  # NAT logo blue
+RED = (0.929, 0.11, 0.141)       # NAT logo red
 LINE = (0.2, 0.2, 0.2)
+# Each space gets its own muted panel colour, as each series does in a brochure.
+TONES = {
+    "office": (0.369, 0.431, 0.525),   # slate blue
+    "living": (0.69, 0.42, 0.341),     # terracotta
+    "dining": (0.451, 0.565, 0.259),   # olive
+    "bedroom": (0.58, 0.502, 0.431),   # taupe
+}
 
 FONTS = ROOT / "ingest" / "fonts"
-LETTERHEAD = ROOT / "public" / "brand" / "letterhead.jpg"
+LOGO = ROOT / "public" / "brand" / "logo.png"
 CSS = """
 @font-face { font-family: ml; src: url(Montserrat-Light.ttf); }
 @font-face { font-family: mr; src: url(Montserrat-Regular.ttf); }
@@ -46,6 +56,7 @@ CSS = """
 body { font-family: tr; color: #231f20; font-size: 9pt; line-height: 1.5; }
 .display { font-family: ml; line-height: 1.05; }
 .eyebrow { font-family: ms; font-size: 7.5pt; letter-spacing: 1.4pt; }
+.head { font-family: ms; line-height: 1.08; letter-spacing: 0.6pt; }
 .muted { color: #6f6c6a; }
 .accent { color: #2b3990; }
 .thl { font-family: tl; }
@@ -119,31 +130,20 @@ class Doc:
         top = y1 - h if align_bottom else y0 + ((y1 - y0) - h) / 2
         page.insert_image(pymupdf.Rect(left, top, left + w, top + h), stream=self.image_cache[key])
 
-    def wash(self, page: pymupdf.Page, rect: tuple[float, float, float, float] = (0, 0, W, H)) -> None:
-        """Soft pastel gradient (pink left, cream middle, sky blue right), as on the website."""
-        if "wash" not in self.image_cache:
-            gw, gh = 420, 297
+    def backdrop(self, page: pymupdf.Page, rect: tuple[float, float, float, float], tone=(0.5, 0.5, 0.5),
+                 tint: float = 0.12) -> None:
+        """Photo-studio backdrop: near white at the top centre, falling off to a light shade of tone."""
+        key = f"backdrop:{tone}:{tint}"
+        if key not in self.image_cache:
+            gw, gh = 240, 300
             y, x = np.mgrid[0:gh, 0:gw] / np.array([gh, gw])[:, None, None]
-            base = np.array([244, 239, 231], float)
-            pink, sky = np.array([249, 227, 230], float), np.array([214, 237, 247], float)
-            a = np.clip(1 - np.hypot((x - 0.12) / 0.6, (y - 0.3) / 0.8), 0, 1)[..., None]
-            b = np.clip(1 - np.hypot((x - 0.92) / 0.55, (y - 0.2) / 0.75), 0, 1)[..., None]
-            rgb = base * (1 - a) + pink * a
-            rgb = rgb * (1 - b) + sky * b
+            t = np.clip(np.hypot((x - 0.5) / 0.95, (y - 0.05) / 1.15), 0, 1)[..., None] ** 1.4
+            light = np.array([247, 247, 246], float)
+            shade = 255 * ((1 - tint) * np.array([0.86, 0.865, 0.87]) + tint * np.array(tone))
             buf = io.BytesIO()
-            Image.fromarray(rgb.astype(np.uint8)).save(buf, "JPEG", quality=90)
-            self.image_cache["wash"] = buf.getvalue()
-        page.insert_image(pymupdf.Rect(*rect), stream=self.image_cache["wash"], keep_proportion=False)
-
-    def footer(self, page: pymupdf.Page, number: int, section: str) -> None:
-        self.html(page, (M, FOOT_Y - 4, M + 200, FOOT_Y + 12), '<div class="eyebrow accent">NAT FURNITURE</div>')
-        cx = W / 2
-        self.html(page, (cx - 150, FOOT_Y - 4, cx - 30, FOOT_Y + 12),
-                  '<div class="eyebrow muted" style="text-align:right">E-CATALOGUE</div>')
-        self.rule(page, cx - 22, FOOT_Y + 2.5, cx + 22, 0.4, MUTED)
-        self.html(page, (cx + 30, FOOT_Y - 4, cx + 300, FOOT_Y + 12), f'<div class="eyebrow muted">{escape(section.upper())}</div>')
-        self.html(page, (W - M - 60, FOOT_Y - 4, W - M, FOOT_Y + 12),
-                  f'<div class="num muted" style="text-align:right; font-size:8pt">{number:02d}</div>')
+            Image.fromarray((light * (1 - t) + shade * t).astype(np.uint8)).save(buf, "JPEG", quality=90)
+            self.image_cache[key] = buf.getvalue()
+        page.insert_image(pymupdf.Rect(*rect), stream=self.image_cache[key], keep_proportion=False)
 
 
 def cut(text: str, n: int) -> str:
@@ -178,35 +178,39 @@ def size_line(mm: dict) -> str:
     return " x ".join(parts) + " cm" if parts else ""
 
 
-PANEL = (0.957, 0.957, 0.953)   # image panel
-BAND = (0.137, 0.122, 0.125)    # dark band (ink)
 GRID_COLS, GRID_ROWS = 5, 3
 PER = GRID_COLS * GRID_ROWS
-TOP = 64        # content top on product pages (below the running header)
-CAT_HEAD = 46   # height of a category title strip
+OPEN_COLS, OPEN_ROWS = 3, 3     # products beside a category's opening panel
+PER_OPEN = OPEN_COLS * OPEN_ROWS
+TOP = 74        # content top below the running label
+INSET = 20      # opening panels sit this far in from the page edge
 
 
-def _band(page, y0, y1, color=BAND):
-    page.draw_rect(pymupdf.Rect(0, y0, W, y1), color=None, fill=color)
+def hexc(rgb) -> str:
+    return "#" + "".join(f"{round(v * 255):02x}" for v in rgb)
 
 
-def _running_header(doc: "Doc", page, left: str, right_th: str, right_en: str) -> None:
-    page.draw_rect(pymupdf.Rect(M, 30, M + 18, 33), color=None, fill=ACCENT)
-    doc.html(page, (M + 26, 24, W / 2, 40), f'<div class="eyebrow" style="font-size:7pt">{escape(left.upper())}</div>')
-    doc.html(page, (W / 2, 23, W - M, 40),
-             f'<div style="text-align:right; font-size:8pt"><span class="num">{escape(right_en)}</span>'
-             f'&#160;&#160;<span class="muted">{escape(right_th)}</span></div>')
-    doc.rule(page, M, 44, W - M, 0.4, MUTED)
+def darker(rgb, k: float = 0.72):
+    return tuple(v * k for v in rgb)
 
 
-def _footer(doc: "Doc", page, number: int) -> None:
-    doc.rule(page, M, FOOT_Y - 8, W - M, 0.4, MUTED)
-    doc.html(page, (M, FOOT_Y - 3, W / 2, FOOT_Y + 12),
-             '<div><span class="eyebrow accent" style="font-size:6.5pt">NAT FURNITURE</span>'
-             '&#160;&#160;<span class="eyebrow muted" style="font-size:6.5pt">E-CATALOGUE</span></div>')
-    page.draw_rect(pymupdf.Rect(W - M - 26, FOOT_Y - 4, W - M, FOOT_Y + 10), color=None, fill=BAND)
-    doc.html(page, (W - M - 26, FOOT_Y - 2.5, W - M, FOOT_Y + 10),
-             f'<div class="num" style="text-align:center; font-size:7.5pt; color:#ffffff">{number}</div>')
+def _running_label(doc: "Doc", page, small: str, big: str, sub: str) -> None:
+    """Stacked label in the top right corner: space, category, Thai name over a short rule."""
+    doc.html(page, (W / 2, 22, W - M, 64),
+             f'<div style="text-align:right; line-height:1.2">'
+             f'<div class="num muted" style="font-size:6pt">{escape(small)}</div>'
+             f'<div class="head" style="font-size:9.5pt">{escape(big.upper())}</div>'
+             f'<div class="thl muted" style="font-size:7pt">{escape(sub)}</div></div>')
+    doc.rule(page, W - M - 34, 66, W - M, 0.6, INK)
+
+
+def _footer(doc: "Doc", page, number: int, brand: bool = True) -> None:
+    if brand:
+        doc.html(page, (M, FOOT_Y - 2, W / 2, FOOT_Y + 12),
+                 '<div><span class="eyebrow accent" style="font-size:6pt">NAT FURNITURE</span>'
+                 '&#160;&#160;<span class="eyebrow muted" style="font-size:6pt">E-CATALOGUE</span></div>')
+    doc.html(page, (W - M - 60, FOOT_Y - 3, W - M, FOOT_Y + 12),
+             f'<div class="head" style="text-align:right; font-size:7.5pt">{number:02d}</div>')
 
 
 def _dims(mm: dict) -> str:
@@ -223,24 +227,31 @@ def _dims(mm: dict) -> str:
 
 
 def _card(doc: "Doc", page, p: dict, x0: float, y0: float, w: float, h: float) -> None:
+    """A product standing on the white page, caption centred underneath."""
     img_h = h * 0.7
-    pad = 5
-    if doc.color:
-        # photos: white panel with a hairline frame (JPEG keeps the file small)
-        page.draw_rect(pymupdf.Rect(x0, y0, x0 + w, y0 + img_h), color=(0.86, 0.85, 0.83), fill=(1, 1, 1), width=0.4)
-        doc.sketch(page, p["image"], (x0 + pad, y0 + pad, x0 + w - pad, y0 + img_h - pad), align_bottom=False, max_px=320)
-    else:
-        page.draw_rect(pymupdf.Rect(x0, y0, x0 + w, y0 + img_h), color=None, fill=PANEL)
-        doc.sketch(page, p["image"], (x0 + pad, y0 + pad, x0 + w - pad, y0 + img_h - pad), align_bottom=False, max_px=300,
-                   transparent=True)
+    doc.sketch(page, p["image"], (x0 + 8, y0 + 4, x0 + w - 8, y0 + img_h - 2), max_px=320 if doc.color else 300,
+               transparent=not doc.color)
     ty = y0 + img_h + 5
     sizes = [_dims(mm) for mm in p["sizes"]]
     sizes = [x for x in sizes if x]
     more = f' <span class="muted">+{len(sizes) - 1}</span>' if len(sizes) > 1 else ""
     doc.html(page, (x0, ty, x0 + w, y0 + h),
-             f'<div class="num" style="font-size:8pt; line-height:1.15">{escape(cut(p["code"], 24))}</div>'
-             f'<div class="muted" style="font-size:6.5pt; line-height:1.3">{escape(cut(p["typeTh"] or "", 34))}</div>'
-             f'<div class="num" style="font-size:6pt; margin-top:1pt">{sizes[0] if sizes else ""}{more}</div>')
+             f'<div style="text-align:center">'
+             f'<div class="head" style="font-size:7.5pt">{escape(cut(p["code"], 24))}</div>'
+             f'<div class="muted" style="font-size:6.3pt; line-height:1.3">{escape(cut(p["typeTh"] or "", 34))}</div>'
+             f'<div class="num" style="font-size:5.8pt; margin-top:1pt">{sizes[0] if sizes else ""}{more}</div></div>')
+
+
+def _grid(doc: "Doc", page, items: list, x0: float, x1: float, top: float, cols: int, rows: int) -> None:
+    gap_x, gap_y = 14, 12
+    cw = (x1 - x0 - gap_x * (cols - 1)) / cols
+    rh = (FOOT_Y - 16 - top - gap_y * (rows - 1)) / rows
+    for j, p in enumerate(items[:cols * rows]):
+        _card(doc, page, p, x0 + (j % cols) * (cw + gap_x), top + (j // cols) * (rh + gap_y), cw, rh)
+
+
+def _logo(page, x0: float, y0: float, width: float) -> None:
+    page.insert_image(pymupdf.Rect(x0, y0, x0 + width, y0 + width * 93 / 334), filename=str(LOGO))
 
 
 def build(color: bool = False) -> Path:
@@ -249,23 +260,29 @@ def build(color: bool = False) -> Path:
     doc = Doc(color)
     total = sum(len(c["products"]) for s in spaces for c in s["categories"])
 
-    def cover_of(cat: dict) -> str | None:
+    def picks(cat: dict) -> list[str]:
+        """Best hero images of a category, traced photos before drawings rendered from the sheet."""
         with_image = [p for p in cat["products"] if p["image"]]
-        best = sorted(with_image, key=lambda p: (p["rendered"], p["code"]))
-        return best[0]["image"] if best else None
+        return [p["image"] for p in sorted(with_image, key=lambda p: (p["rendered"], p["code"]))]
 
-    covers = {c["slug"]: cover_of(c) for s in spaces for c in s["categories"]}
+    heroes = {c["slug"]: picks(c) for s in spaces for c in s["categories"]}
 
-    # ---- plan pages: each category starts on a fresh page with a title strip (one row fewer)
+    def hero(slug: str, k: int = 0) -> str | None:
+        h = heroes.get(slug) or []
+        return h[min(k, len(h) - 1)] if h else None
+
+    def tone(space: dict):
+        return TONES.get(space["slug"], ACCENT)
+
+    # ---- plan pages: each category opens on a panel page with a few products, then full grids
     plan: list[tuple] = []  # ("divider", space) | ("grid", space, cat, items, is_first)
     for space in spaces:
         plan.append(("divider", space))
         for cat in space["categories"]:
             items = cat["products"]
-            chunks = [items[i:i + PER] for i in range(0, len(items), PER)]
-            for k, ch in enumerate(chunks):
-                if ch:
-                    plan.append(("grid", space, cat, ch, k == 0))
+            plan.append(("grid", space, cat, items[:PER_OPEN], True))
+            for i in range(PER_OPEN, len(items), PER):
+                plan.append(("grid", space, cat, items[i:i + PER], False))
     first = 3  # cover, contents
     page_of_space, page_of_cat, page_of_code = {}, {}, []
     for i, entry in enumerate(plan):
@@ -276,33 +293,33 @@ def build(color: bool = False) -> Path:
             page_of_cat.setdefault(entry[2]["slug"], n)
             page_of_code += [(p["code"], n) for p in entry[3]]
 
-    # ---- 1. cover: company letterhead on top, then the catalogue title band
+    # ---- 1. cover: logo on white, colour panel with a rounded corner carrying the title
     page = doc.page()
-    lh_h = (W - 2 * M) * 129 / 1044
-    page.insert_image(pymupdf.Rect(M, 22, W - M, 22 + lh_h), filename=str(LETTERHEAD))
-    band_top = 22 + lh_h + 14
-    _band(page, band_top, H * 0.46)
-    doc.html(page, (M, band_top + 26, W - M, band_top + 90),
-             '<div class="display" style="font-size:44pt; color:#ffffff">E-Catalogue</div>')
-    doc.html(page, (M, band_top + 86, W - M, band_top + 112),
-             '<div class="thl" style="font-size:13pt; color:#d9d6d1">แคตตาล็อกเฟอร์นิเจอร์</div>')
-    doc.html(page, (W - M - 260, band_top + 92, W - M, band_top + 120),
-             f'<div class="num" style="text-align:right; font-size:9pt; color:#bdbab5">{date.today():%Y}&#160;&#160;·&#160;&#160;{total:,} items</div>')
-    page.draw_rect(pymupdf.Rect(M, H * 0.46 - 3, M + 60, H * 0.46), color=None, fill=ACCENT)
-    floor, slot = H - 92, (W - 2 * M) / 4
-    for k, slug in enumerate(("armchairs", "office-chairs", "meeting-tables", "sofas")):
-        x0 = M + k * slot
-        doc.sketch(page, covers.get(slug), (x0 + 16, H * 0.46 + 26, x0 + slot - 16, floor), max_px=700)
-    doc.rule(page, M, floor + 6, W - M, 0.6, INK)
-    doc.html(page, (M, floor + 14, W - M, H - 30),
-             '<div><span class="display" style="font-size:15pt">Furniture for every space</span>'
-             '&#160;&#160;&#160;<span class="thl muted" style="font-size:11pt">เฟอร์นิเจอร์สำหรับทุกพื้นที่ ทั้งสำนักงานและบ้าน</span></div>')
+    px0, py1, r = W * 0.473, H * 0.765, 46
+    # rounded rect whose top corners sit off the page; square off the bottom left corner
+    page.draw_rect(pymupdf.Rect(px0, -2 * r, W, py1), color=None, fill=ACCENT, radius=(r / (W - px0), r / (py1 + 2 * r)))
+    page.draw_rect(pymupdf.Rect(px0, py1 - r, px0 + r, py1), color=None, fill=ACCENT)
+    lw = 210
+    lx = (px0 - lw) / 2
+    _logo(page, lx, H * 0.40, lw)
+    doc.html(page, (lx, H * 0.40 + lw * 93 / 334 + 14, px0 - 20, H * 0.40 + 140),
+             '<div class="head" style="font-size:10pt; letter-spacing:1.6pt">NAT FURNITURE CO., LTD.</div>'
+             '<div class="thl muted" style="font-size:9pt">บริษัท แน๊ตเฟอร์นิเจอร์ จำกัด</div>')
+    page.draw_rect(pymupdf.Rect(px0 + 26, py1 - 104, px0 + 56, py1 - 101), color=None, fill=RED)
+    doc.html(page, (px0 + 26, py1 - 92, W - 20, py1 - 44),
+             '<div class="head" style="font-size:36pt; color:#ffffff; letter-spacing:2.5pt">E-CATALOGUE</div>')
+    doc.html(page, (px0 + 26, py1 - 44, W - 20, py1 - 14),
+             '<div class="thl" style="font-size:12pt; color:#dcdde8">แคตตาล็อกเฟอร์นิเจอร์ · Furniture for every space</div>')
+    doc.html(page, (px0 + 26, py1 + 36, W - M, py1 + 60),
+             f'<div class="num" style="font-size:8.5pt">{date.today():%Y} furniture catalogue'
+             f'&#160;&#160;·&#160;&#160;{total:,} items</div>')
 
     # ---- 2. contents (two columns, dotted leaders)
     page = doc.page()
-    doc.html(page, (M, 46, 300, 120), '<div class="display" style="font-size:40pt">Contents</div>'
-                                      '<div class="thl muted" style="font-size:13pt">สารบัญ</div>')
-    doc.html(page, (M, 130, 250, 260),
+    doc.html(page, (M, 50, 300, 130), '<div class="head" style="font-size:30pt">CONTENTS</div>'
+                                      '<div class="thl muted" style="font-size:13pt; margin-top:2pt">สารบัญ</div>')
+    page.draw_rect(pymupdf.Rect(M, 128, M + 30, 131), color=None, fill=RED)
+    doc.html(page, (M, 146, 250, 280),
              f'<p style="font-size:8.5pt">แคตตาล็อกรวมเฟอร์นิเจอร์ {total:,} รายการ แยกตามพื้นที่ใช้งาน '
              f'พร้อม{"รูปสินค้า" if color else "แบบร่าง"}และขนาดของทุกชิ้น</p>'
              f'<p class="muted" style="margin-top:6pt; font-size:8pt">{total:,} pieces arranged by space, each with '
@@ -313,7 +330,7 @@ def build(color: bool = False) -> Path:
     def leader(x, y, w, left_html, num, big=False):
         doc.html(page, (x, y, x + w - 30, y + 16), left_html)
         doc.html(page, (x + w - 30, y + (1 if big else 0), x + w, y + 16),
-                 f'<div class="num" style="text-align:right; font-size:{9 if big else 7.5}pt">{num}</div>')
+                 f'<div class="{"head" if big else "num"}" style="text-align:right; font-size:{9 if big else 7.5}pt">{num}</div>')
         line_y = y + (19 if big else 13)
         page.draw_line((x, line_y), (x + w, line_y), color=(0.85, 0.84, 0.82) if not big else INK, width=0.4 if not big else 0.6)
     for n, space in enumerate(spaces, 1):
@@ -321,14 +338,16 @@ def build(color: bool = False) -> Path:
         if y + need > FOOT_Y - 20 and col == 0:
             col, y = 1, 50
         x = col_x[col]
-        doc.html(page, (x, y, x + 30, y + 18), f'<div class="num accent" style="font-size:9pt">{n:02d}</div>')
-        leader(x + 24, y - 2, col_w - 24,
-               f'<div><span class="display" style="font-size:13pt">{escape(space["nameEn"])}</span>'
+        page.draw_rect(pymupdf.Rect(x, y + 1, x + 18, y + 15), color=None, fill=tone(space))
+        doc.html(page, (x, y + 2.5, x + 18, y + 16),
+                 f'<div class="head" style="text-align:center; font-size:7pt; color:#ffffff">{n:02d}</div>')
+        leader(x + 26, y - 2, col_w - 26,
+               f'<div><span class="head" style="font-size:12pt">{escape(space["nameEn"].upper())}</span>'
                f'&#160;&#160;<span class="thl muted" style="font-size:9pt">{escape(space["nameTh"])}</span></div>',
                page_of_space[space["slug"]], big=True)
         y += 24
         for cat in space["categories"]:
-            leader(x + 24, y, col_w - 24,
+            leader(x + 26, y, col_w - 26,
                    f'<div style="font-size:7.5pt"><span class="num">{escape(cat["nameEn"])}</span>'
                    f'&#160;<span class="muted">{escape(cat["nameTh"])}</span></div>', page_of_cat[cat["slug"]])
             y += 15
@@ -340,63 +359,69 @@ def build(color: bool = False) -> Path:
         number = first + i
         page = doc.page()
         if entry[0] == "divider":
+            # colour panel with the space name | studio backdrop with number and a hero piece
             space = entry[1]
             idx = spaces.index(space) + 1
-            _band(page, 0, H, PANEL)
-            page.draw_rect(pymupdf.Rect(0, 0, W * 0.36, H), color=None, fill=BAND)
-            doc.html(page, (M, 60, W * 0.36 - 20, 160),
-                     f'<div class="display" style="font-size:72pt; color:#ffffff">{idx:02d}</div>')
-            doc.html(page, (M, 190, W * 0.36 - 20, 300),
-                     f'<div class="display" style="font-size:30pt; color:#ffffff">{escape(space["nameEn"])}</div>'
-                     f'<div class="thl" style="font-size:15pt; color:#d9d6d1; margin-top:4pt">{escape(space["nameTh"])}</div>')
-            page.draw_rect(pymupdf.Rect(M, 300, M + 40, 302.5), color=None, fill=ACCENT)
+            t = tone(space)
+            page.draw_rect(pymupdf.Rect(0, 0, W / 2, H), color=None, fill=t)
+            doc.backdrop(page, (W / 2, 0, W, H), t)
+            doc.html(page, (M, H * 0.30, W / 2 - M, H * 0.30 + 60),
+                     f'<div style="text-align:center"><div class="head" style="font-size:20pt; color:#ffffff; '
+                     f'letter-spacing:3pt">{escape(space["nameEn"].upper())}</div>'
+                     f'<div class="thl" style="font-size:12pt; color:#ffffff">{escape(space["nameTh"])}</div></div>')
             if space.get("copy"):
-                doc.html(page, (M, 316, W * 0.36 - 24, 470),
-                         f'<p style="color:#ffffff; font-size:8.5pt">{escape(space["copy"]["th"])}</p>'
-                         f'<p style="color:#bdbab5; margin-top:6pt; font-size:7.5pt">{escape(space["copy"]["en"])}</p>')
-            cats = space["categories"][:6]
-            gx0 = W * 0.36 + 28
-            gw = W - M - gx0
-            cols = 3 if len(cats) > 4 else 2 if len(cats) > 1 else 1
-            rows = math.ceil(len(cats) / cols)
-            cw = gw / cols
-            rh = min(230, (H - 2 * 54) / max(rows, 1))
+                doc.html(page, (M + 30, H * 0.30 + 66, W / 2 - M - 30, H * 0.30 + 150),
+                         f'<div style="text-align:center"><p style="color:#ffffff; font-size:8pt">{escape(space["copy"]["th"])}</p>'
+                         f'<p style="color:#ffffff; margin-top:4pt; font-size:7pt">{escape(space["copy"]["en"])}</p></div>')
+            # categories with page numbers along the bottom of the panel
+            cats = space["categories"]
+            ncol = 2 if len(cats) > 6 else 1
+            per_col = math.ceil(len(cats) / ncol)
+            cw = (W / 2 - 2 * M - 20 * (ncol - 1)) / ncol
+            y0 = H - 46 - per_col * 13
+            doc.rule(page, M, y0 - 10, W / 2 - M, 0.5, (1, 1, 1))
             for j, c in enumerate(cats):
-                cx0 = gx0 + (j % cols) * cw
-                cy0 = 54 + (j // cols) * rh
-                page.draw_rect(pymupdf.Rect(cx0 + 6, cy0, cx0 + cw - 6, cy0 + rh - 44), color=None, fill=(1, 1, 1))
-                doc.sketch(page, covers.get(c["slug"]), (cx0 + 16, cy0 + 10, cx0 + cw - 16, cy0 + rh - 54), align_bottom=False, max_px=480)
-                doc.html(page, (cx0 + 6, cy0 + rh - 38, cx0 + cw - 6, cy0 + rh),
-                         f'<div class="thm" style="font-size:8.5pt">{escape(c["nameTh"])}</div>'
-                         f'<div class="num muted" style="font-size:7pt">{escape(c["nameEn"])}&#160;·&#160;'
-                         f'{len(c["products"])} items&#160;·&#160;p.{page_of_cat[c["slug"]]}</div>')
+                cx0 = M + (j // per_col) * (cw + 20)
+                cy = y0 + (j % per_col) * 13
+                doc.html(page, (cx0, cy, cx0 + cw - 24, cy + 13),
+                         f'<div style="font-size:7pt; color:#ffffff">{escape(c["nameEn"])}</div>')
+                doc.html(page, (cx0 + cw - 24, cy, cx0 + cw, cy + 13),
+                         f'<div class="num" style="font-size:7pt; color:#ffffff; text-align:right">{page_of_cat[c["slug"]]}</div>')
+            ink = hexc(darker(t))
+            doc.html(page, (W / 2 + 46, 52, W - M, 160),
+                     f'<div class="head" style="font-size:54pt; color:{ink}">{idx:02d}</div>'
+                     f'<div class="head" style="font-size:15pt; color:{ink}; letter-spacing:2pt">{escape(space["nameEn"].upper())}</div>')
+            page.draw_rect(pymupdf.Rect(W / 2 + 48, 168, W / 2 + 72, 170.5), color=None, fill=(0.6, 0.6, 0.6))
+            doc.sketch(page, hero(cats[0]["slug"], 1), (W / 2 + 70, 150, W - 40, H - 34), max_px=900, transparent=True)
             continue
 
         _, space, cat, items, is_first = entry
-        _running_header(doc, page, space["nameEn"], cat["nameTh"], cat["nameEn"])
-        top = TOP
+        _running_label(doc, page, space["nameEn"], cat["nameEn"], cat["nameTh"])
         if is_first:
-            doc.html(page, (M, 54, W - M, 96),
-                     f'<div><span class="display" style="font-size:22pt">{escape(cat["nameEn"])}</span>'
-                     f'&#160;&#160;&#160;<span class="thl" style="font-size:13pt">{escape(cat["nameTh"])}</span>'
-                     f'&#160;&#160;&#160;<span class="num muted" style="font-size:8pt">{len(cat["products"])} items</span></div>')
-            top = 54 + 34
-        gap_x, gap_y = 12, 10
-        cw = (W - 2 * M - gap_x * (GRID_COLS - 1)) / GRID_COLS
-        rh = (FOOT_Y - 14 - top - gap_y * (GRID_ROWS - 1)) / GRID_ROWS
-        for j, p in enumerate(items[:PER]):
-            x0 = M + (j % GRID_COLS) * (cw + gap_x)
-            y0 = top + (j // GRID_COLS) * (rh + gap_y)
-            _card(doc, page, p, x0, y0, cw, rh)
-        _footer(doc, page, number)
+            # tinted panel with the category title and its hero piece, first products beside it
+            t = tone(space)
+            px1 = W * 0.47
+            doc.backdrop(page, (INSET, INSET, px1, H - INSET), t, tint=0.3)
+            doc.html(page, (INSET + 24, INSET + 26, px1 - 20, INSET + 150),
+                     f'<div class="head" style="font-size:24pt; color:{hexc(darker(t, 0.6))}">{escape(cat["nameEn"].upper())}</div>'
+                     f'<div class="thm" style="font-size:12pt; margin-top:3pt">{escape(cat["nameTh"])}</div>'
+                     f'<div class="num muted" style="font-size:8pt; margin-top:2pt">{len(cat["products"])} items</div>')
+            doc.sketch(page, hero(cat["slug"]), (INSET + 40, INSET + 150, px1 - 40, H - INSET - 28), max_px=900,
+                       transparent=True)
+            _grid(doc, page, items, px1 + 30, W - M, TOP + 8, OPEN_COLS, OPEN_ROWS)
+        else:
+            _grid(doc, page, items, M, W - M, TOP + 8, GRID_COLS, GRID_ROWS)
+        _footer(doc, page, number, brand=not is_first)  # the opening panel runs down to the footer
 
     # ---- 4. index of codes
     entries = sorted(page_of_code, key=lambda e: (re.sub(r"[^A-Z0-9]", "", e[0].upper()) or "~", e[0]))
-    per_col, cols_per_page = 46, 5
+    per_col, cols_per_page = 44, 5
     col_w = (W - 2 * M) / cols_per_page
     for start in range(0, len(entries), per_col * cols_per_page):
         page = doc.page()
-        _running_header(doc, page, "Index", "ดัชนีรหัสสินค้า", "Product codes")
+        _running_label(doc, page, "Index", "Product codes", "ดัชนีรหัสสินค้า")
+        if start == 0:
+            doc.html(page, (M, 30, W / 2, 70), '<div class="head" style="font-size:20pt">INDEX</div>')
         chunk = entries[start:start + per_col * cols_per_page]
         for c in range(cols_per_page):
             col_items = chunk[c * per_col:(c + 1) * per_col]
@@ -405,27 +430,33 @@ def build(color: bool = False) -> Path:
             rows_html = "".join(
                 f'<tr><td class="num" style="font-size:6.5pt; padding:0.6pt 0">{escape(cut(code, 22))}</td>'
                 f'<td class="num muted" style="font-size:6.5pt; text-align:right">{n}</td></tr>' for code, n in col_items)
-            doc.html(page, (M + c * col_w, 56, M + (c + 1) * col_w - 10, FOOT_Y - 12),
+            doc.html(page, (M + c * col_w, TOP + 6, M + (c + 1) * col_w - 10, FOOT_Y - 12),
                      f'<table style="width:100%; border-collapse:collapse">{rows_html}</table>')
         _footer(doc, page, doc.pdf.page_count)
 
-    # ---- 5. back cover
+    # ---- 5. back cover: hairline frame, logo and company details centred
     page = doc.page()
-    _band(page, 0, H)
-    # company letterhead on a white panel
-    lh_h = (W - 2 * M - 40) * 129 / 1044
-    page.draw_rect(pymupdf.Rect(M, 60, W - M, 60 + lh_h + 40), color=None, fill=(1, 1, 1))
-    page.insert_image(pymupdf.Rect(M + 20, 80, W - M - 20, 80 + lh_h), filename=str(LETTERHEAD))
-    page.draw_rect(pymupdf.Rect(M, 200, M + 60, 203), color=None, fill=ACCENT)
-    doc.html(page, (M, 220, W * 0.55, 420),
-             '<p style="color:#ffffff; font-size:9pt">ขนาดสินค้าอ้างอิงจากแผ่นสเปกของผู้ผลิต อาจคลาดเคลื่อนเล็กน้อย '
+    page.draw_rect(pymupdf.Rect(14, 14, W - 14, H - 14), color=ACCENT, width=0.8)
+    lw = 190
+    _logo(page, (W - lw) / 2, 92, lw)
+    doc.html(page, (M, 160, W - M, 330),
+             '<div style="text-align:center; line-height:1.9">'
+             '<div class="thm" style="font-size:12pt">บริษัท แน๊ตเฟอร์นิเจอร์ จำกัด</div>'
+             '<div class="head" style="font-size:12pt; letter-spacing:1.6pt">NAT FURNITURE CO., LTD.</div>'
+             '<div class="num" style="font-size:9pt; margin-top:6pt">64/4 Moo 7, Rai Khing, Sam Phran, Nakhon Pathom, Thailand 73210</div>'
+             '<div class="num" style="font-size:9pt"><span class="muted">Tax ID</span>&#160; 0735551000056</div>'
+             '<div class="head" style="font-size:9pt; letter-spacing:1.4pt">ISO 9001&#160;&#160;·&#160;&#160;ISO 14001</div></div>')
+    page.draw_rect(pymupdf.Rect(W / 2 - 15, 318, W / 2 + 15, 320.5), color=None, fill=RED)
+    doc.html(page, (W * 0.2, 338, W * 0.8, 470),
+             '<div style="text-align:center">'
+             '<p class="muted" style="font-size:8pt">ขนาดสินค้าอ้างอิงจากแผ่นสเปกของผู้ผลิต อาจคลาดเคลื่อนเล็กน้อย '
              'รายละเอียด วัสดุ และสีอาจเปลี่ยนแปลงได้โดยไม่ต้องแจ้งให้ทราบล่วงหน้า '
              'ดูข้อมูลล่าสุดและรายละเอียดการผลิตของแต่ละรุ่นได้ที่เว็บไซต์แคตตาล็อก</p>'
-             '<p style="color:#bdbab5; margin-top:8pt; font-size:8pt">Sizes come from the manufacturers\' specification sheets '
+             '<p class="muted" style="margin-top:6pt; font-size:7pt">Sizes come from the manufacturers\' specification sheets '
              'and may vary slightly. Details, materials and finishes may change without notice; see the online catalogue '
-             'for the latest information and full construction details of each model.</p>')
-    doc.html(page, (M, H - 60, W - M, H - 36),
-             f'<div class="num" style="font-size:7.5pt; color:#8d8a85">NAT Furniture E-Catalogue&#160;&#160;·&#160;&#160;'
+             'for the latest information and full construction details of each model.</p></div>')
+    doc.html(page, (M, H - 62, W - M, H - 40),
+             f'<div class="num muted" style="text-align:center; font-size:7pt">NAT Furniture E-Catalogue&#160;&#160;·&#160;&#160;'
              f'{date.today():%B %Y}&#160;&#160;·&#160;&#160;{total:,} items</div>')
 
     doc.pdf.set_metadata({"title": "NAT Furniture E-Catalogue", "author": "NAT Furniture",
