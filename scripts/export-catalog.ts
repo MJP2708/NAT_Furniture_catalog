@@ -1,6 +1,7 @@
 /**
  * Export the published catalogue (including admin edits) for the e-catalogue PDF builder.
- * Writes ingest/.cache/ecatalog.json; `pnpm catalog:pdf` runs this and then the Python layout.
+ * Writes ingest/.cache/ecatalog.json; `pnpm catalog:pdf` (brochure) and `pnpm catalog:office` (interactive
+ * office catalogue) run this and then their Python layout.
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 
@@ -27,6 +28,10 @@ async function main() {
       featuresTh: products.featuresTh,
       featuresEn: products.featuresEn,
       categoryId: products.categoryId,
+      materials: products.materials,
+      material: products.material,
+      tags: products.tags,
+      specs: products.specs,
       sizes: products.sizes,
       flags: products.flags,
     })
@@ -54,7 +59,7 @@ async function main() {
           nameEn: c.nameEn,
           products: rows
             .filter((p) => p.categoryId === c.id)
-            .map(({ id, flags, slug, code, typeTh, typeEn, summaryTh, summaryEn, featuresTh, featuresEn, sizes }) => ({
+            .map(({ id, flags, slug, code, typeTh, typeEn, summaryTh, summaryEn, featuresTh, featuresEn, sizes, materials, material, tags, specs }) => ({
               slug,
               code,
               typeTh,
@@ -62,8 +67,13 @@ async function main() {
               // Copy for the feature pages (a few lines next to a large picture)
               summaryTh,
               summaryEn,
-              featuresTh: featuresTh.slice(0, 4),
-              featuresEn: featuresEn.slice(0, 4),
+              featuresTh: featuresTh.slice(0, 6),
+              featuresEn: featuresEn.slice(0, 6),
+              // For the office catalogue: range (mesh/leather, steel/wood ...), material and colour lines
+              materials,
+              material,
+              tags,
+              specs,
               // Drawings rendered from the sheet (vs. a traced photo) make weaker cover images.
               rendered: flags.includes("image-from-render"),
               // Size sets as [w, d, h, dia] mm ranges; the PDF prints one line per set.

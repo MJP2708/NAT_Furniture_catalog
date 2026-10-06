@@ -44,6 +44,9 @@ export function SiteShell({ lang, children }: { lang: Lang; children: React.Reac
                   {spaceName(th, en)}
                 </Link>
               ))}
+              <Link href={href(lang, "/catalogue")} className="whitespace-nowrap hover:text-accent">
+                {ui.officeCatalogue}
+              </Link>
               <a href={E_CATALOGUE_URL} className="eyebrow whitespace-nowrap text-accent hover:underline">
                 E-Catalogue
               </a>
@@ -63,6 +66,9 @@ export function SiteShell({ lang, children }: { lang: Lang; children: React.Reac
                 {spaceName(th, en)}
               </Link>
             ))}
+            <Link href={href(lang, "/catalogue")} className="shrink-0 py-1 hover:text-accent">
+              {ui.officeCatalogue}
+            </Link>
             <a href={E_CATALOGUE_URL} className="eyebrow shrink-0 self-center py-1 text-accent">
               E-Catalogue
             </a>
@@ -91,6 +97,11 @@ export function SiteShell({ lang, children }: { lang: Lang; children: React.Reac
             <div>
               <div className="eyebrow text-muted">E-Catalogue</div>
               <p className="mt-3 text-sm">
+                <Link href={href(lang, "/catalogue")} className="text-accent hover:underline">
+                  {ui.officeCatalogue}
+                </Link>
+              </p>
+              <p className="mt-1 text-sm">
                 <a href={E_CATALOGUE_URL} className="text-accent hover:underline">
                   {ui.footerDownload}
                 </a>

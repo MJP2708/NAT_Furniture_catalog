@@ -6,6 +6,7 @@ import { ProductGrid } from "@/components/product-grid";
 import { getProduct } from "@/lib/catalog";
 import { formatEnvelope, formatRange } from "@/lib/format";
 import { href, type Lang, pick, t } from "@/lib/i18n";
+import { officeEntry, rangeAnchor } from "@/lib/office-catalogue";
 
 const DIM_LABELS = {
   w: ["Width", "กว้าง"],
@@ -55,6 +56,7 @@ export async function ProductView({ slug, lang }: { slug: string; lang: Lang }) 
   const type = pick(lang, p.typeTh ?? "", p.typeEn);
   const summary = pick(lang, p.summaryTh ?? "", p.summaryEn);
   const note = pick(lang, p.noteTh ?? "", p.noteEn);
+  const office = officeEntry(slug);
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 print:p-0">
@@ -113,6 +115,16 @@ export async function ProductView({ slug, lang }: { slug: string; lang: Lang }) 
         {/* Specification */}
         <div>
           {category && <div className="eyebrow text-muted">{category.nameEn}</div>}
+          {office && (
+            <Link
+              href={href(lang, `/catalogue/${office.main.code.toLowerCase()}#${rangeAnchor(office.range.code)}`)}
+              className="no-print mt-2 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs hover:opacity-80"
+              style={{ borderColor: office.main.accent, color: office.main.accent }}
+            >
+              <span className="font-num font-semibold">{office.code}</span>
+              <span>{lang === "en" ? office.range.en : office.range.th}</span>
+            </Link>
+          )}
           <h1 className="display mt-2 text-4xl break-words sm:text-6xl">{p.code}</h1>
           {type.value && (
             <p className="mt-3 text-xl font-light">
