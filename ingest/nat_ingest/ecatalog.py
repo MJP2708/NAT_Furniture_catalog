@@ -178,12 +178,13 @@ def size_line(mm: dict) -> str:
     return " x ".join(parts) + " cm" if parts else ""
 
 
-GRID_COLS, GRID_ROWS = 5, 3
-PER = GRID_COLS * GRID_ROWS
+GRID_COLS, GRID_ROWS = 4, 2
 OPEN_COLS, OPEN_ROWS = 3, 3     # products beside a category's opening panel
 PER_OPEN = OPEN_COLS * OPEN_ROWS
+# After its opening page a category runs through brochure layouts in turn: (kind, products per page)
+LAYOUTS = (("feature", 5), ("lineup", 10), ("showcase", 7), ("grid", GRID_COLS * GRID_ROWS))
 TOP = 74        # content top below the running label
-INSET = 20      # opening panels sit this far in from the page edge
+INSET = 20      # panels sit this far in from the page edge
 
 
 def hexc(rgb) -> str:
@@ -226,28 +227,131 @@ def _dims(mm: dict) -> str:
     return " &#160;".join(parts) + ' <span class="muted">cm</span>' if parts else ""
 
 
-def _card(doc: "Doc", page, p: dict, x0: float, y0: float, w: float, h: float) -> None:
-    """A product standing on the white page, caption centred underneath."""
+def _sizes(p: dict) -> list[str]:
+    return [x for x in (_dims(mm) for mm in p["sizes"]) if x]
+
+
+def _caption(doc: "Doc", page, p: dict, x0: float, y0: float, x1: float, y1: float, big: bool = False) -> None:
+    """Code, Thai type and first size set, centred."""
+    sizes = _sizes(p)
+    more = f' <span class="muted">+{len(sizes) - 1}</span>' if len(sizes) > 1 else ""
+    k = 1.15 if big else 1
+    doc.html(page, (x0, y0, x1, y1),
+             f'<div style="text-align:center">'
+             f'<div class="head" style="font-size:{7.5 * k}pt">{escape(cut(p["code"], 24))}</div>'
+             f'<div class="muted" style="font-size:{6.3 * k}pt; line-height:1.3">{escape(cut(p["typeTh"] or "", 34))}</div>'
+             f'<div class="num" style="font-size:{5.8 * k}pt; margin-top:1pt">{sizes[0] if sizes else ""}{more}</div></div>')
+
+
+def _card(doc: "Doc", page, p: dict, x0: float, y0: float, w: float, h: float, on_tint: bool = False) -> None:
+    """A product standing on the page, caption centred underneath."""
     img_h = h * 0.7
     doc.sketch(page, p["image"], (x0 + 8, y0 + 4, x0 + w - 8, y0 + img_h - 2), max_px=320 if doc.color else 300,
-               transparent=not doc.color)
-    ty = y0 + img_h + 5
-    sizes = [_dims(mm) for mm in p["sizes"]]
-    sizes = [x for x in sizes if x]
-    more = f' <span class="muted">+{len(sizes) - 1}</span>' if len(sizes) > 1 else ""
-    doc.html(page, (x0, ty, x0 + w, y0 + h),
-             f'<div style="text-align:center">'
-             f'<div class="head" style="font-size:7.5pt">{escape(cut(p["code"], 24))}</div>'
-             f'<div class="muted" style="font-size:6.3pt; line-height:1.3">{escape(cut(p["typeTh"] or "", 34))}</div>'
-             f'<div class="num" style="font-size:5.8pt; margin-top:1pt">{sizes[0] if sizes else ""}{more}</div></div>')
+               transparent=on_tint or not doc.color)
+    _caption(doc, page, p, x0, y0 + img_h + 5, x0 + w, y0 + h)
 
 
-def _grid(doc: "Doc", page, items: list, x0: float, x1: float, top: float, cols: int, rows: int) -> None:
+def _grid(doc: "Doc", page, items: list, x0: float, x1: float, top: float, cols: int, rows: int,
+          bottom: float = FOOT_Y - 16) -> None:
     gap_x, gap_y = 14, 12
     cw = (x1 - x0 - gap_x * (cols - 1)) / cols
-    rh = (FOOT_Y - 16 - top - gap_y * (rows - 1)) / rows
+    rh = (bottom - top - gap_y * (rows - 1)) / rows
     for j, p in enumerate(items[:cols * rows]):
         _card(doc, page, p, x0 + (j % cols) * (cw + gap_x), top + (j // cols) * (rh + gap_y), cw, rh)
+
+
+def _row(doc: "Doc", page, items: list, x0: float, x1: float, top: float, bottom: float, slots: int,
+         on_tint: bool = False) -> None:
+    """One row of products, centred when there are fewer than slots."""
+    gap = 14
+    cw = (x1 - x0 - gap * (slots - 1)) / slots
+    left = x0 + (slots - len(items)) * (cw + gap) / 2
+    for j, p in enumerate(items):
+        _card(doc, page, p, left + j * (cw + gap), top, cw, bottom - top, on_tint)
+
+
+def _hero_first(items: list) -> list:
+    """Put the product with the strongest picture first (traced photo before a rendered sheet drawing)."""
+    best = min(range(len(items)), key=lambda j: (not items[j]["image"], items[j]["rendered"], j))
+    return [items[best]] + items[:best] + items[best + 1:]
+
+
+def paginate(items: list) -> list[tuple[str, list]]:
+    """Split a category's products over its opening page and the rotating brochure layouts."""
+    pages = [("open", items[:PER_OPEN])]
+    rest, k = items[PER_OPEN:], 0
+    while rest:
+        kind, n = LAYOUTS[k % len(LAYOUTS)]
+        chunk, rest = rest[:n], rest[n:]
+        if kind in ("feature", "showcase"):
+            chunk = _hero_first(chunk)
+            if not chunk[0]["image"]:
+                kind = "grid"  # nothing to show large
+            elif kind == "showcase" and len(chunk) < 3:
+                kind = "feature"
+        pages.append((kind, chunk))
+        k += 1
+    return pages
+
+
+def _feature(doc: "Doc", page, items: list, t) -> None:
+    """Tinted panel with one product large and its code as the headline; the rest beside it (ref. series page)."""
+    p, px1 = items[0], W * 0.47
+    doc.backdrop(page, (INSET, INSET, px1, H - INSET), t, tint=0.3)
+    sizes = _sizes(p)
+    doc.html(page, (INSET + 24, INSET + 26, px1 - 20, INSET + 130),
+             f'<div class="head" style="font-size:28pt; color:{hexc(darker(t, 0.6))}">{escape(cut(p["code"], 20))}</div>'
+             f'<div class="thm" style="font-size:10pt; margin-top:3pt">{escape(cut(p["typeTh"] or "", 60))}</div>'
+             f'<div class="num" style="font-size:7.5pt; margin-top:2pt">{"<br>".join(sizes[:2])}</div>')
+    doc.sketch(page, p["image"], (INSET + 40, INSET + 140, px1 - 40, H - INSET - 28), max_px=900, transparent=True)
+    _grid(doc, page, items[1:], px1 + 30, W - M, TOP + 8, 2, 2)
+
+
+def _lineup(doc: "Doc", page, items: list, t, cat: dict) -> None:
+    """Big heading, five pieces standing on one studio floor, a smaller row below (ref. line-up page)."""
+    doc.html(page, (M, 30, W * 0.62, 100),
+             f'<div class="head" style="font-size:20pt">{escape(cat["nameEn"].upper())}</div>'
+             f'<div style="font-family:ml; font-size:11pt; letter-spacing:6pt; color:{hexc(darker(t))}">'
+             f'COLLECTION</div>')
+    page.draw_rect(pymupdf.Rect(M, 84, M + 30, 86.5), color=None, fill=RED)
+    doc.backdrop(page, (M, 100, W - M, 344), t, tint=0.15)
+    _row(doc, page, items[:5], M + 10, W - M - 10, 110, 340, 5, on_tint=True)
+    if items[5:]:
+        _row(doc, page, items[5:10], M, W - M, 360, FOOT_Y - 16, 5)
+
+
+def _showcase(doc: "Doc", page, items: list, t, cat: dict) -> None:
+    """Wide studio band with three pieces, a row of small ones and a text block on the main one
+    (ref. "ERGONOMIC DESIGN•" page)."""
+    band_y0, band_y1 = TOP + 4, 352
+    doc.backdrop(page, (M, band_y0, W - M, band_y1), t, tint=0.18)
+    p = items[0]
+    hw = (W - 2 * M) * 0.42
+    doc.sketch(page, p["image"], (M + 30, band_y0 + 12, M + 30 + hw, band_y1 - 42), max_px=900, transparent=True)
+    _caption(doc, page, p, M + 30, band_y1 - 39, M + 30 + hw, band_y1, big=True)
+    side = items[1:3]
+    sx0 = M + 30 + hw + 20
+    _row(doc, page, side, sx0, W - M - 20, band_y0 + 60, band_y1, 2, on_tint=True)
+    # small row and the text block
+    small = items[3:7]
+    tx0 = W * 0.66
+    if small:
+        _row(doc, page, small, M, tx0 - 24, band_y1 + 18, FOOT_Y - 16, 4)
+    feats = [f for f in (p.get("featuresTh") or []) if f][:3]
+    body = "".join(f'<p style="font-size:7pt; margin-bottom:2pt"><span style="color:{hexc(RED)}">•</span>&#160; '
+                   f'{escape(cut(f, 90))}</p>' for f in feats)
+    if not body and p.get("summaryTh"):
+        body = f'<p style="font-size:7pt">{escape(cut(p["summaryTh"], 220))}</p>'
+    sizes = "<br>".join(_sizes(p)[:3])
+    doc.html(page, (tx0, band_y1 + 22, W - M, band_y1 + 74),
+             f'<div class="head" style="font-size:8pt">{escape(cat["nameEn"].upper())}</div>'
+             f'<div style="font-family:ml; font-size:20pt; line-height:1.15; color:{hexc(darker(t))}">'
+             f'{escape(cut(p["code"], 18))}<span style="color:{hexc(RED)}">•</span></div>')
+    doc.rule(page, tx0, band_y1 + 76, W - M, 0.4, MUTED)
+    doc.html(page, (tx0, band_y1 + 82, W - M, FOOT_Y - 14),
+             f'<div class="thm" style="font-size:8pt">{escape(cut(p["typeTh"] or "", 70))}</div>'
+             f'<div class="muted" style="font-size:7pt">{escape(cut(p.get("typeEn") or "", 70))}</div>'
+             f'<div class="num" style="font-size:7pt; margin:3pt 0 4pt 0">{sizes}</div>{body}')
 
 
 def _logo(page, x0: float, y0: float, width: float) -> None:
@@ -274,15 +378,12 @@ def build(color: bool = False) -> Path:
     def tone(space: dict):
         return TONES.get(space["slug"], ACCENT)
 
-    # ---- plan pages: each category opens on a panel page with a few products, then full grids
-    plan: list[tuple] = []  # ("divider", space) | ("grid", space, cat, items, is_first)
+    # ---- plan pages: each category opens on a panel page, then runs through the brochure layouts
+    plan: list[tuple] = []  # ("divider", space) | (kind, space, cat, items)
     for space in spaces:
         plan.append(("divider", space))
         for cat in space["categories"]:
-            items = cat["products"]
-            plan.append(("grid", space, cat, items[:PER_OPEN], True))
-            for i in range(PER_OPEN, len(items), PER):
-                plan.append(("grid", space, cat, items[i:i + PER], False))
+            plan += [(kind, space, cat, chunk) for kind, chunk in paginate(cat["products"])]
     first = 3  # cover, contents
     page_of_space, page_of_cat, page_of_code = {}, {}, []
     for i, entry in enumerate(plan):
@@ -395,11 +496,11 @@ def build(color: bool = False) -> Path:
             doc.sketch(page, hero(cats[0]["slug"], 1), (W / 2 + 70, 150, W - 40, H - 34), max_px=900, transparent=True)
             continue
 
-        _, space, cat, items, is_first = entry
+        kind, space, cat, items = entry
+        t = tone(space)
         _running_label(doc, page, space["nameEn"], cat["nameEn"], cat["nameTh"])
-        if is_first:
+        if kind == "open":
             # tinted panel with the category title and its hero piece, first products beside it
-            t = tone(space)
             px1 = W * 0.47
             doc.backdrop(page, (INSET, INSET, px1, H - INSET), t, tint=0.3)
             doc.html(page, (INSET + 24, INSET + 26, px1 - 20, INSET + 150),
@@ -409,9 +510,16 @@ def build(color: bool = False) -> Path:
             doc.sketch(page, hero(cat["slug"]), (INSET + 40, INSET + 150, px1 - 40, H - INSET - 28), max_px=900,
                        transparent=True)
             _grid(doc, page, items, px1 + 30, W - M, TOP + 8, OPEN_COLS, OPEN_ROWS)
+        elif kind == "feature":
+            _feature(doc, page, items, t)
+        elif kind == "lineup":
+            _lineup(doc, page, items, t, cat)
+        elif kind == "showcase":
+            _showcase(doc, page, items, t, cat)
         else:
             _grid(doc, page, items, M, W - M, TOP + 8, GRID_COLS, GRID_ROWS)
-        _footer(doc, page, number, brand=not is_first)  # the opening panel runs down to the footer
+        # panels on the left run down to the footer
+        _footer(doc, page, number, brand=kind not in ("open", "feature"))
 
     # ---- 4. index of codes
     entries = sorted(page_of_code, key=lambda e: (re.sub(r"[^A-Z0-9]", "", e[0].upper()) or "~", e[0]))

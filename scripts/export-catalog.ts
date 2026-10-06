@@ -22,6 +22,10 @@ async function main() {
       code: products.code,
       typeTh: products.typeTh,
       typeEn: products.typeEn,
+      summaryTh: products.summaryTh,
+      summaryEn: products.summaryEn,
+      featuresTh: products.featuresTh,
+      featuresEn: products.featuresEn,
       categoryId: products.categoryId,
       sizes: products.sizes,
       flags: products.flags,
@@ -50,11 +54,16 @@ async function main() {
           nameEn: c.nameEn,
           products: rows
             .filter((p) => p.categoryId === c.id)
-            .map(({ id, flags, slug, code, typeTh, typeEn, sizes }) => ({
+            .map(({ id, flags, slug, code, typeTh, typeEn, summaryTh, summaryEn, featuresTh, featuresEn, sizes }) => ({
               slug,
               code,
               typeTh,
               typeEn,
+              // Copy for the feature pages (a few lines next to a large picture)
+              summaryTh,
+              summaryEn,
+              featuresTh: featuresTh.slice(0, 4),
+              featuresEn: featuresEn.slice(0, 4),
               // Drawings rendered from the sheet (vs. a traced photo) make weaker cover images.
               rendered: flags.includes("image-from-render"),
               // Size sets as [w, d, h, dia] mm ranges; the PDF prints one line per set.
