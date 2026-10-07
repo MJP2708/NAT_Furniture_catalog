@@ -570,6 +570,16 @@
    "accent": "#21809e",
    "subs": [
     {
+     "code": "WS-BEM",
+     "en": "Other",
+     "th": "อื่น ๆ",
+     "group": {
+      "code": "WS-BEM",
+      "en": "Beam & Row Seating",
+      "th": "เก้าอี้แถว / พักคอย"
+     }
+    },
+    {
      "code": "WS-BEM-FB",
      "en": "Fabric",
      "th": "ผ้า",
@@ -1030,6 +1040,16 @@
      }
     },
     {
+     "code": "TB-CLS-PL",
+     "en": "Plastic",
+     "th": "พลาสติก",
+     "group": {
+      "code": "TB-CLS",
+      "en": "Classroom Desks & Podiums",
+      "th": "โต๊ะนักเรียน / โพเดียม"
+     }
+    },
+    {
      "code": "TB-CLS-WD",
      "en": "Wooden",
      "th": "ไม้",
@@ -1177,6 +1197,16 @@
       "code": "TB-DIN",
       "en": "Dining & Café Tables",
       "th": "โต๊ะอาหาร / คาเฟ่"
+     }
+    },
+    {
+     "code": "TB-DRF-WS",
+     "en": "Wood top + steel frame",
+     "th": "ไม้ขาเหล็ก",
+     "group": {
+      "code": "TB-DRF",
+      "en": "Drafting Tables",
+      "th": "โต๊ะเขียนแบบ"
      }
     },
     {
@@ -1490,6 +1520,16 @@
      }
     },
     {
+     "code": "CB-DOC",
+     "en": "Other",
+     "th": "อื่น ๆ",
+     "group": {
+      "code": "CB-DOC",
+      "en": "Document Cupboards",
+      "th": "ตู้เอกสาร"
+     }
+    },
+    {
      "code": "CB-DOC-ST",
      "en": "Steel",
      "th": "เหล็ก",
@@ -1647,6 +1687,16 @@
       "code": "CB-LCK",
       "en": "Lockers",
       "th": "ตู้ล็อคเกอร์"
+     }
+    },
+    {
+     "code": "CB-MED-ST",
+     "en": "Steel",
+     "th": "เหล็ก",
+     "group": {
+      "code": "CB-MED",
+      "en": "Medical Record Cabinets",
+      "th": "ตู้เวชระเบียน / บัตรผู้ป่วย"
      }
     },
     {
@@ -1890,6 +1940,16 @@
      }
     },
     {
+     "code": "PT-DSK-GL",
+     "en": "Glass",
+     "th": "กระจก",
+     "group": {
+      "code": "PT-DSK",
+      "en": "Desk Screens",
+      "th": "มินิสกรีน / ฉากกั้นบนโต๊ะ"
+     }
+    },
+    {
      "code": "PT-DSK-HG",
      "en": "Half-glass",
      "th": "ครึ่งกระจก",
@@ -1970,6 +2030,16 @@
      }
     },
     {
+     "code": "PT-PRT",
+     "en": "Other",
+     "th": "อื่น ๆ",
+     "group": {
+      "code": "PT-PRT",
+      "en": "Posts, Feet & Parts",
+      "th": "เสา ขาตั้ง และอุปกรณ์"
+     }
+    },
+    {
      "code": "PT-PRT-ST",
      "en": "Steel",
      "th": "เหล็ก",
@@ -2038,6 +2108,16 @@
       "en": "Beds",
       "th": "เตียงนอน"
      }
+    },
+    {
+     "code": "BD-BNK-ST",
+     "en": "Steel",
+     "th": "เหล็ก",
+     "group": {
+      "code": "BD-BNK",
+      "en": "Bunk Beds",
+      "th": "เตียง 2 ชั้น"
+     }
     }
    ]
   },
@@ -2085,6 +2165,12 @@
   {
    "slug": "nat-kradan-wai-bot-chanit-mi-loluean",
    "code": "AC-06",
+   "range": "AC",
+   "also": []
+  },
+  {
+   "slug": "nat-item-2",
+   "code": "AC-07",
    "range": "AC",
    "also": []
   },
@@ -2191,6 +2277,24 @@
    "also": []
   },
   {
+   "slug": "osj-sj2001",
+   "code": "BD-BNK-ST-01",
+   "range": "BD-BNK-ST",
+   "also": []
+  },
+  {
+   "slug": "osj-sj2002",
+   "code": "BD-BNK-ST-02",
+   "range": "BD-BNK-ST",
+   "also": []
+  },
+  {
+   "slug": "osj-sj2003",
+   "code": "BD-BNK-ST-03",
+   "range": "BD-BNK-ST",
+   "also": []
+  },
+  {
    "slug": "nat-f-06-2",
    "code": "CB-BSD-WD-01",
    "range": "CB-BSD-WD",
@@ -2266,6 +2370,12 @@
    "slug": "practika-x-lockers",
    "code": "CB-CUB-WD-07",
    "range": "CB-CUB-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-f-15",
+   "code": "CB-DOC-01",
+   "range": "CB-DOC",
    "also": []
   },
   {
@@ -2527,6 +2637,12 @@
    "also": []
   },
   {
+   "slug": "nat-nh-756-tu-eksan-elk-2-ban-poet",
+   "code": "CB-DOC-ST-SW-05",
+   "range": "CB-DOC-ST-SW",
+   "also": []
+  },
+  {
    "slug": "nat-tukepeksan-ban-thuep-ban-poet-khu",
    "code": "CB-DOC-ST-SW-06",
    "range": "CB-DOC-ST-SW",
@@ -2589,6 +2705,24 @@
   {
    "slug": "nat-ca-01-2",
    "code": "CB-DOC-WD-02",
+   "range": "CB-DOC-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-ca-01",
+   "code": "CB-DOC-WD-03",
+   "range": "CB-DOC-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-cb160",
+   "code": "CB-DOC-WD-04",
+   "range": "CB-DOC-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-lf-301",
+   "code": "CB-DOC-WD-05",
    "range": "CB-DOC-WD",
    "also": []
   },
@@ -3247,6 +3381,12 @@
    "also": []
   },
   {
+   "slug": "nat-s3",
+   "code": "CB-FIL-ST-07",
+   "range": "CB-FIL-ST",
+   "also": []
+  },
+  {
    "slug": "thaitaiyo-fc-632",
    "code": "CB-FIL-ST-08",
    "range": "CB-FIL-ST",
@@ -3427,6 +3567,30 @@
    "also": []
   },
   {
+   "slug": "nat-lo-01",
+   "code": "CB-LCK-02",
+   "range": "CB-LCK",
+   "also": []
+  },
+  {
+   "slug": "nat-lo-01-2",
+   "code": "CB-LCK-03",
+   "range": "CB-LCK",
+   "also": []
+  },
+  {
+   "slug": "nat-lo-02",
+   "code": "CB-LCK-04",
+   "range": "CB-LCK",
+   "also": []
+  },
+  {
+   "slug": "nat-lo-02-2",
+   "code": "CB-LCK-05",
+   "range": "CB-LCK",
+   "also": []
+  },
+  {
    "slug": "nat-b3",
    "code": "CB-LCK-ST-01",
    "range": "CB-LCK-ST",
@@ -3529,6 +3693,12 @@
    "also": []
   },
   {
+   "slug": "nat-tu-lkkoe-elk",
+   "code": "CB-LCK-ST-18",
+   "range": "CB-LCK-ST",
+   "also": []
+  },
+  {
    "slug": "thaitaiyo-lk-01",
    "code": "CB-LCK-ST-19",
    "range": "CB-LCK-ST",
@@ -3580,6 +3750,42 @@
    "slug": "thaitaiyo-lkm-09",
    "code": "CB-LCK-ST-27",
    "range": "CB-LCK-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-opd-132",
+   "code": "CB-MED-ST-01",
+   "range": "CB-MED-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-opd-264",
+   "code": "CB-MED-ST-02",
+   "range": "CB-MED-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-prv-120",
+   "code": "CB-MED-ST-03",
+   "range": "CB-MED-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-prv-240",
+   "code": "CB-MED-ST-04",
+   "range": "CB-MED-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-xrv-116",
+   "code": "CB-MED-ST-05",
+   "range": "CB-MED-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-xrv-232",
+   "code": "CB-MED-ST-06",
+   "range": "CB-MED-ST",
    "also": []
   },
   {
@@ -3651,6 +3857,24 @@
   {
    "slug": "nat-ca1",
    "code": "CB-OTH-WD-02",
+   "range": "CB-OTH-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-ch-02",
+   "code": "CB-OTH-WD-03",
+   "range": "CB-OTH-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-cl-02",
+   "code": "CB-OTH-WD-04",
+   "range": "CB-OTH-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-cl-04",
+   "code": "CB-OTH-WD-05",
    "range": "CB-OTH-WD",
    "also": []
   },
@@ -3789,6 +4013,12 @@
   {
    "slug": "nat-cl-05",
    "code": "CB-PED-WD-MB-03",
+   "range": "CB-PED-WD-MB",
+   "also": []
+  },
+  {
+   "slug": "nat-cl-05-2",
+   "code": "CB-PED-WD-MB-04",
    "range": "CB-PED-WD-MB",
    "also": []
   },
@@ -4141,6 +4371,12 @@
    "also": []
   },
   {
+   "slug": "nat-bf6",
+   "code": "CB-SHO-WD-03",
+   "range": "CB-SHO-WD",
+   "also": []
+  },
+  {
    "slug": "nat-f-3-2",
    "code": "CB-SHO-WD-04",
    "range": "CB-SHO-WD",
@@ -4327,6 +4563,12 @@
    "also": []
   },
   {
+   "slug": "nat-bf5-1",
+   "code": "CB-WRD-WD-05",
+   "range": "CB-WRD-WD",
+   "also": []
+  },
+  {
    "slug": "nat-cl-1",
    "code": "CB-WRD-WD-06",
    "range": "CB-WRD-WD",
@@ -4435,6 +4677,12 @@
    "also": []
   },
   {
+   "slug": "nat-1",
+   "code": "CB-WRD-WD-24",
+   "range": "CB-WRD-WD",
+   "also": []
+  },
+  {
    "slug": "nat-tusueapha",
    "code": "CB-WRD-WD-25",
    "range": "CB-WRD-WD",
@@ -4471,6 +4719,12 @@
    "also": []
   },
   {
+   "slug": "nat-rd8863",
+   "code": "CH-AUD-01",
+   "range": "CH-AUD",
+   "also": []
+  },
+  {
    "slug": "nat-kaoi-ongprachum",
    "code": "CH-AUD-02",
    "range": "CH-AUD",
@@ -4479,6 +4733,12 @@
   {
    "slug": "nat-c-16",
    "code": "CH-AUD-FB-01",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "nat-cu-601",
+   "code": "CH-AUD-FB-02",
    "range": "CH-AUD-FB",
    "also": []
   },
@@ -4515,6 +4775,450 @@
   {
    "slug": "practika-auditorium-7",
    "code": "CH-AUD-FB-08",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-c-w",
+   "code": "CH-AUD-FB-09",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-mv-ap",
+   "code": "CH-AUD-FB-10",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-mv-aw",
+   "code": "CH-AUD-FB-11",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-mv-awd",
+   "code": "CH-AUD-FB-12",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-mv-p",
+   "code": "CH-AUD-FB-13",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-mv-w",
+   "code": "CH-AUD-FB-14",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-raf-aw",
+   "code": "CH-AUD-FB-15",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-raf-aw-c",
+   "code": "CH-AUD-FB-16",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-raf-aw1",
+   "code": "CH-AUD-FB-17",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-raf-p",
+   "code": "CH-AUD-FB-18",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-raf-ps1",
+   "code": "CH-AUD-FB-19",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-raf-w",
+   "code": "CH-AUD-FB-20",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-raf-ws1",
+   "code": "CH-AUD-FB-21",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-6305",
+   "code": "CH-AUD-FB-22",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-6601",
+   "code": "CH-AUD-FB-23",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-6602",
+   "code": "CH-AUD-FB-24",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-6603",
+   "code": "CH-AUD-FB-25",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-6605",
+   "code": "CH-AUD-FB-26",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-6607",
+   "code": "CH-AUD-FB-27",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-6616",
+   "code": "CH-AUD-FB-28",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-8601",
+   "code": "CH-AUD-FB-29",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-8602",
+   "code": "CH-AUD-FB-30",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-8603",
+   "code": "CH-AUD-FB-31",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-8606",
+   "code": "CH-AUD-FB-32",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-8607",
+   "code": "CH-AUD-FB-33",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-8608",
+   "code": "CH-AUD-FB-34",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-8609",
+   "code": "CH-AUD-FB-35",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-8619",
+   "code": "CH-AUD-FB-36",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-8621",
+   "code": "CH-AUD-FB-37",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-8624",
+   "code": "CH-AUD-FB-38",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-8633",
+   "code": "CH-AUD-FB-39",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-8646",
+   "code": "CH-AUD-FB-40",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-9603",
+   "code": "CH-AUD-FB-41",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-9604",
+   "code": "CH-AUD-FB-42",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-9609",
+   "code": "CH-AUD-FB-43",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-9611",
+   "code": "CH-AUD-FB-44",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj-9613",
+   "code": "CH-AUD-FB-45",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj6604",
+   "code": "CH-AUD-FB-46",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj6706",
+   "code": "CH-AUD-FB-47",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj6706-s1",
+   "code": "CH-AUD-FB-48",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj6706a",
+   "code": "CH-AUD-FB-49",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj6712",
+   "code": "CH-AUD-FB-50",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8623",
+   "code": "CH-AUD-FB-51",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8625b",
+   "code": "CH-AUD-FB-52",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8633a",
+   "code": "CH-AUD-FB-53",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8706a",
+   "code": "CH-AUD-FB-54",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8707",
+   "code": "CH-AUD-FB-55",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8708",
+   "code": "CH-AUD-FB-56",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8709",
+   "code": "CH-AUD-FB-57",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8801m",
+   "code": "CH-AUD-FB-58",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8801md",
+   "code": "CH-AUD-FB-59",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8802",
+   "code": "CH-AUD-FB-60",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8803",
+   "code": "CH-AUD-FB-61",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8807",
+   "code": "CH-AUD-FB-62",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj8807w",
+   "code": "CH-AUD-FB-63",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9610",
+   "code": "CH-AUD-FB-64",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9615",
+   "code": "CH-AUD-FB-65",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9615m",
+   "code": "CH-AUD-FB-66",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9615y",
+   "code": "CH-AUD-FB-67",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9616",
+   "code": "CH-AUD-FB-68",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9706",
+   "code": "CH-AUD-FB-69",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9706-s1",
+   "code": "CH-AUD-FB-70",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9707-ps1",
+   "code": "CH-AUD-FB-71",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9707-ws1",
+   "code": "CH-AUD-FB-72",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9707-ws2",
+   "code": "CH-AUD-FB-73",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9707p",
+   "code": "CH-AUD-FB-74",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9707w",
+   "code": "CH-AUD-FB-75",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9708d",
+   "code": "CH-AUD-FB-76",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9708h",
+   "code": "CH-AUD-FB-77",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9708p",
+   "code": "CH-AUD-FB-78",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9709p",
+   "code": "CH-AUD-FB-79",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9709w",
+   "code": "CH-AUD-FB-80",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-sj9709w-s1",
+   "code": "CH-AUD-FB-81",
+   "range": "CH-AUD-FB",
+   "also": []
+  },
+  {
+   "slug": "osj-z-w",
+   "code": "CH-AUD-FB-82",
    "range": "CH-AUD-FB",
    "also": []
   },
@@ -4759,6 +5463,12 @@
    "also": []
   },
   {
+   "slug": "nat-9",
+   "code": "CH-DIN-PL-12",
+   "range": "CH-DIN-PL",
+   "also": []
+  },
+  {
    "slug": "patara-hobby",
    "code": "CH-DIN-PL-13",
    "range": "CH-DIN-PL",
@@ -4768,6 +5478,12 @@
    "slug": "mass-mono-maxi",
    "code": "CH-DIN-PL-14",
    "range": "CH-DIN-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-f-2-5",
+   "code": "CH-DIN-PU-01",
+   "range": "CH-DIN-PU",
    "also": []
   },
   {
@@ -5407,6 +6123,30 @@
    "also": []
   },
   {
+   "slug": "nat-c-09",
+   "code": "CH-EXE-PU-02",
+   "range": "CH-EXE-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-c-10",
+   "code": "CH-EXE-PU-03",
+   "range": "CH-EXE-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-c-11",
+   "code": "CH-EXE-PU-04",
+   "range": "CH-EXE-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-c-12",
+   "code": "CH-EXE-PU-05",
+   "range": "CH-EXE-PU",
+   "also": []
+  },
+  {
    "slug": "nat-c1-5",
    "code": "CH-EXE-PU-06",
    "range": "CH-EXE-PU",
@@ -5875,6 +6615,18 @@
    "also": []
   },
   {
+   "slug": "taijong-bh011a",
+   "code": "CH-EXE-PU-84",
+   "range": "CH-EXE-PU",
+   "also": []
+  },
+  {
+   "slug": "taijong-bh012a",
+   "code": "CH-EXE-PU-85",
+   "range": "CH-EXE-PU",
+   "also": []
+  },
+  {
    "slug": "nat-c1-13",
    "code": "CH-EXE-UP-01",
    "range": "CH-EXE-UP",
@@ -6043,6 +6795,24 @@
    "also": []
   },
   {
+   "slug": "taijong-h03",
+   "code": "CH-LEC-NT-08",
+   "range": "CH-LEC-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-h04",
+   "code": "CH-LEC-NT-09",
+   "range": "CH-LEC-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-h09",
+   "code": "CH-LEC-NT-10",
+   "range": "CH-LEC-NT",
+   "also": []
+  },
+  {
    "slug": "nat-c2",
    "code": "CH-LEC-PL-01",
    "range": "CH-LEC-PL",
@@ -6121,6 +6891,18 @@
    "also": []
   },
   {
+   "slug": "osj-sj308pu",
+   "code": "CH-LEC-PL-14",
+   "range": "CH-LEC-PL",
+   "also": []
+  },
+  {
+   "slug": "osj-sj309pu",
+   "code": "CH-LEC-PL-15",
+   "range": "CH-LEC-PL",
+   "also": []
+  },
+  {
    "slug": "nat-c-106l",
    "code": "CH-LEC-PU-01",
    "range": "CH-LEC-PU",
@@ -6175,6 +6957,66 @@
    "also": []
   },
   {
+   "slug": "osj-sj302",
+   "code": "CH-LEC-WD-03",
+   "range": "CH-LEC-WD",
+   "also": []
+  },
+  {
+   "slug": "osj-sj307",
+   "code": "CH-LEC-WD-04",
+   "range": "CH-LEC-WD",
+   "also": []
+  },
+  {
+   "slug": "osj-sj308",
+   "code": "CH-LEC-WD-05",
+   "range": "CH-LEC-WD",
+   "also": []
+  },
+  {
+   "slug": "osj-sj308m",
+   "code": "CH-LEC-WD-06",
+   "range": "CH-LEC-WD",
+   "also": []
+  },
+  {
+   "slug": "osj-sj309m",
+   "code": "CH-LEC-WD-07",
+   "range": "CH-LEC-WD",
+   "also": []
+  },
+  {
+   "slug": "osj-sj317",
+   "code": "CH-LEC-WD-08",
+   "range": "CH-LEC-WD",
+   "also": []
+  },
+  {
+   "slug": "osj-sj320",
+   "code": "CH-LEC-WD-09",
+   "range": "CH-LEC-WD",
+   "also": []
+  },
+  {
+   "slug": "osj-sj322",
+   "code": "CH-LEC-WD-10",
+   "range": "CH-LEC-WD",
+   "also": []
+  },
+  {
+   "slug": "osj-sj323",
+   "code": "CH-LEC-WD-11",
+   "range": "CH-LEC-WD",
+   "also": []
+  },
+  {
+   "slug": "osj-sj3081",
+   "code": "CH-LEC-WD-12",
+   "range": "CH-LEC-WD",
+   "also": []
+  },
+  {
    "slug": "patara-c-1703-1",
    "code": "CH-LNG-01",
    "range": "CH-LNG",
@@ -6184,6 +7026,12 @@
    "slug": "patara-lz-06",
    "code": "CH-LNG-02",
    "range": "CH-LNG",
+   "also": []
+  },
+  {
+   "slug": "nat-c-06-2",
+   "code": "CH-LNG-FB-01",
+   "range": "CH-LNG-FB",
    "also": []
   },
   {
@@ -6811,8 +7659,20 @@
    "also": []
   },
   {
+   "slug": "nat-c-01-2",
+   "code": "CH-MLT-PL-01",
+   "range": "CH-MLT-PL",
+   "also": []
+  },
+  {
    "slug": "nat-c-02",
    "code": "CH-MLT-PL-02",
+   "range": "CH-MLT-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-c-02-2",
+   "code": "CH-MLT-PL-03",
    "range": "CH-MLT-PL",
    "also": []
   },
@@ -7024,6 +7884,12 @@
    "slug": "practika-yoyo-stacking-chair",
    "code": "CH-MLT-PL-38",
    "range": "CH-MLT-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-c-107",
+   "code": "CH-MLT-PU-01",
+   "range": "CH-MLT-PU",
    "also": []
   },
   {
@@ -7315,6 +8181,12 @@
    "also": []
   },
   {
+   "slug": "nat-c10",
+   "code": "CH-MTG-PU-03",
+   "range": "CH-MTG-PU",
+   "also": []
+  },
+  {
    "slug": "nat-ca-23c",
    "code": "CH-MTG-PU-04",
    "range": "CH-MTG-PU",
@@ -7357,6 +8229,12 @@
    "also": []
   },
   {
+   "slug": "nat-ch8",
+   "code": "CH-MTG-PU-11",
+   "range": "CH-MTG-PU",
+   "also": []
+  },
+  {
    "slug": "nat-ch11",
    "code": "CH-MTG-PU-12",
    "range": "CH-MTG-PU",
@@ -7366,6 +8244,12 @@
    "slug": "nat-kaoinang-prachum",
    "code": "CH-MTG-PU-13",
    "range": "CH-MTG-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-c2-5",
+   "code": "CH-TRN-NT-01",
+   "range": "CH-TRN-NT",
    "also": []
   },
   {
@@ -7405,6 +8289,24 @@
    "also": []
   },
   {
+   "slug": "taijong-h05",
+   "code": "CH-TRN-NT-08",
+   "range": "CH-TRN-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-h06",
+   "code": "CH-TRN-NT-09",
+   "range": "CH-TRN-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-h08",
+   "code": "CH-TRN-NT-10",
+   "range": "CH-TRN-NT",
+   "also": []
+  },
+  {
    "slug": "practika-modelo-training-chair",
    "code": "CH-TRN-PL-01",
    "range": "CH-TRN-PL",
@@ -7437,6 +8339,18 @@
   {
    "slug": "nat-c-3-kaoi-thamngan-phuprihan",
    "code": "CH-TSK-FB-01",
+   "range": "CH-TSK-FB",
+   "also": []
+  },
+  {
+   "slug": "nat-c-07",
+   "code": "CH-TSK-FB-02",
+   "range": "CH-TSK-FB",
+   "also": []
+  },
+  {
+   "slug": "nat-c-08",
+   "code": "CH-TSK-FB-03",
    "range": "CH-TSK-FB",
    "also": []
   },
@@ -8023,6 +8937,12 @@
    "also": []
   },
   {
+   "slug": "nat-ch-3-3",
+   "code": "CH-TSK-NT-06",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
    "slug": "nat-ch1",
    "code": "CH-TSK-NT-07",
    "range": "CH-TSK-NT",
@@ -8089,8 +9009,86 @@
    "also": []
   },
   {
+   "slug": "taijong-617-1b",
+   "code": "CH-TSK-NT-107",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-623-1a",
+   "code": "CH-TSK-NT-108",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-623-1b",
+   "code": "CH-TSK-NT-109",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
    "slug": "nat-f1-2",
    "code": "CH-TSK-NT-11",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-623a",
+   "code": "CH-TSK-NT-110",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-623b",
+   "code": "CH-TSK-NT-111",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-624a",
+   "code": "CH-TSK-NT-112",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-624b",
+   "code": "CH-TSK-NT-113",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-625a",
+   "code": "CH-TSK-NT-114",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-625a-dp",
+   "code": "CH-TSK-NT-115",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-625b",
+   "code": "CH-TSK-NT-116",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-625b-dp",
+   "code": "CH-TSK-NT-117",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-626a",
+   "code": "CH-TSK-NT-118",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-626b",
+   "code": "CH-TSK-NT-119",
    "range": "CH-TSK-NT",
    "also": []
   },
@@ -8101,8 +9099,128 @@
    "also": []
   },
   {
+   "slug": "taijong-629-1a",
+   "code": "CH-TSK-NT-120",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-629-1b",
+   "code": "CH-TSK-NT-121",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-629a",
+   "code": "CH-TSK-NT-122",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-629b",
+   "code": "CH-TSK-NT-123",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-630-1a",
+   "code": "CH-TSK-NT-124",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-630-1b",
+   "code": "CH-TSK-NT-125",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-630a",
+   "code": "CH-TSK-NT-126",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-630b",
+   "code": "CH-TSK-NT-127",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-631-1a",
+   "code": "CH-TSK-NT-128",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-631-1b",
+   "code": "CH-TSK-NT-129",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
    "slug": "nat-f3-5",
    "code": "CH-TSK-NT-13",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-631a",
+   "code": "CH-TSK-NT-130",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-631b",
+   "code": "CH-TSK-NT-131",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-632-1a",
+   "code": "CH-TSK-NT-132",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-632-1b",
+   "code": "CH-TSK-NT-133",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-640-1a",
+   "code": "CH-TSK-NT-134",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-640-1b",
+   "code": "CH-TSK-NT-135",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-640a",
+   "code": "CH-TSK-NT-136",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-640b",
+   "code": "CH-TSK-NT-137",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-641-1a",
+   "code": "CH-TSK-NT-138",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-641-1b",
+   "code": "CH-TSK-NT-139",
    "range": "CH-TSK-NT",
    "also": []
   },
@@ -8113,8 +9231,116 @@
    "also": []
   },
   {
+   "slug": "taijong-641a",
+   "code": "CH-TSK-NT-140",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-641b",
+   "code": "CH-TSK-NT-141",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-646a",
+   "code": "CH-TSK-NT-142",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-646a-dp",
+   "code": "CH-TSK-NT-143",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-646b",
+   "code": "CH-TSK-NT-144",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-646b-dp",
+   "code": "CH-TSK-NT-145",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-649a",
+   "code": "CH-TSK-NT-146",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-649b",
+   "code": "CH-TSK-NT-147",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-651",
+   "code": "CH-TSK-NT-148",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-651b",
+   "code": "CH-TSK-NT-149",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
    "slug": "nat-lf-03",
    "code": "CH-TSK-NT-15",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-652-1a",
+   "code": "CH-TSK-NT-150",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-652a",
+   "code": "CH-TSK-NT-151",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-652b",
+   "code": "CH-TSK-NT-152",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-653",
+   "code": "CH-TSK-NT-153",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-655",
+   "code": "CH-TSK-NT-154",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-658a",
+   "code": "CH-TSK-NT-155",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-658b",
+   "code": "CH-TSK-NT-156",
+   "range": "CH-TSK-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-659",
+   "code": "CH-TSK-NT-157",
    "range": "CH-TSK-NT",
    "also": []
   },
@@ -8623,6 +9849,12 @@
    "also": []
   },
   {
+   "slug": "nat-c3-10",
+   "code": "CH-TSK-PL-01",
+   "range": "CH-TSK-PL",
+   "also": []
+  },
+  {
    "slug": "perfect-fg-1-as",
    "code": "CH-TSK-PL-02",
    "range": "CH-TSK-PL",
@@ -8743,6 +9975,24 @@
    "also": []
   },
   {
+   "slug": "taijong-bh011b",
+   "code": "CH-TSK-PU-102",
+   "range": "CH-TSK-PU",
+   "also": []
+  },
+  {
+   "slug": "taijong-bh012b",
+   "code": "CH-TSK-PU-103",
+   "range": "CH-TSK-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-c3-4",
+   "code": "CH-TSK-PU-11",
+   "range": "CH-TSK-PU",
+   "also": []
+  },
+  {
    "slug": "nat-c4-3",
    "code": "CH-TSK-PU-12",
    "range": "CH-TSK-PU",
@@ -8761,6 +10011,12 @@
    "also": []
   },
   {
+   "slug": "nat-ca-17c",
+   "code": "CH-TSK-PU-15",
+   "range": "CH-TSK-PU",
+   "also": []
+  },
+  {
    "slug": "nat-ca-27b",
    "code": "CH-TSK-PU-16",
    "range": "CH-TSK-PU",
@@ -8769,6 +10025,18 @@
   {
    "slug": "nat-ca27",
    "code": "CH-TSK-PU-17",
+   "range": "CH-TSK-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-ca29b",
+   "code": "CH-TSK-PU-18",
+   "range": "CH-TSK-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-ca30",
+   "code": "CH-TSK-PU-19",
    "range": "CH-TSK-PU",
    "also": []
   },
@@ -8799,6 +10067,12 @@
   {
    "slug": "nat-ch-3",
    "code": "CH-TSK-PU-24",
+   "range": "CH-TSK-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-ch4-2",
+   "code": "CH-TSK-PU-25",
    "range": "CH-TSK-PU",
    "also": []
   },
@@ -9571,6 +10845,60 @@
    "also": []
   },
   {
+   "slug": "taijong-617-1c",
+   "code": "CH-VIS-NT-13",
+   "range": "CH-VIS-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-625c",
+   "code": "CH-VIS-NT-14",
+   "range": "CH-VIS-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-625c-dp",
+   "code": "CH-VIS-NT-15",
+   "range": "CH-VIS-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-627c",
+   "code": "CH-VIS-NT-16",
+   "range": "CH-VIS-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-640c",
+   "code": "CH-VIS-NT-17",
+   "range": "CH-VIS-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-641c",
+   "code": "CH-VIS-NT-18",
+   "range": "CH-VIS-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-646c",
+   "code": "CH-VIS-NT-19",
+   "range": "CH-VIS-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-649c",
+   "code": "CH-VIS-NT-20",
+   "range": "CH-VIS-NT",
+   "also": []
+  },
+  {
+   "slug": "taijong-652c",
+   "code": "CH-VIS-NT-21",
+   "range": "CH-VIS-NT",
+   "also": []
+  },
+  {
    "slug": "nat-b3-4",
    "code": "CH-VIS-PU-01",
    "range": "CH-VIS-PU",
@@ -9643,6 +10971,12 @@
    "also": []
   },
   {
+   "slug": "nat-ch5-2",
+   "code": "CH-VIS-PU-13",
+   "range": "CH-VIS-PU",
+   "also": []
+  },
+  {
    "slug": "nat-ch6-2",
    "code": "CH-VIS-PU-14",
    "range": "CH-VIS-PU",
@@ -9685,6 +11019,12 @@
    "also": []
   },
   {
+   "slug": "nat-item-11",
+   "code": "CH-VIS-PU-21",
+   "range": "CH-VIS-PU",
+   "also": []
+  },
+  {
    "slug": "nat-kaoi-na-to-pho-kong",
    "code": "CH-VIS-PU-22",
    "range": "CH-VIS-PU",
@@ -9711,6 +11051,18 @@
   {
    "slug": "mono-pilot-c",
    "code": "CH-VIS-PU-26",
+   "range": "CH-VIS-PU",
+   "also": []
+  },
+  {
+   "slug": "taijong-bh011c",
+   "code": "CH-VIS-PU-27",
+   "range": "CH-VIS-PU",
+   "also": []
+  },
+  {
+   "slug": "taijong-bh012c",
+   "code": "CH-VIS-PU-28",
    "range": "CH-VIS-PU",
    "also": []
   },
@@ -9751,6 +11103,54 @@
    "also": []
   },
   {
+   "slug": "nat-cpr-4",
+   "code": "MS-MSC-ST-01",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpr-5",
+   "code": "MS-MSC-ST-02",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpr-6",
+   "code": "MS-MSC-ST-03",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpr-7",
+   "code": "MS-MSC-ST-04",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpr-8",
+   "code": "MS-MSC-ST-05",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpr-9",
+   "code": "MS-MSC-ST-06",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpr-10",
+   "code": "MS-MSC-ST-07",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpr-16",
+   "code": "MS-MSC-ST-08",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
    "slug": "nat-cpt2-3",
    "code": "MS-MSC-ST-09",
    "range": "MS-MSC-ST",
@@ -9783,6 +11183,78 @@
   {
    "slug": "nat-iem-201",
    "code": "MS-MSC-ST-14",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-iem-202",
+   "code": "MS-MSC-ST-15",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpt-4",
+   "code": "MS-MSC-ST-16",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpt-4-100",
+   "code": "MS-MSC-ST-17",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpt-4-2",
+   "code": "MS-MSC-ST-18",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpt-6",
+   "code": "MS-MSC-ST-19",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpt-6-100",
+   "code": "MS-MSC-ST-20",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpt-6-2",
+   "code": "MS-MSC-ST-21",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpt-8",
+   "code": "MS-MSC-ST-22",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpt-8-2",
+   "code": "MS-MSC-ST-23",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpt-10",
+   "code": "MS-MSC-ST-24",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpt-10-2",
+   "code": "MS-MSC-ST-25",
+   "range": "MS-MSC-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpt-13",
+   "code": "MS-MSC-ST-26",
    "range": "MS-MSC-ST",
    "also": []
   },
@@ -9865,6 +11337,30 @@
    "also": []
   },
   {
+   "slug": "nat-p1",
+   "code": "PT-DSK-01",
+   "range": "PT-DSK",
+   "also": []
+  },
+  {
+   "slug": "nat-p2",
+   "code": "PT-DSK-02",
+   "range": "PT-DSK",
+   "also": []
+  },
+  {
+   "slug": "nat-p3",
+   "code": "PT-DSK-03",
+   "range": "PT-DSK",
+   "also": []
+  },
+  {
+   "slug": "nat-p4",
+   "code": "PT-DSK-04",
+   "range": "PT-DSK",
+   "also": []
+  },
+  {
    "slug": "nat-screen-01",
    "code": "PT-DSK-05",
    "range": "PT-DSK",
@@ -9891,6 +11387,18 @@
   {
    "slug": "nat-pt1-2",
    "code": "PT-DSK-FB-02",
+   "range": "PT-DSK-FB",
+   "also": []
+  },
+  {
+   "slug": "nat-item-8",
+   "code": "PT-DSK-FB-03",
+   "range": "PT-DSK-FB",
+   "also": []
+  },
+  {
+   "slug": "nat-item-10",
+   "code": "PT-DSK-FB-04",
    "range": "PT-DSK-FB",
    "also": []
   },
@@ -9925,8 +11433,32 @@
    "also": []
   },
   {
+   "slug": "nat-item-9",
+   "code": "PT-DSK-GL-01",
+   "range": "PT-DSK-GL",
+   "also": []
+  },
+  {
+   "slug": "nat-item-7",
+   "code": "PT-DSK-GL-02",
+   "range": "PT-DSK-GL",
+   "also": []
+  },
+  {
    "slug": "nat-mini-sakrin-baep-khrueng-kratk-khat-lai",
    "code": "PT-DSK-HG-01",
+   "range": "PT-DSK-HG",
+   "also": []
+  },
+  {
+   "slug": "nat-item-6",
+   "code": "PT-DSK-HG-02",
+   "range": "PT-DSK-HG",
+   "also": []
+  },
+  {
+   "slug": "nat-40-cm",
+   "code": "PT-DSK-HG-03",
    "range": "PT-DSK-HG",
    "also": []
   },
@@ -9967,6 +11499,24 @@
    "also": []
   },
   {
+   "slug": "nat-m8",
+   "code": "PT-OFF-02",
+   "range": "PT-OFF",
+   "also": []
+  },
+  {
+   "slug": "nat-m9",
+   "code": "PT-OFF-03",
+   "range": "PT-OFF",
+   "also": []
+  },
+  {
+   "slug": "nat-m10",
+   "code": "PT-OFF-04",
+   "range": "PT-OFF",
+   "also": []
+  },
+  {
    "slug": "nat-c-165x70",
    "code": "PT-OFF-FB-01",
    "range": "PT-OFF-FB",
@@ -9997,6 +11547,30 @@
    "also": []
   },
   {
+   "slug": "nat-p3-2",
+   "code": "PT-OFF-FB-06",
+   "range": "PT-OFF-FB",
+   "also": []
+  },
+  {
+   "slug": "nat-p4-2",
+   "code": "PT-OFF-FB-07",
+   "range": "PT-OFF-FB",
+   "also": []
+  },
+  {
+   "slug": "nat-p5",
+   "code": "PT-OFF-FB-08",
+   "range": "PT-OFF-FB",
+   "also": []
+  },
+  {
+   "slug": "nat-p6",
+   "code": "PT-OFF-FB-09",
+   "range": "PT-OFF-FB",
+   "also": []
+  },
+  {
    "slug": "nat-pa-01",
    "code": "PT-OFF-FB-10",
    "range": "PT-OFF-FB",
@@ -10015,6 +11589,24 @@
    "also": []
   },
   {
+   "slug": "nat-patition-2",
+   "code": "PT-OFF-FB-13",
+   "range": "PT-OFF-FB",
+   "also": []
+  },
+  {
+   "slug": "nat-item-3",
+   "code": "PT-OFF-FB-14",
+   "range": "PT-OFF-FB",
+   "also": []
+  },
+  {
+   "slug": "nat-patition-4",
+   "code": "PT-OFF-FB-15",
+   "range": "PT-OFF-FB",
+   "also": []
+  },
+  {
    "slug": "nat-p-01",
    "code": "PT-OFF-GL-01",
    "range": "PT-OFF-GL",
@@ -10023,6 +11615,12 @@
   {
    "slug": "nat-p1-5",
    "code": "PT-OFF-GL-02",
+   "range": "PT-OFF-GL",
+   "also": []
+  },
+  {
+   "slug": "nat-patition-3",
+   "code": "PT-OFF-GL-03",
    "range": "PT-OFF-GL",
    "also": []
   },
@@ -10111,9 +11709,63 @@
    "also": []
   },
   {
+   "slug": "nat-item-4",
+   "code": "PT-OFF-HG-15",
+   "range": "PT-OFF-HG",
+   "also": []
+  },
+  {
+   "slug": "nat-item-5",
+   "code": "PT-OFF-HG-16",
+   "range": "PT-OFF-HG",
+   "also": []
+  },
+  {
+   "slug": "nat-patition",
+   "code": "PT-OFF-HG-17",
+   "range": "PT-OFF-HG",
+   "also": []
+  },
+  {
+   "slug": "nat-patition-5",
+   "code": "PT-OFF-HG-18",
+   "range": "PT-OFF-HG",
+   "also": []
+  },
+  {
+   "slug": "nat-patition-7",
+   "code": "PT-OFF-HG-19",
+   "range": "PT-OFF-HG",
+   "also": []
+  },
+  {
+   "slug": "nat-patition-6",
+   "code": "PT-OFF-WD-01",
+   "range": "PT-OFF-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-patition-8",
+   "code": "PT-OFF-WD-02",
+   "range": "PT-OFF-WD",
+   "also": []
+  },
+  {
    "slug": "mono-mcr-105",
    "code": "PT-OFF-WD-03",
    "range": "PT-OFF-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-partition",
+   "code": "PT-PRT-01",
+   "range": "PT-PRT",
+   "also": []
+  },
+  {
+   "slug": "nat-l-165",
+   "code": "PT-PRT-ST-01",
+   "range": "PT-PRT-ST",
    "also": []
   },
   {
@@ -10147,8 +11799,32 @@
    "also": []
   },
   {
+   "slug": "nat-t-165",
+   "code": "PT-PRT-ST-07",
+   "range": "PT-PRT-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-x-165",
+   "code": "PT-PRT-ST-08",
+   "range": "PT-PRT-ST",
+   "also": []
+  },
+  {
    "slug": "nat-khatang-t-foot-si-dam",
    "code": "PT-PRT-ST-09",
+   "range": "PT-PRT-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-sao-to-trong-165-cm-si-dam",
+   "code": "PT-PRT-ST-10",
+   "range": "PT-PRT-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-sao-pit-rim-165-cm-si-dam",
+   "code": "PT-PRT-ST-11",
    "range": "PT-PRT-ST",
    "also": []
   },
@@ -10431,6 +12107,12 @@
   {
    "slug": "nat-sf-1",
    "code": "SF-MOD-PU-01",
+   "range": "SF-MOD-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-sf-03-2",
+   "code": "SF-MOD-PU-02",
    "range": "SF-MOD-PU",
    "also": []
   },
@@ -11089,6 +12771,12 @@
    "also": []
   },
   {
+   "slug": "nat-f-3-6",
+   "code": "SF-SOF-PU-05",
+   "range": "SF-SOF-PU",
+   "also": []
+  },
+  {
    "slug": "nat-f-6-2",
    "code": "SF-SOF-PU-06",
    "range": "SF-SOF-PU",
@@ -11139,6 +12827,12 @@
   {
    "slug": "nat-f5-4",
    "code": "SF-SOF-PU-14",
+   "range": "SF-SOF-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-f5-8",
+   "code": "SF-SOF-PU-15",
    "range": "SF-SOF-PU",
    "also": []
   },
@@ -11257,6 +12951,12 @@
    "also": []
   },
   {
+   "slug": "nat-sf-05",
+   "code": "SF-SOF-PU-35",
+   "range": "SF-SOF-PU",
+   "also": []
+  },
+  {
    "slug": "nat-sf-06",
    "code": "SF-SOF-PU-36",
    "range": "SF-SOF-PU",
@@ -11335,6 +13035,12 @@
    "also": []
   },
   {
+   "slug": "nat-sf11",
+   "code": "SF-SOF-PU-49",
+   "range": "SF-SOF-PU",
+   "also": []
+  },
+  {
    "slug": "nat-so1",
    "code": "SF-SOF-PU-50",
    "range": "SF-SOF-PU",
@@ -11343,6 +13049,12 @@
   {
    "slug": "nat-so2",
    "code": "SF-SOF-PU-51",
+   "range": "SF-SOF-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-kaoirapkhaek-3-thinang",
+   "code": "SF-SOF-PU-52",
    "range": "SF-SOF-PU",
    "also": []
   },
@@ -11821,6 +13533,42 @@
    "also": []
   },
   {
+   "slug": "nat-s-315",
+   "code": "SH-BOK-ST-04",
+   "range": "SH-BOK-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-s-325",
+   "code": "SH-BOK-ST-05",
+   "range": "SH-BOK-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-s001",
+   "code": "SH-BOK-ST-06",
+   "range": "SH-BOK-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-s002",
+   "code": "SH-BOK-ST-07",
+   "range": "SH-BOK-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-s204",
+   "code": "SH-BOK-ST-08",
+   "range": "SH-BOK-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-s327",
+   "code": "SH-BOK-ST-09",
+   "range": "SH-BOK-ST",
+   "also": []
+  },
+  {
    "slug": "nat-s337",
    "code": "SH-BOK-ST-10",
    "range": "SH-BOK-ST",
@@ -11905,8 +13653,44 @@
    "also": []
   },
   {
+   "slug": "nat-mr-104",
+   "code": "SH-STO-ST-10",
+   "range": "SH-STO-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-mr-204",
+   "code": "SH-STO-ST-11",
+   "range": "SH-STO-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-o-9195",
+   "code": "SH-STO-ST-12",
+   "range": "SH-STO-ST",
+   "also": []
+  },
+  {
    "slug": "nat-s-327n",
    "code": "SH-STO-ST-13",
+   "range": "SH-STO-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-s103",
+   "code": "SH-STO-ST-14",
+   "range": "SH-STO-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-s205-nat",
+   "code": "SH-STO-ST-15",
+   "range": "SH-STO-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-s317",
+   "code": "SH-STO-ST-16",
    "range": "SH-STO-ST",
    "also": []
   },
@@ -12283,6 +14067,12 @@
    "also": []
   },
   {
+   "slug": "nat-3",
+   "code": "ST-LAB-FB-01",
+   "range": "ST-LAB-FB",
+   "also": []
+  },
+  {
    "slug": "perfect-cy-r",
    "code": "ST-LAB-FB-02",
    "range": "ST-LAB-FB",
@@ -12375,6 +14165,12 @@
   {
    "slug": "nat-sf-01",
    "code": "ST-OTT-FB-02",
+   "range": "ST-OTT-FB",
+   "also": []
+  },
+  {
+   "slug": "nat-sf-10",
+   "code": "ST-OTT-FB-03",
    "range": "ST-OTT-FB",
    "also": []
   },
@@ -12637,6 +14433,36 @@
    "also": []
   },
   {
+   "slug": "osj-sj2102",
+   "code": "TB-CLS-PL-01",
+   "range": "TB-CLS-PL",
+   "also": []
+  },
+  {
+   "slug": "osj-sj2106",
+   "code": "TB-CLS-PL-02",
+   "range": "TB-CLS-PL",
+   "also": []
+  },
+  {
+   "slug": "osj-sj2108",
+   "code": "TB-CLS-PL-03",
+   "range": "TB-CLS-PL",
+   "also": []
+  },
+  {
+   "slug": "osj-sj2109",
+   "code": "TB-CLS-PL-04",
+   "range": "TB-CLS-PL",
+   "also": []
+  },
+  {
+   "slug": "osj-sj2110",
+   "code": "TB-CLS-PL-05",
+   "range": "TB-CLS-PL",
+   "also": []
+  },
+  {
    "slug": "nat-f34",
    "code": "TB-CLS-WD-01",
    "range": "TB-CLS-WD",
@@ -12652,6 +14478,12 @@
    "slug": "nat-pho-diam-yuen-son-na-ong",
    "code": "TB-CLS-WD-03",
    "range": "TB-CLS-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-10",
+   "code": "TB-CLS-WS-01",
+   "range": "TB-CLS-WS",
    "also": []
   },
   {
@@ -12739,6 +14571,30 @@
    "also": []
   },
   {
+   "slug": "osj-sj2101",
+   "code": "TB-CLS-WS-16",
+   "range": "TB-CLS-WS",
+   "also": []
+  },
+  {
+   "slug": "osj-sj2103",
+   "code": "TB-CLS-WS-17",
+   "range": "TB-CLS-WS",
+   "also": []
+  },
+  {
+   "slug": "osj-sj2104",
+   "code": "TB-CLS-WS-18",
+   "range": "TB-CLS-WS",
+   "also": []
+  },
+  {
+   "slug": "osj-sj2105",
+   "code": "TB-CLS-WS-19",
+   "range": "TB-CLS-WS",
+   "also": []
+  },
+  {
    "slug": "thaitaiyo-2rl6t1",
    "code": "TB-CMP-WD-01",
    "range": "TB-CMP-WD",
@@ -12799,6 +14655,12 @@
    "also": []
   },
   {
+   "slug": "nat-20100928005719-a",
+   "code": "TB-CMP-WS-01",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
    "slug": "nat-f-08",
    "code": "TB-CMP-WS-02",
    "range": "TB-CMP-WS",
@@ -12823,14 +14685,86 @@
    "also": []
   },
   {
+   "slug": "nat-tb8",
+   "code": "TB-CMP-WS-06",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tc-80",
+   "code": "TB-CMP-WS-07",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tc-81",
+   "code": "TB-CMP-WS-08",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tc-82",
+   "code": "TB-CMP-WS-09",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tc-91",
+   "code": "TB-CMP-WS-10",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tc-92d",
+   "code": "TB-CMP-WS-11",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
    "slug": "nat-tc1",
    "code": "TB-CMP-WS-12",
    "range": "TB-CMP-WS",
    "also": []
   },
   {
+   "slug": "nat-tc2",
+   "code": "TB-CMP-WS-13",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tc90l",
+   "code": "TB-CMP-WS-14",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
    "slug": "nat-tc92",
    "code": "TB-CMP-WS-15",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tcf-82",
+   "code": "TB-CMP-WS-16",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tcf-92",
+   "code": "TB-CMP-WS-17",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tcfl-82",
+   "code": "TB-CMP-WS-18",
+   "range": "TB-CMP-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tcfl-92",
+   "code": "TB-CMP-WS-19",
    "range": "TB-CMP-WS",
    "also": []
   },
@@ -13417,6 +15351,12 @@
    "also": []
   },
   {
+   "slug": "nat-f-12-4",
+   "code": "TB-DIN-WS-06",
+   "range": "TB-DIN-WS",
+   "also": []
+  },
+  {
    "slug": "nat-f-14-2",
    "code": "TB-DIN-WS-07",
    "range": "TB-DIN-WS",
@@ -13453,8 +15393,56 @@
    "also": []
   },
   {
+   "slug": "nat-tr-1",
+   "code": "TB-DIN-WS-13",
+   "range": "TB-DIN-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tr-2",
+   "code": "TB-DIN-WS-14",
+   "range": "TB-DIN-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tr-3",
+   "code": "TB-DIN-WS-15",
+   "range": "TB-DIN-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tr-48",
+   "code": "TB-DIN-WS-16",
+   "range": "TB-DIN-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tr-60",
+   "code": "TB-DIN-WS-17",
+   "range": "TB-DIN-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tr-72",
+   "code": "TB-DIN-WS-18",
+   "range": "TB-DIN-WS",
+   "also": []
+  },
+  {
    "slug": "nat-to-rapprathan-ahan",
    "code": "TB-DIN-WS-19",
+   "range": "TB-DIN-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-item-12",
+   "code": "TB-DIN-WS-20",
+   "range": "TB-DIN-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-222",
+   "code": "TB-DIN-WS-21",
    "range": "TB-DIN-WS",
    "also": []
   },
@@ -13534,6 +15522,36 @@
    "slug": "practika-square-dining-coffee-table",
    "code": "TB-DIN-WS-34",
    "range": "TB-DIN-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-dt-6080",
+   "code": "TB-DRF-WS-01",
+   "range": "TB-DRF-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-dt-6090",
+   "code": "TB-DRF-WS-02",
+   "range": "TB-DRF-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-dt-60100",
+   "code": "TB-DRF-WS-03",
+   "range": "TB-DRF-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-dt-60450",
+   "code": "TB-DRF-WS-04",
+   "range": "TB-DRF-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-dt-80120",
+   "code": "TB-DRF-WS-05",
+   "range": "TB-DRF-WS",
    "also": []
   },
   {
@@ -13653,6 +15671,18 @@
   {
    "slug": "nat-tothamngan",
    "code": "TB-EXE-WD-14",
+   "range": "TB-EXE-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-2",
+   "code": "TB-EXE-WD-15",
+   "range": "TB-EXE-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-3-11",
+   "code": "TB-EXE-WD-16",
    "range": "TB-EXE-WD",
    "also": []
   },
@@ -14353,6 +16383,12 @@
    "also": []
   },
   {
+   "slug": "nat-4",
+   "code": "TB-MLT-WS-19",
+   "range": "TB-MLT-WS",
+   "also": []
+  },
+  {
    "slug": "practika-cantilever-laboratory-table",
    "code": "TB-MLT-WS-20",
    "range": "TB-MLT-WS",
@@ -14623,6 +16659,12 @@
    "also": []
   },
   {
+   "slug": "nat-ntct-15-1",
+   "code": "TB-MTG-WS-08",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
    "slug": "nat-t-5",
    "code": "TB-MTG-WS-09",
    "range": "TB-MTG-WS",
@@ -14833,6 +16875,114 @@
    "also": []
   },
   {
+   "slug": "nat-tm-1",
+   "code": "TB-MTG-WS-32",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tm-2",
+   "code": "TB-MTG-WS-33",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tm-3",
+   "code": "TB-MTG-WS-34",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tm-247",
+   "code": "TB-MTG-WS-35",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tm-260",
+   "code": "TB-MTG-WS-36",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tm-272",
+   "code": "TB-MTG-WS-37",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tmm-1",
+   "code": "TB-MTG-WS-38",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tmm-2",
+   "code": "TB-MTG-WS-39",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tmm-3",
+   "code": "TB-MTG-WS-40",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tmm-247",
+   "code": "TB-MTG-WS-41",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tmm-260",
+   "code": "TB-MTG-WS-42",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tmm-272",
+   "code": "TB-MTG-WS-43",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tmmo-1",
+   "code": "TB-MTG-WS-44",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tmmo-2",
+   "code": "TB-MTG-WS-45",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tmmo-72",
+   "code": "TB-MTG-WS-46",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tmo-1",
+   "code": "TB-MTG-WS-47",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tmo-72",
+   "code": "TB-MTG-WS-48",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tmw1",
+   "code": "TB-MTG-WS-49",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
    "slug": "nat-tw-1",
    "code": "TB-MTG-WS-50",
    "range": "TB-MTG-WS",
@@ -14857,6 +17007,18 @@
    "also": []
   },
   {
+   "slug": "nat-cc",
+   "code": "TB-MTG-WS-54",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-40",
+   "code": "TB-MTG-WS-55",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
    "slug": "nat-chut-toprachum-samrap-6-8-thinang",
    "code": "TB-MTG-WS-56",
    "range": "TB-MTG-WS",
@@ -14865,6 +17027,12 @@
   {
    "slug": "nat-toprachum-2",
    "code": "TB-MTG-WS-57",
+   "range": "TB-MTG-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tw",
+   "code": "TB-MTG-WS-58",
    "range": "TB-MTG-WS",
    "also": []
   },
@@ -15219,6 +17387,12 @@
   {
    "slug": "nat-f-02-3",
    "code": "TB-OFF-WD-02",
+   "range": "TB-OFF-WD",
+   "also": []
+  },
+  {
+   "slug": "nat-f-15-3",
+   "code": "TB-OFF-WD-03",
    "range": "TB-OFF-WD",
    "also": []
   },
@@ -16045,8 +18219,32 @@
    "also": []
   },
   {
+   "slug": "nat-tw-260",
+   "code": "TB-OFF-WS-47",
+   "range": "TB-OFF-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-tw247",
+   "code": "TB-OFF-WS-48",
+   "range": "TB-OFF-WS",
+   "also": []
+  },
+  {
    "slug": "nat-twd247",
    "code": "TB-OFF-WS-49",
+   "range": "TB-OFF-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-twd260",
+   "code": "TB-OFF-WS-50",
+   "range": "TB-OFF-WS",
+   "also": []
+  },
+  {
+   "slug": "nat-twd272",
+   "code": "TB-OFF-WS-51",
    "range": "TB-OFF-WS",
    "also": []
   },
@@ -16399,6 +18597,12 @@
    "also": []
   },
   {
+   "slug": "nat-22",
+   "code": "TB-SID-ST-01",
+   "range": "TB-SID-ST",
+   "also": []
+  },
+  {
    "slug": "practika-bua-side-table",
    "code": "TB-SID-ST-02",
    "range": "TB-SID-ST",
@@ -16627,8 +18831,86 @@
    "also": []
   },
   {
+   "slug": "nat-tf-1860",
+   "code": "TB-TRN-WS-FL-09",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
+   "slug": "nat-tf-1872",
+   "code": "TB-TRN-WS-FL-10",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
+   "slug": "nat-tf-2447",
+   "code": "TB-TRN-WS-FL-11",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
+   "slug": "nat-tf-2460",
+   "code": "TB-TRN-WS-FL-12",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
+   "slug": "nat-tf-2472",
+   "code": "TB-TRN-WS-FL-13",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
+   "slug": "nat-tf-3047",
+   "code": "TB-TRN-WS-FL-14",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
+   "slug": "nat-tf-3060",
+   "code": "TB-TRN-WS-FL-15",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
+   "slug": "nat-tf-3072",
+   "code": "TB-TRN-WS-FL-16",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
+   "slug": "nat-tp-2460",
+   "code": "TB-TRN-WS-FL-17",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
+   "slug": "nat-tp-2472",
+   "code": "TB-TRN-WS-FL-18",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
+   "slug": "nat-tp-3060",
+   "code": "TB-TRN-WS-FL-19",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
+   "slug": "nat-tp-3072",
+   "code": "TB-TRN-WS-FL-20",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
    "slug": "nat-to-nekpratng",
    "code": "TB-TRN-WS-FL-21",
+   "range": "TB-TRN-WS-FL",
+   "also": []
+  },
+  {
+   "slug": "nat-item-13",
+   "code": "TB-TRN-WS-FL-22",
    "range": "TB-TRN-WS-FL",
    "also": []
   },
@@ -16873,6 +19155,30 @@
    "also": []
   },
   {
+   "slug": "nat-te-3047",
+   "code": "TB-TRN-WS-FX-01",
+   "range": "TB-TRN-WS-FX",
+   "also": []
+  },
+  {
+   "slug": "nat-te-3060",
+   "code": "TB-TRN-WS-FX-02",
+   "range": "TB-TRN-WS-FX",
+   "also": []
+  },
+  {
+   "slug": "nat-te-3072",
+   "code": "TB-TRN-WS-FX-03",
+   "range": "TB-TRN-WS-FX",
+   "also": []
+  },
+  {
+   "slug": "nat-teo-3047",
+   "code": "TB-TRN-WS-FX-04",
+   "range": "TB-TRN-WS-FX",
+   "also": []
+  },
+  {
    "slug": "practika-desk-me-up-table",
    "code": "TB-TRN-WS-FX-05",
    "range": "TB-TRN-WS-FX",
@@ -17029,6 +19335,24 @@
    "also": []
   },
   {
+   "slug": "nat-cpa904",
+   "code": "WS-BEM-01",
+   "range": "WS-BEM",
+   "also": []
+  },
+  {
+   "slug": "nat-cpa1003",
+   "code": "WS-BEM-02",
+   "range": "WS-BEM",
+   "also": []
+  },
+  {
+   "slug": "nat-sj708la",
+   "code": "WS-BEM-03",
+   "range": "WS-BEM",
+   "also": []
+  },
+  {
    "slug": "nat-ch-02-kaoi-phak-khoi-3-thinang",
    "code": "WS-BEM-FB-01",
    "range": "WS-BEM-FB",
@@ -17149,6 +19473,36 @@
    "also": []
   },
   {
+   "slug": "nat-cp-112",
+   "code": "WS-BEM-PL-06",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-cp-112l",
+   "code": "WS-BEM-PL-07",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-cp-113lv",
+   "code": "WS-BEM-PL-08",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-cp-114lv",
+   "code": "WS-BEM-PL-09",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-cp-115l",
+   "code": "WS-BEM-PL-10",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
    "slug": "nat-cp-203",
    "code": "WS-BEM-PL-11",
    "range": "WS-BEM-PL",
@@ -17157,6 +19511,48 @@
   {
    "slug": "nat-cp-204",
    "code": "WS-BEM-PL-12",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-cp-212lv",
+   "code": "WS-BEM-PL-13",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-cp-213",
+   "code": "WS-BEM-PL-14",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-cp-213lv",
+   "code": "WS-BEM-PL-15",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-cp-214",
+   "code": "WS-BEM-PL-16",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-cp-214lv",
+   "code": "WS-BEM-PL-17",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-cp-215",
+   "code": "WS-BEM-PL-18",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-cpo-114",
+   "code": "WS-BEM-PL-19",
    "range": "WS-BEM-PL",
    "also": []
   },
@@ -17175,6 +19571,12 @@
   {
    "slug": "nat-khunlaktna-kaoi-run-clf-813",
    "code": "WS-BEM-PL-22",
+   "range": "WS-BEM-PL",
+   "also": []
+  },
+  {
+   "slug": "nat-kaoi-phak-khoi-3-thinang",
+   "code": "WS-BEM-PL-23",
    "range": "WS-BEM-PL",
    "also": []
   },
@@ -17599,6 +20001,12 @@
    "also": []
   },
   {
+   "slug": "nat-c-14",
+   "code": "WS-BEM-PU-01",
+   "range": "WS-BEM-PU",
+   "also": []
+  },
+  {
    "slug": "nat-c5-3",
    "code": "WS-BEM-PU-02",
    "range": "WS-BEM-PU",
@@ -17637,6 +20045,18 @@
   {
    "slug": "nat-ch7-5",
    "code": "WS-BEM-PU-08",
+   "range": "WS-BEM-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-cp-213v",
+   "code": "WS-BEM-PU-09",
+   "range": "WS-BEM-PU",
+   "also": []
+  },
+  {
+   "slug": "nat-cp-214v",
+   "code": "WS-BEM-PU-10",
    "range": "WS-BEM-PU",
    "also": []
   },
@@ -17935,8 +20355,26 @@
    "also": []
   },
   {
+   "slug": "nat-cpa-604v",
+   "code": "WS-BEM-ST-03",
+   "range": "WS-BEM-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpa602g",
+   "code": "WS-BEM-ST-04",
+   "range": "WS-BEM-ST",
+   "also": []
+  },
+  {
    "slug": "nat-cpa603",
    "code": "WS-BEM-ST-05",
+   "range": "WS-BEM-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-cpa603v",
+   "code": "WS-BEM-ST-06",
    "range": "WS-BEM-ST",
    "also": []
   },
@@ -17967,6 +20405,12 @@
   {
    "slug": "nat-f-26",
    "code": "WS-BEM-ST-11",
+   "range": "WS-BEM-ST",
+   "also": []
+  },
+  {
+   "slug": "nat-7",
+   "code": "WS-BEM-ST-12",
    "range": "WS-BEM-ST",
    "also": []
   },
