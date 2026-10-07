@@ -26,3 +26,4 @@ next-env.d.ts
 
 # model downloads for image search indexing
 /.cache/
+.vercel

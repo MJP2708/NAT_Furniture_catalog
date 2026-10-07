@@ -5,7 +5,8 @@
 Only new or changed files are uploaded (compared by MD5 against the object's ETag); objects
 whose local file is gone are deleted. Credentials come from .env.local (AWS_* variables).
 
-Usage: python -m nat_ingest.upload [--dry-run]
+Usage: python -m nat_ingest.upload [--dry-run] [--prune]
+  (--prune allows deleting more than 10% of the bucket; without it a large delete is refused)
 """
 from __future__ import annotations
 
@@ -26,6 +27,11 @@ BUCKET = "nat-media"
 
 def client():
     load_dotenv(ROOT / ".env.local")
+    redacted = [k for k in ("AWS_REGION", "AWS_ENDPOINT_URL_S3", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY")
+                if os.environ.get(k, "") in ("", "[SENSITIVE]")]
+    if redacted:
+        sys.exit(f"{', '.join(redacted)} missing or redacted in .env.local (`vercel env pull` blanks sensitive "
+                 "values). Copy the real values from the Neon console or the PC that has them.")
     return boto3.client(
         "s3",
         region_name=os.environ["AWS_REGION"],
@@ -61,6 +67,10 @@ def main() -> None:
     print(f"{len(local)} local files · {len(remote)} in bucket · {len(todo)} to upload · {len(stale)} to delete")
     if dry:
         return
+    # a PC without the generated images (public/media is gitignored) would otherwise wipe the bucket
+    if stale and "--prune" not in sys.argv and len(stale) > max(50, len(remote) // 10):
+        sys.exit(f"refusing to delete {len(stale)} of {len(remote)} objects: is {MEDIA} complete on this PC? "
+                 "Re-run with --prune if the deletions are intended.")
 
     def put(item: tuple[str, str]) -> None:
         key, path = item
