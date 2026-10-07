@@ -21,3 +21,9 @@ export function media<T extends string | null | undefined>(url: T): T {
 export function catalogueFile(name: string) {
   return `/media/catalogue/${name}`;
 }
+
+/**
+ * The e-catalogue every download button links to: all categories, photos, links and bookmarks.
+ * It ships with the site (public/catalogue); the older bucket PDFs redirect here (next.config.ts).
+ */
+export const E_CATALOGUE_PDF = "/catalogue/nat-furniture-e-catalogue-2026.pdf";

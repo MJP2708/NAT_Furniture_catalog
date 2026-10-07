@@ -5,7 +5,7 @@ import listing from "../../data/office-catalogue.json";
 import { db } from "@/db";
 import { products } from "@/db/schema";
 import { CATALOG_TAG } from "@/lib/catalog";
-import { catalogueFile, isCustomerSite, media } from "@/lib/site";
+import { E_CATALOGUE_PDF, media } from "@/lib/site";
 
 /**
  * The office e-catalogue on the web: the same seven categories, ranges and codes (CH-NT-01 ...)
@@ -76,7 +76,7 @@ const ENTRIES = (listing as unknown as { products: Entry[] }).products;
 const BY_SLUG = new Map(ENTRIES.map((e) => [e.slug, e]));
 const mainOfRange = (range: string) => OFFICE_TAXONOMY.find((m) => rangesOf(m).some((r) => r.code === range))!;
 
-export const OFFICE_CATALOGUE_PDF = catalogueFile(isCustomerSite ? "office-catalogue-photo.pdf" : "office-catalogue.pdf");
+export const OFFICE_CATALOGUE_PDF = E_CATALOGUE_PDF;
 
 /** Catalogue code and where it sits, for the product page ("CH-NT-01 · Mesh / Net Chairs"). */
 export function officeEntry(slug: string) {
