@@ -5,6 +5,7 @@ import { href, type Lang, pick, t } from "@/lib/i18n";
 import {
   getOfficeCategory,
   getOfficeContents,
+  groupsOf,
   type MainCategory,
   OFFICE_CATALOGUE_PDF,
   OFFICE_TAXONOMY,
@@ -14,8 +15,8 @@ import {
 
 const COPY = {
   th: {
-    title: "แคตตาล็อกเฟอร์นิเจอร์สำนักงาน",
-    lead: "เลือกหมวดสินค้า แตะสินค้าเพื่อดูขนาด วัสดุ และสเปกครบทุกชิ้น ใช้รหัสแคตตาล็อก (เช่น CH-NT-01) เมื่อขอใบเสนอราคา",
+    title: "แคตตาล็อกเฟอร์นิเจอร์",
+    lead: "เลือกหมวดสินค้า แล้วเลือกการใช้งานและวัสดุ แตะสินค้าเพื่อดูขนาด วัสดุ และสเปกครบทุกชิ้น ใช้รหัสแคตตาล็อก (เช่น CH-TSK-NT-01) เมื่อขอใบเสนอราคา",
     pdf: "ดาวน์โหลด PDF (มีลิงก์และบุ๊กมาร์ก)",
     contents: "สารบัญ",
     products: (n: number) => `${n} รายการ`,
@@ -26,8 +27,8 @@ const COPY = {
     top: "กลับด้านบน",
   },
   en: {
-    title: "Office Furniture E-Catalogue",
-    lead: "Pick a category, then tap any product for its sizes, materials and full specification. Quote the catalogue code (e.g. CH-NT-01) when asking for a price.",
+    title: "Furniture E-Catalogue",
+    lead: "Pick a category, then a use and a material; tap any product for its sizes, materials and full specification. Quote the catalogue code (e.g. CH-TSK-NT-01) when asking for a price.",
     pdf: "Download the PDF (with links and bookmarks)",
     contents: "Contents",
     products: (n: number) => `${n} products`,
@@ -38,6 +39,14 @@ const COPY = {
     top: "Back to top",
   },
 };
+
+/** "Task & Staff Chairs · Net / Mesh" for a range code. */
+function fullName(m: MainCategory, code: string, lang: Lang) {
+  const r = m.subs.find((s) => s.code === code);
+  if (!r) return lang === "en" ? m.en : m.th;
+  const g = r.group.code !== r.code ? (lang === "en" ? r.group.en : r.group.th) + " · " : "";
+  return g + (lang === "en" ? r.en : r.th);
+}
 
 /** Category tabs: one swipeable row on phones, a full row from tablets up. */
 function CategoryTabs({ lang, active }: { lang: Lang; active?: MainCategory }) {
@@ -201,25 +210,39 @@ export async function OfficeCategoryView({ main: m, lang }: { main: MainCategory
           </div>
         </div>
         {m.subs.length > 0 && (
-          <ul className="mt-4 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-4">
-            {ranges.map(({ range, items }) => (
-              <li key={range.code}>
-                <a
-                  href={`#${rangeAnchor(range.code)}`}
-                  className="block h-full rounded-lg border-2 bg-surface px-3 py-2.5 hover:shadow-md"
-                  style={{ borderColor: m.accent }}
-                >
-                  <span className="font-num block text-xs font-semibold" style={{ color: m.accent }}>
-                    {range.code}
-                  </span>
-                  <span className="block text-sm leading-snug font-semibold">{range.en}</span>
-                  <span className="block text-xs text-muted">
-                    {range.th} · {c.products(items.length)}
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {groupsOf(m).map((g) => {
+              const inGroup = ranges.filter(({ range }) => g.ranges.some((r) => r.code === range.code));
+              const n = inGroup.reduce((k, r) => k + r.items.length, 0);
+              if (!n) return null;
+              return (
+                <div key={g.code} className="rounded-lg border-2 bg-surface p-3" style={{ borderColor: m.accent }}>
+                  <a href={`#${rangeAnchor(inGroup[0].range.code)}`} className="block hover:underline">
+                    <span className="font-num text-xs font-semibold" style={{ color: m.accent }}>
+                      {g.code}
+                    </span>{" "}
+                    <span className="text-sm font-semibold">{lang === "en" ? g.en : g.th}</span>{" "}
+                    <span className="font-num text-xs text-muted">{n}</span>
+                  </a>
+                  <ul className="mt-2 flex flex-wrap gap-1.5">
+                    {inGroup.map(({ range, items }) =>
+                      items.length ? (
+                        <li key={range.code}>
+                          <a
+                            href={`#${rangeAnchor(range.code)}`}
+                            className="block rounded-full border px-2.5 py-1 text-xs hover:opacity-80"
+                            style={{ borderColor: m.accent, color: m.accent }}
+                          >
+                            {lang === "en" ? range.en : range.th} <span className="font-num opacity-70">{items.length}</span>
+                          </a>
+                        </li>
+                      ) : null,
+                    )}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
         )}
       </section>
       <div className="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6">
@@ -231,8 +254,8 @@ export async function OfficeCategoryView({ main: m, lang }: { main: MainCategory
                   <span className="font-num text-sm font-semibold" style={{ color: m.accent }}>
                     {range.code}
                   </span>
-                  <span className="text-lg font-semibold">{range.en}</span>
-                  <span className="text-sm text-muted">{range.th}</span>
+                  <span className="text-lg font-semibold">{fullName(m, range.code, "en")}</span>
+                  <span className="text-sm text-muted">{fullName(m, range.code, "th")}</span>
                   <span className="font-num text-sm text-muted">{items.length}</span>
                 </h2>
               )}

@@ -1,65 +1,39 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { and, eq, inArray, sql } from "drizzle-orm";
 
-import listing from "../../data/office-catalogue.json";
+import listing from "../../data/e-catalogue.json";
 import { db } from "@/db";
 import { products } from "@/db/schema";
 import { CATALOG_TAG } from "@/lib/catalog";
 import { E_CATALOGUE_PDF, media } from "@/lib/site";
 
 /**
- * The office e-catalogue on the web: the same seven categories, ranges and codes (CH-NT-01 ...)
- * as the interactive PDF. `pnpm catalog:office` sorts the products and writes the order and codes
- * to data/office-catalogue.json; commit that file to publish a new order here.
- * The taxonomy mirrors TAXONOMY in ingest/nat_ingest/office_catalogue.py.
+ * The e-catalogue on the web: the same categories, ranges and codes (CH-TSK-NT-01 ...) as the PDF.
+ * Categories are split by type, then function, then material (and a key feature where customers
+ * choose by it, e.g. door type). data/e-catalogue.json holds the tree and every product's code;
+ * it is generated together with the PDF, commit it to publish a new order here.
  */
 export type Range = { code: string; en: string; th: string };
-export type MainCategory = Range & { n: number; tab: string; accent: string; subs: Range[] };
+/** A range's function group ("Task & Staff Chairs") — ranges below it differ by material or feature. */
+export type SubRange = Range & { group: Range };
+export type MainCategory = Range & { n: number; tab: string; accent: string; subs: SubRange[] };
 
-export const OFFICE_TAXONOMY: MainCategory[] = [
-  {
-    n: 1, code: "CH", en: "Chairs", th: "เก้าอี้", tab: "Chairs", accent: "#2a5d9e",
-    subs: [
-      { code: "CH-NT", en: "Mesh / Net Chairs", th: "เก้าอี้ตาข่าย" },
-      { code: "CH-LT", en: "Leather Chairs", th: "เก้าอี้หนัง" },
-      { code: "CH-MP", en: "Multipurpose Chairs", th: "เก้าอี้เอนกประสงค์ (ไม่มีล้อ)" },
-      { code: "CH-MW", en: "Multipurpose Chairs with Wheels", th: "เก้าอี้เอนกประสงค์ (มีล้อ)" },
-    ],
-  },
-  {
-    n: 2, code: "CB", en: "Cupboards", th: "ตู้", tab: "Cupboards", accent: "#007d7d",
-    subs: [
-      { code: "CB-WD", en: "Wooden Cupboards", th: "ตู้ไม้" },
-      { code: "CB-ST", en: "Steel Cupboards", th: "ตู้เหล็ก" },
-    ],
-  },
-  {
-    n: 3, code: "SH", en: "Shelves", th: "ชั้นวาง", tab: "Shelves", accent: "#4a873b",
-    subs: [
-      { code: "SH-WD", en: "Wooden Shelves", th: "ชั้นวางไม้" },
-      { code: "SH-ST", en: "Steel Shelves", th: "ชั้นวางเหล็ก" },
-    ],
-  },
-  {
-    n: 4, code: "ST", en: "Sliding Track Cabinets / Mobile Shelving", th: "ตู้รางเลื่อน", tab: "Mobile shelving",
-    accent: "#704a99", subs: [],
-  },
-  {
-    n: 5, code: "TB", en: "Tables", th: "โต๊ะ", tab: "Tables", accent: "#c7661c",
-    subs: [
-      { code: "TB-WD", en: "Wooden Tables", th: "โต๊ะไม้" },
-      { code: "TB-ST", en: "Full Steel Tables", th: "โต๊ะเหล็ก" },
-      { code: "TB-WS", en: "Wood + Steel Tables", th: "โต๊ะไม้ขาเหล็ก" },
-      { code: "TB-MT", en: "Meeting Tables", th: "โต๊ะประชุม" },
-    ],
-  },
-  { n: 6, code: "PT", en: "Partition Screens", th: "พาร์ทิชั่น & ฉากกั้น", tab: "Partitions", accent: "#b33359", subs: [] },
-  { n: 7, code: "GR", en: "Guest Room Sets", th: "ชุดรับแขก", tab: "Guest room", accent: "#94731a", subs: [] },
-];
+export const OFFICE_TAXONOMY: MainCategory[] = (listing as unknown as { taxonomy: MainCategory[] }).taxonomy;
 
 /** Sub-categories; a category without any is one range carrying the category code. */
 export function rangesOf(m: MainCategory): Range[] {
   return m.subs.length ? m.subs : [{ code: m.code, en: m.en, th: m.th }];
+}
+
+/** The function groups of a category, each with its material / feature ranges, in catalogue order. */
+export function groupsOf(m: MainCategory): (Range & { ranges: SubRange[] })[] {
+  const out = new Map<string, Range & { ranges: SubRange[] }>();
+  for (const s of m.subs) {
+    const g = out.get(s.group.code) ?? { ...s.group, ranges: [] };
+    g.ranges.push(s);
+    out.set(s.group.code, g);
+  }
+  return [...out.values()];
 }
 
 export function findMain(code: string) {
@@ -78,12 +52,18 @@ const mainOfRange = (range: string) => OFFICE_TAXONOMY.find((m) => rangesOf(m).s
 
 export const OFFICE_CATALOGUE_PDF = E_CATALOGUE_PDF;
 
-/** Catalogue code and where it sits, for the product page ("CH-NT-01 · Mesh / Net Chairs"). */
+/** Catalogue code and where it sits, for the product page ("CH-TSK-NT-01 · Task & Staff Chairs · Net / Mesh"). */
 export function officeEntry(slug: string) {
   const e = BY_SLUG.get(slug);
   if (!e) return null;
   const main = mainOfRange(e.range);
-  return { ...e, main, range: rangesOf(main).find((r) => r.code === e.range)! };
+  const r = rangesOf(main).find((x) => x.code === e.range)! as Range & { group?: Range };
+  const g = r.group && r.group.code !== r.code ? r.group : null;
+  return {
+    ...e,
+    main,
+    range: { code: r.code, en: g ? `${g.en} · ${r.en}` : r.en, th: g ? `${g.th} · ${r.th}` : r.th },
+  };
 }
 
 export type OfficeCard = {
